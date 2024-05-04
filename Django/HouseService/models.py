@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+import math
 
 class Area(models.Model):
     name = models.CharField(max_length=100)
@@ -31,6 +32,8 @@ class House(models.Model):
     
     area = models.ForeignKey(Area, on_delete=models.CASCADE)
     meterage = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="متراژ")
+    location_x = models.DecimalField(max_digits=10, decimal_places=2, verbose_name= "طول جغرافیایی")
+    location_y =  models.DecimalField(max_digits=10, decimal_places=2, verbose_name= "عرض جغرافیایی")
     name = models.CharField(max_length=100, verbose_name="نام ساختمان")
     title = models.CharField(max_length=200, verbose_name="عنوان")
     address = models.CharField(max_length=255, verbose_name="آدرس")
@@ -51,6 +54,12 @@ class House(models.Model):
     class Meta:
         verbose_name = "خانه"
         verbose_name_plural = "خانه ها"
+    
+    def distance_to(self, x, y):
+        return math.sqrt((self.location_x - x) ** 2 + (self.location_y - y) ** 2)
+
+    def __repr__(self):
+        return f"{self.name}: ({self.location_x}, {self.location_y})"
 
 class HouseDetail(models.Model):
     house = models.OneToOneField(House, on_delete=models.CASCADE)
