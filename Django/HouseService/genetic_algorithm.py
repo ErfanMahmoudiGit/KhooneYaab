@@ -15,6 +15,32 @@ class GeneticAlgorithm:
             chromosome = [random.randint(0, 1) for _ in range(self.chromosome_length)]
             population.append(chromosome)
         return population
+    
+
+    def fitness_function(chromosome):
+        # Convert binary chromosome representation to actual house attributes
+        # For example, you might map the first half of the chromosome to represent binary features of the house
+        # such as presence of parking lot, number of bedrooms, etc.
+
+        # Calculate fitness based on mapped house attributes
+        house_attributes = map_chromosome_to_house_attributes(chromosome)
+        house = House.objects.create(**house_attributes)
+        fitness = calculate_fitness_of_house(house)
+        
+        return fitness
+
+    def map_chromosome_to_house_attributes(chromosome):
+        # Implement the mapping from chromosome to house attributes
+        # For example, map binary values to house attributes like bedrooms, bathrooms, parking_lot, etc.
+        # Return a dictionary of house attributes
+        pass
+
+    def calculate_fitness_of_house(house):
+        # Calculate fitness based on factors like price, distance from work, amenities, etc.
+        # You can define your own formula for calculating fitness based on these factors
+        # Return the fitness value
+        pass
+
 
     def evaluate_population(self):
         return [(chromosome, self.fitness_function(chromosome)) for chromosome in self.population]
