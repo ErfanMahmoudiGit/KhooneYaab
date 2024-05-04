@@ -41,7 +41,6 @@ class House(models.Model):
     bedrooms = models.IntegerField(verbose_name="تعداد اتاق‌ها")
     bathrooms = models.DecimalField(max_digits=4, decimal_places=2, verbose_name="سرویس بهداشتی")
     parking_lot = models.BooleanField(verbose_name="پارکینگ")
-    area_size = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="مساحت")
     description = models.TextField(verbose_name="محتوا")
     image = models.ImageField(upload_to='house_images/', verbose_name="تصویر")
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, verbose_name="وضعیت")
