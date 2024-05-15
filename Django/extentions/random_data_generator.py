@@ -2,10 +2,8 @@ import pandas as pd
 import random
 from faker import Faker
 
-# Initialize Faker
 fake = Faker()
 
-# Function to generate random phone numbers
 def generate_phone():
     return '0919' + ''.join([str(random.randint(0, 9)) for _ in range(7)])
 
@@ -40,13 +38,10 @@ def generate_record(id):
     }
     return record
 
-# Generate 2000 records
 records = [generate_record(i + 1) for i in range(2000)]
 
-# Convert to DataFrame
 df = pd.DataFrame(records)
 
-# Save to CSV
 df.to_csv("buildings.csv", index=False)
 
 print("CSV file 'buildings.csv' generated successfully.")
