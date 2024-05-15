@@ -7,7 +7,7 @@ class Area(models.Model):
     # Other relevant fields for the area, such as location coordinates, demographics, etc.
     ...
 
-class House(models.Model):
+class Building(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255)
     time = models.DateField()
@@ -30,8 +30,8 @@ class House(models.Model):
         return self.title
 
 
-class HouseImage(models.Model):
-    house = models.ForeignKey(House, related_name='images', on_delete=models.CASCADE)
+class BuildingImage(models.Model):
+    house = models.ForeignKey(Building, related_name='images', on_delete=models.CASCADE)
     image_path = models.ImageField(upload_to='house_images/')
     caption = models.CharField(max_length=255, blank=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
