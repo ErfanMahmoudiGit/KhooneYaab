@@ -1,5 +1,7 @@
 import pandas as pd
+import os
 
-df = pd.read_csv('buildings.csv')
+#print("Current Working Directory:", os.getcwd())
+df = pd.read_csv('Django/extentions/buildings.csv')
 
 print(df.head())
