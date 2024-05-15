@@ -1,3 +1,4 @@
+#this file should be at the same level with manage.py to run correctly.
 import pandas as pd
 import os
 import django
@@ -8,7 +9,7 @@ django.setup()
 
 from ProximityFinder.models import Building
 
-df = pd.read_csv('buildings.csv')
+df = pd.read_csv('Django/buildings.csv') # should be updated according to the working directory.
 
 for _, row in df.iterrows():
     Building.objects.create(
