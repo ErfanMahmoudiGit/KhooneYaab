@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     # local apps
     'ProximityFinder.apps.ProximityFinderConfig',
+    'extentions',
     
 ]
 
