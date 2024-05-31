@@ -1,7 +1,8 @@
+# realestate/genetic_algorithm.py
 import random
+import math
 import numpy as np
 from .models import Building
-import math
 
 def calculate_fitness(building, target):
     price_diff = abs(building.price - target['price'])
@@ -20,28 +21,12 @@ def calculate_fitness(building, target):
     fitness = price_diff + meterage_diff + build_date_diff + rooms_diff - facilities_score + distance_score
     return fitness
 
-def genetic_algorithm(target, population_size=100, generations=100):
-    population = list(Building.objects.all())
-    best_fit = None
-    best_score = float('inf')
-    
-    for _ in range(generations):
-        scores = [(building, calculate_fitness(building, target)) for building in population]
-        scores.sort(key=lambda x: x[1])
-        
-        if scores[0][1] < best_score:
-            best_fit = scores[0][0]
-            best_score = scores[0][1]
-        
-        selected = scores[:population_size // 2]
-        population = [b for b, _ in selected]
-        
-        for _ in range(population_size // 2):
-            parent1, parent2 = random.sample(population, 2)
-            child = crossover(parent1, parent2)
-            population.append(child)
-    
-    return best_fit
+def initialize_population(size):
+    return list(Building.objects.all()[:size])
+
+def select_parents(population, fitnesses, num_parents):
+    parents = random.choices(population, weights=fitnesses, k=num_parents)
+    return parents
 
 def crossover(parent1, parent2):
     child = Building(
@@ -55,3 +40,45 @@ def crossover(parent1, parent2):
         priorities=random.choice([parent1.priorities, parent2.priorities]),
     )
     return child
+
+def mutate(individual, mutation_rate=0.01):
+    if random.random() < mutation_rate:
+        individual.meterage = random.uniform(10, 500)
+    if random.random() < mutation_rate:
+        individual.price = random.uniform(1_000_000_000, 100_000_000_000)
+    if random.random() < mutation_rate:
+        individual.build_date = random.choice(range(1900, 2024))
+    if random.random() < mutation_rate:
+        individual.rooms = random.choice(range(1, 21))
+    if random.random() < mutation_rate:
+        individual.facilities = [random.choice([0, 1]) for _ in range(3)]
+    if random.random() < mutation_rate:
+        individual.latitude = random.uniform(51.132826, 51.609179)
+    if random.random() < mutation_rate:
+        individual.longitude = random.uniform(35.608353, 35.779512)
+    if random.random() < mutation_rate:
+        individual.priorities = [random.choice([0, 1]) for _ in range(3)]
+
+def genetic_algorithm(target, population_size=100, generations=100, mutation_rate=0.01):
+    population = initialize_population(population_size)
+    best_fit = None
+    best_score = float('inf')
+    
+    for generation in range(generations):
+        fitnesses = [calculate_fitness(individual, target) for individual in population]
+        if min(fitnesses) < best_score:
+            best_fit = population[fitnesses.index(min(fitnesses))]
+            best_score = min(fitnesses)
+        
+        parents = select_parents(population, fitnesses, population_size // 2)
+        population = []
+        
+        for i in range(population_size // 2):
+            parent1, parent2 = random.sample(parents, 2)
+            child1 = crossover(parent1, parent2)
+            child2 = crossover(parent1, parent2)
+            mutate(child1, mutation_rate)
+            mutate(child2, mutation_rate)
+            population.extend([child1, child2])
+    
+    return best_fit
