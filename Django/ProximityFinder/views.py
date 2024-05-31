@@ -1,12 +1,77 @@
 from django.shortcuts import render
 from .genetic_algorithm import genetic_algorithm
-
-# Create your views here.
 import json
 import math
 from django.http import JsonResponse
-from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_GET, require_POST
 from .models import Building
+from django.views.decorators.csrf import csrf_exempt
+from django.core.exceptions import ValidationError
+from django.utils.dateparse import parse_date
+from .models import Building
+# Create your views here.
+
+@csrf_exempt  # This is for simplicity; consider using proper CSRF protection in production
+@require_POST
+def create_house(request):
+    try:
+        data = json.loads(request.body)
+        
+        title = data.get('title')
+        time = parse_date(data.get('time'))
+        meterage = data.get('meterage')
+        price = data.get('price')
+        price_per_meter = data.get('price_per_meter')
+        image = data.get('image')
+        description = data.get('description')
+        phone = data.get('phone')
+        floor = data.get('floor')
+        all_floors = data.get('all_floors')
+        build_date = parse_date(data.get('build_date'))
+        rooms = data.get('rooms')
+        facilities = data.get('facilities')
+        latitude = data.get('latitude')
+        longitude = data.get('longitude')
+        priorities = data.get('priorities')
+
+        if all_floors < floor:
+            return JsonResponse({'error': 'All floors must be greater than or equal to floor number'}, status=400)
+
+        # Validate facilities and priorities
+        if not isinstance(facilities, list) or len(facilities) != 3 or not all(isinstance(i, int) and i in [0, 1] for i in facilities):
+            return JsonResponse({'error': 'Facilities must be a list of three elements containing 0 or 1'}, status=400)
+        
+        if not isinstance(priorities, list) or len(priorities) != 3 or not all(isinstance(i, int) and i in [0, 1] for i in priorities):
+            return JsonResponse({'error': 'Priorities must be a list of three elements containing 0 or 1'}, status=400)
+
+        # Create the new building object
+        building = Building(
+            title=title,
+            time=time,
+            meterage=meterage,
+            price=price,
+            price_per_meter=price_per_meter,
+            image=image,
+            description=description,
+            phone=phone,
+            floor=floor,
+            all_floors=all_floors,
+            build_date=build_date,
+            rooms=rooms,
+            facilities=facilities,
+            latitude=latitude,
+            longitude=longitude,
+            priorities=priorities
+        )
+
+        # Save the building object to the database
+        building.save()
+
+        return JsonResponse({'message': 'Building created successfully', 'id': building.id}, status=201)
+    
+    except (KeyError, TypeError, ValueError, ValidationError) as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
 
 @require_GET
 def get_buildings(request):
