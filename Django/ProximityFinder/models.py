@@ -5,7 +5,6 @@ import math
 class Area(models.Model):
     name = models.CharField(max_length=100)
     # Other relevant fields for the area, such as location coordinates, demographics, etc.
-    ...
 
 class Building(models.Model):
     id = models.AutoField(primary_key=True)

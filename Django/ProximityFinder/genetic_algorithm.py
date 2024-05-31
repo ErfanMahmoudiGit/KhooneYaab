@@ -1,76 +1,57 @@
 import random
-from .models import House
+import numpy as np
+from .models import Building
+import math
 
-class GeneticAlgorithm:
-    def __init__(self, population_size, chromosome_length, mutation_rate, fitness_function):
-        self.population_size = population_size
-        self.chromosome_length = chromosome_length
-        self.mutation_rate = mutation_rate
-        self.fitness_function = fitness_function
-        self.population = self.initialize_population()
-
-    def initialize_population(self):
-        population = []
-        for _ in range(self.population_size):
-            chromosome = [random.randint(0, 1) for _ in range(self.chromosome_length)]
-            population.append(chromosome)
-        return population
+def calculate_fitness(building, target):
+    price_diff = abs(building.price - target['price'])
+    meterage_diff = abs(building.meterage - target['meterage'])
+    build_date_diff = abs(building.build_date.year - target['build_date'])
+    rooms_diff = abs(building.rooms - target['rooms'])
     
+    facilities_score = sum([1 for f, t in zip(building.facilities, target['facilities']) if f == t == 1])
+    
+    distances = [
+        math.sqrt((building.latitude - loc['latitude']) ** 2 + (building.longitude - loc['longitude']) ** 2)
+        for loc in target['locations']
+    ]
+    distance_score = sum(distances)
+    
+    fitness = price_diff + meterage_diff + build_date_diff + rooms_diff - facilities_score + distance_score
+    return fitness
 
-    def fitness_function(chromosome):
-        # Convert binary chromosome representation to actual house attributes
-        # For example, you might map the first half of the chromosome to represent binary features of the house
-        # such as presence of parking lot, number of bedrooms, etc.
-
-        # Calculate fitness based on mapped house attributes
-        house_attributes = map_chromosome_to_house_attributes(chromosome)
-        house = House.objects.create(**house_attributes)
-        fitness = calculate_fitness_of_house(house)
+def genetic_algorithm(target, population_size=100, generations=100):
+    population = list(Building.objects.all())
+    best_fit = None
+    best_score = float('inf')
+    
+    for _ in range(generations):
+        scores = [(building, calculate_fitness(building, target)) for building in population]
+        scores.sort(key=lambda x: x[1])
         
-        return fitness
+        if scores[0][1] < best_score:
+            best_fit = scores[0][0]
+            best_score = scores[0][1]
+        
+        selected = scores[:population_size // 2]
+        population = [b for b, _ in selected]
+        
+        for _ in range(population_size // 2):
+            parent1, parent2 = random.sample(population, 2)
+            child = crossover(parent1, parent2)
+            population.append(child)
+    
+    return best_fit
 
-    def map_chromosome_to_house_attributes(chromosome):
-        # Implement the mapping from chromosome to house attributes
-        # For example, map binary values to house attributes like bedrooms, bathrooms, parking_lot, etc.
-        # Return a dictionary of house attributes
-        pass
-
-    def calculate_fitness_of_house(house):
-        # Calculate fitness based on factors like price, distance from work, amenities, etc.
-        # You can define your own formula for calculating fitness based on these factors
-        # Return the fitness value
-        pass
-
-
-    def evaluate_population(self):
-        return [(chromosome, self.fitness_function(chromosome)) for chromosome in self.population]
-
-    def select_parents(self, population):
-        # Implement selection mechanism (e.g., roulette wheel selection, tournament selection)
-        pass
-
-    def crossover(self, parent1, parent2):
-        # Implement crossover mechanism (e.g., single-point crossover, multi-point crossover)
-        pass
-
-    def mutate(self, chromosome):
-        # Implement mutation mechanism
-        pass
-
-    def evolve(self):
-        new_population = []
-        evaluated_population = self.evaluate_population()
-
-        # Elitism: Keep the best individuals from the previous generation
-        evaluated_population.sort(key=lambda x: x[1], reverse=True)
-        elite_size = int(0.1 * self.population_size)
-        new_population.extend([individual[0] for individual in evaluated_population[:elite_size]])
-
-        while len(new_population) < self.population_size:
-            parent1, parent2 = self.select_parents(evaluated_population)
-            child = self.crossover(parent1, parent2)
-            if random.random() < self.mutation_rate:
-                child = self.mutate(child)
-            new_population.append(child)
-
-        self.population = new_population
+def crossover(parent1, parent2):
+    child = Building(
+        meterage=random.choice([parent1.meterage, parent2.meterage]),
+        price=random.choice([parent1.price, parent2.price]),
+        build_date=random.choice([parent1.build_date, parent2.build_date]),
+        rooms=random.choice([parent1.rooms, parent2.rooms]),
+        facilities=random.choice([parent1.facilities, parent2.facilities]),
+        latitude=random.choice([parent1.latitude, parent2.latitude]),
+        longitude=random.choice([parent1.longitude, parent2.longitude]),
+        priorities=random.choice([parent1.priorities, parent2.priorities]),
+    )
+    return child
