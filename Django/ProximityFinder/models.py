@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-import math
 
 class Area(models.Model):
     name = models.CharField(max_length=100)
