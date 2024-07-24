@@ -19,5 +19,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('realestate/', include('realestate.urls')),  # Include the realestate app URLs
+    path('ProximityFinder/', include('ProximityFinder.urls')),  # Include the ProximityFinder app URLs
 ]
