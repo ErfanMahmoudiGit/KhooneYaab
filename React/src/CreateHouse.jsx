@@ -6,7 +6,8 @@ import SwipeableViews from 'react-swipeable-views';
 import ContactInformation from './ContactInformation';
 import OrgInformation from './OrgInformation';
 import MapInformation from './MapInformation';
-import { createHouse } from "./services/createHouseService";
+// import { createHouse } from "./services/createHouseService";
+import { API_createHouse } from "./services/createHouseService";
 
 const steps = [ContactInformation, OrgInformation, MapInformation];
 
@@ -50,14 +51,23 @@ export default function CreateHouse() {
             priorities : [0, 0 , 0],
         }
         console.log("data",data)
-        createHouse(data)
-            .then((res) => {
-                console.log(res)
-                console.log("successfully posted")
-            })
-            .catch((err) => {
-                console.log(err)
-            });
+        let resp = API_createHouse(data)
+            resp.then((res) => {
+                if (res.status === 200) {
+                    console.log("success");        
+                } else {
+                    console.log("false");        
+
+                }
+                })
+        // createHouse(data)
+        //     .then((res) => {
+        //         console.log(res)
+        //         console.log("successfully posted")
+        //     })
+        //     .catch((err) => {
+        //         console.log(err)
+        //     });
                 
 
         if (!isLastStep()) {
