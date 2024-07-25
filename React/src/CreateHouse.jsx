@@ -6,6 +6,7 @@ import SwipeableViews from 'react-swipeable-views';
 import ContactInformation from './ContactInformation';
 import OrgInformation from './OrgInformation';
 import MapInformation from './MapInformation';
+import { createHouse } from "./services/createHouseService";
 
 const steps = [ContactInformation, OrgInformation, MapInformation];
 
@@ -27,14 +28,43 @@ export default function CreateHouse() {
     const onSubmit = (values, formikBag) => {
         console.log(values);
         const { setSubmitting } = formikBag;
+        // ProximityFinder/api/create_house/
+        let data = {
+            title : values.title,
+            time : "2024-01-11",
+            meterage : values.meterage,
+            price : values.price ,
+            price_per_meter : values.price_per_meter ,
+            image : "https://unsplash.com/s/photos/image/3" , 
+            description : values.description ,
+            phone : "09127564545",
+            floor : values.floors,
+            all_floors : values.all_floors,
+            build_date : values.build_date,
+            rooms : values.rooms,
+            facilities : [0, 1, 1],
+            latitude : "11.9837",
+            // latitude : values.locations[0].latitude,
+            longitude : "24.983",
+            // longitude : values.locations[0].longitude,
+            priorities : [0, 0 , 0],
+        }
+        console.log("data",data)
+        createHouse(data)
+            .then((res) => {
+                console.log(res)
+                console.log("successfully posted")
+            })
+            .catch((err) => {
+                console.log(err)
+            });
+                
 
         if (!isLastStep()) {
             setSubmitting(false);
             handleNext();
             return;
         }
-
-        console.log(values);
 
         setTimeout(() => {
             setSubmitting(false);
