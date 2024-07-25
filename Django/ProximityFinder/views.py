@@ -11,28 +11,28 @@ from django.utils.dateparse import parse_date
 from .models import Building
 # Create your views here.
 
-@csrf_exempt  # This is for simplicity; consider using proper CSRF protection in production
+#@csrf_exempt  # This is for simplicity; consider using proper CSRF protection in production
 @require_POST
 def create_house(request):
     try:
         data = json.loads(request.body)
         
-        title = data.get('title')
-        time = parse_date(data.get('time'))
-        meterage = data.get('meterage')
-        price = data.get('price')
-        price_per_meter = data.get('price_per_meter')
-        image = data.get('image')
-        description = data.get('description')
-        phone = data.get('phone')
-        floor = data.get('floor')
-        all_floors = data.get('all_floors')
-        build_date = parse_date(data.get('build_date'))
-        rooms = data.get('rooms')
-        facilities = data.get('facilities')
-        latitude = data.get('latitude')
-        longitude = data.get('longitude')
-        priorities = data.get('priorities')
+        title = data.get('title')#
+        time = parse_date(data.get('time'))#
+        meterage = data.get('meterage')#
+        price = data.get('price')#
+        price_per_meter = data.get('price_per_meter')#
+        image = data.get('image')#
+        description = data.get('description')#
+        phone = data.get('phone')#
+        floor = data.get('floor')#
+        all_floors = data.get('all_floors')#
+        build_date = parse_date(data.get('build_date'))#
+        rooms = data.get('rooms')#
+        facilities = data.get('facilities')#
+        latitude = data.get('latitude')#
+        longitude = data.get('longitude')#
+        priorities = data.get('priorities')#
 
         if all_floors < floor:
             return JsonResponse({'error': 'All floors must be greater than or equal to floor number'}, status=400)
