@@ -2,6 +2,9 @@
 import pandas as pd
 import os
 import django
+import sys
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Set up Django environment
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'CharKhone.settings')
@@ -9,8 +12,7 @@ django.setup()
 
 from ProximityFinder.models import Building
 
-df = pd.read_csv('Django/buildings.csv') # should be updated according to the working directory.
-
+df = pd.read_csv("buildings.csv")
 for _, row in df.iterrows():
     Building.objects.create(
         id=row['id'],
@@ -24,7 +26,8 @@ for _, row in df.iterrows():
         phone=row['phone'],
         floor=row['floor'],
         all_floors=row['all_floors'],
-        build_date=row['build_date'],
+        #build_date=row['build_date'],
+        build_date=2001,
         rooms=row['rooms'],
         facilities=row['facilities'],
         latitude=row['latitude'],

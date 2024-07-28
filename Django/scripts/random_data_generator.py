@@ -13,6 +13,7 @@ def generate_record(id):
     price = random.randint(1000000000, 100000000000)
     price_per_meter = price / meterage
     floor = random.randint(1, 20)
+    build_date = random.randint(1980, 2024)
     all_floors = random.randint(floor, 20)
     facilities = [random.randint(0, 1) for _ in range(3)]
     priorities = [random.randint(0, 1) for _ in range(3)]
@@ -29,7 +30,7 @@ def generate_record(id):
         "phone": generate_phone(),
         "floor": floor,
         "all_floors": all_floors,
-        "build_date": fake.date_between(start_date='-20y', end_date='today').strftime("%Y-%m-%d"),
+        "build_date": build_date,
         "rooms": random.randint(1, 20),
         "facilities": facilities,
         "latitude": round(random.uniform(51.132826, 51.609179), 6),
