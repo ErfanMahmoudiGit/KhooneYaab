@@ -113,7 +113,7 @@ def find_best_building(request):
         response_data = {
             'meterage': best_building.meterage,
             'price': best_building.price,
-            'build_date': best_building.build_date.year,
+            'build_date': best_building.build_date,
             'rooms': best_building.rooms,
             'facilities': best_building.facilities,
             'latitude': best_building.latitude,

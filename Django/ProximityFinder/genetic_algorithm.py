@@ -7,7 +7,9 @@ from .models import Building
 def calculate_fitness(building, target):
     price_diff = abs(building.price - target['price'])
     meterage_diff = abs(building.meterage - target['meterage'])
-    build_date_diff = abs(building.build_date.year - target['build_date'])
+    
+    build_date_diff = abs(building.build_date - target['build_date'])
+    
     rooms_diff = abs(building.rooms - target['rooms'])
     
     facilities_score = sum([1 for f, t in zip(building.facilities, target['facilities']) if f == t == 1])

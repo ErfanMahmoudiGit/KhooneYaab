@@ -17,12 +17,13 @@ class Building(models.Model):
     phone = models.CharField(max_length=11)
     floor = models.IntegerField()
     all_floors = models.IntegerField()
-    build_date = models.DateField()
+    build_date = models.IntegerField()
     rooms = models.IntegerField()
     facilities = models.JSONField()
     latitude = models.FloatField()
     longitude = models.FloatField()
     priorities = models.JSONField()
+    #area_id = models.IntegerField()
 
     def __str__(self):
         return self.title
