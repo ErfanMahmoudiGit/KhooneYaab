@@ -1,12 +1,16 @@
 from django.urls import path
-from .views import get_buildings, find_best_building, create_house
+from .views import get_buildings, find_best_building, create_house, search_buildings
 
 urlpatterns = [
     path('api/buildings/', get_buildings, name='get_buildings'),
     path('api/find_best_building/', find_best_building, name='find_best_building'),
     path('api/create_house/', create_house, name='create_house'),
+    path('api/search/', search_buildings, name='search_buildings'),
 ]
 
+"""
+GET request to /search/?q=keyword.
+"""
 """
 test for create_house api.
 {

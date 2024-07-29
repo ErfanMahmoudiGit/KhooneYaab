@@ -9,6 +9,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_date
 from .models import Building
+from django.db.models import Q
+
 # Create your views here.
 
 #@csrf_exempt  # This is for simplicity; consider using proper CSRF protection in production
@@ -94,6 +96,30 @@ def get_buildings(request):
         building_list.append(building_data)
 
     return JsonResponse(building_list, safe=False)
+
+@require_GET
+def search_buildings(request):
+    query = request.GET.get('q', '')
+    if query:
+        buildings = Building.objects.filter(Q(title__icontains=query) | Q(description__icontains=query))
+    else:
+        buildings = Building.objects.none()
+
+    buildings_data = [
+        {
+            'id': building.id,
+            'title': building.title,
+            'description': building.description,
+            'price': building.price,
+            'meterage': building.meterage,
+            'rooms': building.rooms,
+            'latitude': building.latitude,
+            'longitude': building.longitude,
+            #'area': building.area.name if building.area else None
+        } for building in buildings
+    ]
+
+    return JsonResponse(buildings_data, safe=False)
 
 @require_GET
 def find_best_building(request):
