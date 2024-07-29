@@ -11,10 +11,13 @@ from django.utils.dateparse import parse_date
 from .models import Building
 from django.db.models import Q
 
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 # Create your views here.
 
-#@csrf_exempt  # This is for simplicity; consider using proper CSRF protection in production
-@require_POST
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_house(request):
     try:
         data = json.loads(request.body)
@@ -29,7 +32,7 @@ def create_house(request):
         phone = data.get('phone')
         floor = data.get('floor')
         all_floors = data.get('all_floors')
-        build_date = parse_date(data.get('build_date'))
+        build_date = data.get('build_date')
         rooms = data.get('rooms')
         facilities = data.get('facilities')
         latitude = data.get('latitude')
