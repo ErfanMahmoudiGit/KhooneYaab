@@ -21,7 +21,6 @@ from rest_framework.response import Response
 def create_house(request):
     try:
         data = json.loads(request.body)
-        
         title = data.get('title')
         time = parse_date(data.get('time'))
         meterage = data.get('meterage')
@@ -29,9 +28,7 @@ def create_house(request):
         price_per_meter = data.get('price_per_meter')
         image = data.get('image')
         description = data.get('description')
-        phone = data.get('phone')
         floor = data.get('floor')
-        all_floors = data.get('all_floors')
         build_date = data.get('build_date')
         rooms = data.get('rooms')
         facilities = data.get('facilities')
@@ -39,8 +36,6 @@ def create_house(request):
         longitude = data.get('longitude')
         priorities = data.get('priorities')
 
-        if all_floors < floor:
-            return JsonResponse({'error': 'All floors must be greater than or equal to floor number'}, status=400)
 
         # Validate facilities and priorities
         if not isinstance(facilities, list) or len(facilities) != 3 or not all(isinstance(i, int) and i in [0, 1] for i in facilities):
@@ -58,9 +53,7 @@ def create_house(request):
             price_per_meter=price_per_meter,
             image=image,
             description=description,
-            phone=phone,
             floor=floor,
-            all_floors=all_floors,
             build_date=build_date,
             rooms=rooms,
             facilities=facilities,

@@ -1,5 +1,7 @@
 from . import jalali
 from django.utils import timezone
+import re
+
 def persian_numbers_convertor(mystr):
     numbers = {
     "0" : "۰",
@@ -39,3 +41,21 @@ def jalali_convertor(time):
     )
 
     return persian_numbers_convertor(output)
+
+def convert_persian_text_to_english_digits(s):
+    s = str(s)
+    
+    persian_to_english = {
+        '۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4',
+        '۵': '5', '۶': '6', '۷': '7', '۸': '8', '۹': '9'
+    }
+    
+    # Replace Persian digits with English digits
+    for persian_digit, english_digit in persian_to_english.items():
+        s = s.replace(persian_digit, english_digit)
+    
+    # Remove all non-numeric characters
+    s = re.sub(r'\D', '', s)
+    if s == '':
+        s = 0
+    return s

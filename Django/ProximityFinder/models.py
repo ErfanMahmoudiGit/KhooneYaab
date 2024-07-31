@@ -1,17 +1,10 @@
 from django.db import models
 from django.utils import timezone
 
-class Area(models.Model):
-    name = models.CharField(max_length=100)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-    demographics = models.JSONField()  # Example: {'population': 50000, 'avg_income': 60000}
-
-    def __str__(self):
-        return self.name
-
 class Building(models.Model):
     id = models.AutoField(primary_key=True)
+    city = models.CharField(max_length=255)
+    category = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
     time = models.DateField()
     meterage = models.FloatField()
@@ -19,16 +12,16 @@ class Building(models.Model):
     price_per_meter = models.FloatField()
     image = models.URLField()
     description = models.TextField()
-    phone = models.CharField(max_length=11)
     floor = models.IntegerField()
-    all_floors = models.IntegerField()
     build_date = models.IntegerField()
     rooms = models.IntegerField()
-    facilities = models.JSONField()
+    facilities = models.JSONField() #elevator, parking, warehouse
+    direction = models.CharField(max_length=255)
+    document_type = models.CharField(max_length=255)
+    status = models.CharField(max_length=255)
     latitude = models.FloatField()
     longitude = models.FloatField()
-    priorities = models.JSONField()
-    #area = models.ForeignKey(Area, related_name='buildings', on_delete=models.CASCADE)
+    priorities = models.JSONField()# TODO, shows if the building is close to: hospital, school, park
 
     def __str__(self):
         return self.title
@@ -42,4 +35,3 @@ class BuildingImage(models.Model):
     
     def __str__(self):
         return f"{self.building.title} - {self.caption if self.caption else 'Image'}"
-    

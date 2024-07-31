@@ -35,12 +35,11 @@ for _, row in df.iterrows():
         price_per_meter=ppm,
         image=row['image'],
         description=row['description'],
-        floor=vhd,#TODO
-        #all_floors=row['all_floors'], ###TODO
+        floor=vhd,
         build_date=row['build_date'],
         rooms=rms,
         facilities = f"[{elevator},{parking},{warehouse}]", # type: ignore
-        jahat = row['jahat'],
+        direction = row['jahat'],
         document_type= row['sanad'],
         status =row['status'],
         latitude=row['latitude'],
