@@ -16,11 +16,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 # Create your views here.
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
+#@api_view(['POST'])
+#@permission_classes([IsAuthenticated])
+@require_POST
 def create_house(request):
     try:
         data = json.loads(request.body)
+        city = data.get('city')
+        category = data.get('category')
         title = data.get('title')
         time = parse_date(data.get('time'))
         meterage = data.get('meterage')
@@ -32,10 +35,12 @@ def create_house(request):
         build_date = data.get('build_date')
         rooms = data.get('rooms')
         facilities = data.get('facilities')
+        direction = data.get('direction')
+        document_type = data.get('document_type')
+        status = data.get('status')
         latitude = data.get('latitude')
         longitude = data.get('longitude')
         priorities = data.get('priorities')
-
 
         # Validate facilities and priorities
         if not isinstance(facilities, list) or len(facilities) != 3 or not all(isinstance(i, int) and i in [0, 1] for i in facilities):
@@ -59,7 +64,12 @@ def create_house(request):
             facilities=facilities,
             latitude=latitude,
             longitude=longitude,
-            priorities=priorities
+            priorities=priorities,
+            document_type = document_type,
+            status = status,
+            direction = direction,
+            city = city,
+            category = category
         )
 
         # Save the building object to the database
@@ -80,7 +90,7 @@ def get_buildings(request):
         building_data = {
             'meterage': building.meterage,
             'price': building.price,
-            'build_date': building.build_date.year,
+            'build_date': building.build_date,
             'rooms': building.rooms,
             'facilities': ['warehouse' if building.facilities[0] else '', 
                            'parking' if building.facilities[1] else '', 
