@@ -591,7 +591,7 @@ for home in homes:
     mtr = utils.convert_persian_text_to_english_digits(home['meterage'])
     prc = utils.convert_persian_text_to_english_digits(home['price'])
     ppm = utils.convert_persian_text_to_english_digits(home['price_per_meter'])
-    vhd = utils.convert_persian_text_to_english_digits(home['floor'])
+    flr = utils.convert_persian_text_to_english_digits(home['floor'])
     avhd= utils.convert_persian_text_to_english_digits(home['all_floors'])
     rms = utils.convert_persian_text_to_english_digits(home['rooms'])
     elevator=utils.convert_persian_text_to_english_digits(home['elevator'])
@@ -610,7 +610,7 @@ for home in homes:
         price_per_meter=ppm,
         image=home['image'],
         description=home['description'],
-        floor=vhd,
+        floor=flr,
         all_floors=avhd,
         build_date=home['build_date'], 
         rooms=rms,
