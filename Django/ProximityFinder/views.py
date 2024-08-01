@@ -48,13 +48,6 @@ def create_house(request):
         longitude = data.get('longitude')
         priorities = data.get('priorities')
 
-        # Validate facilities and priorities
-        if not isinstance(facilities, list) or len(facilities) != 3 or not all(isinstance(i, int) and i in [0, 1] for i in facilities):
-            return JsonResponse({'error': 'Facilities must be a list of three elements containing 0 or 1'}, status=400)
-        
-        if not isinstance(priorities, list) or len(priorities) != 3 or not all(isinstance(i, int) and i in [0, 1] for i in priorities):
-            return JsonResponse({'error': 'Priorities must be a list of three elements containing 0 or 1'}, status=400)
-
         # Create the new building object
         building = Building(
             title=title,
@@ -99,12 +92,24 @@ def get_buildings(request):
             'price': building.price,
             'build_date': building.build_date,
             'rooms': building.rooms,
-            'facilities': ['warehouse' if building.facilities[0] else '', 
-                           'parking' if building.facilities[1] else '', 
-                           'elevator' if building.facilities[2] else ''],
+            'warehouse': 1 if building.facilities[0] else 0,
+            'parking': 1 if building.facilities[1] else 0,
+            'elevator': 1 if building.facilities[2] else 0,
             'latitude': building.latitude,
             'longitude': building.longitude,
-            'priorities': building.priorities
+            'priorities': building.priorities,
+            'title':building.title,
+            'time':building.time,
+            'price_per_meter':building.price_per_meter,
+            'image':building.image,
+            'description':building.description,
+            'floor':building.floor,
+            'all_floors' :building.all_floors,
+            'document_type' :building.document_type,
+            'status':building.status,
+            'direction' :building.direction,
+            'city' :building.city,
+            'category' :building.category
         }
         building_list.append(building_data)
 
@@ -120,15 +125,28 @@ def search_buildings(request):
 
     buildings_data = [
         {
-            'id': building.id,
-            'title': building.title,
-            'description': building.description,
-            'price': building.price,
             'meterage': building.meterage,
+            'price': building.price,
+            'build_date': building.build_date,
             'rooms': building.rooms,
+            'warehouse': 1 if building.facilities[0] else 0,
+            'parking': 1 if building.facilities[1] else 0,
+            'elevator': 1 if building.facilities[2] else 0,
             'latitude': building.latitude,
             'longitude': building.longitude,
-            #'area': building.area.name if building.area else None
+            'priorities': building.priorities,
+            'title':building.title,
+            'time':building.time,
+            'price_per_meter':building.price_per_meter,
+            'image':building.image,
+            'description':building.description,
+            'floor':building.floor,
+            'all_floors' :building.all_floors,
+            'document_type' :building.document_type,
+            'status':building.status,
+            'direction' :building.direction,
+            'city' :building.city,
+            'category' :building.category
         } for building in buildings
     ]
 
