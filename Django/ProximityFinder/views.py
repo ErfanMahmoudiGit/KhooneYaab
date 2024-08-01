@@ -14,6 +14,8 @@ from django.db.models import Q
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+
+from extentions import utils
 # Create your views here.
 
 #@api_view(['POST'])
@@ -26,15 +28,18 @@ def create_house(request):
         category = data.get('category')
         title = data.get('title')
         time = parse_date(data.get('time'))
-        meterage = data.get('meterage')
-        price = data.get('price')
-        price_per_meter = data.get('price_per_meter')
+        meterage = utils.convert_persian_text_to_english_digits(data.get('meterage'))
+        price = utils.convert_persian_text_to_english_digits(data.get('price'))
+        price_per_meter = utils.convert_persian_text_to_english_digits(data.get('price_per_meter'))
         image = data.get('image')
         description = data.get('description')
-        floor = data.get('floor')
+        floor = utils.convert_persian_text_to_english_digits(data.get('floor'))
         build_date = data.get('build_date')
-        rooms = data.get('rooms')
-        facilities = data.get('facilities')
+        rooms = utils.convert_persian_text_to_english_digits(data.get('rooms'))
+        elevator=utils.convert_persian_text_to_english_digits(data.get('elevator'))
+        parking=utils.convert_persian_text_to_english_digits(data.get('parking'))
+        warehouse =utils.convert_persian_text_to_english_digits(data.get('warehouse'))
+        facilities = f"[{elevator},{parking},{warehouse}]", # type: ignore
         direction = data.get('direction')
         document_type = data.get('document_type')
         status = data.get('status')
