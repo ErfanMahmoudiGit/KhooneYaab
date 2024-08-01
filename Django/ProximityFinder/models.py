@@ -13,6 +13,7 @@ class Building(models.Model):
     image = models.URLField()
     description = models.TextField()
     floor = models.IntegerField()
+    all_floors = models.IntegerField()
     build_date = models.IntegerField()
     rooms = models.IntegerField()
     facilities = models.JSONField() #elevator, parking, warehouse

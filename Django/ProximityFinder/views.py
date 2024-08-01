@@ -34,6 +34,7 @@ def create_house(request):
         image = data.get('image')
         description = data.get('description')
         floor = utils.convert_persian_text_to_english_digits(data.get('floor'))
+        all_floors = utils.convert_persian_text_to_english_digits(data.get('all_floors'))
         build_date = data.get('build_date')
         rooms = utils.convert_persian_text_to_english_digits(data.get('rooms'))
         elevator=utils.convert_persian_text_to_english_digits(data.get('elevator'))
@@ -64,6 +65,7 @@ def create_house(request):
             image=image,
             description=description,
             floor=floor,
+            all_floors = all_floors,
             build_date=build_date,
             rooms=rooms,
             facilities=facilities,
