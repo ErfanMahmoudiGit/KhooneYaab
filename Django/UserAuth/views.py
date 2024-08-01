@@ -13,6 +13,8 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 import json
 
+from django.views.decorators.http import require_GET, require_POST
+
 CODE_EXPIRES = 90  # seconds
 
 KAVENEGAR_API_KEY = "79306A46484F77372B4476373756565968416444784D63435445647857436B55364E5755314758553975493D"
@@ -24,7 +26,8 @@ class UserAuthController(View):
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
-
+    
+    @require_POST
     async def get_otp(self, request):
         data = json.loads(request.body)
         phone_number = data.get('phoneNumber')
