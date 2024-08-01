@@ -8,7 +8,6 @@ class User(models.Model):
     name = models.CharField(max_length=100, blank=True)
     email = models.EmailField(blank=True)
     is_verified_phone_number = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=False)
     otp_code = models.CharField(max_length=6, blank=True)
     otp_expires_in = models.DateTimeField(null=True)
    

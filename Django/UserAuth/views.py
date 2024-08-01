@@ -10,10 +10,17 @@ from django.http import JsonResponse
 from django.views import View
 from .models import User
 from django.utils.decorators import method_decorator
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 import json
 
 from django.views.decorators.http import require_GET, require_POST
+
+from pytz import timezone as pytz_timezone
+from datetime import datetime, timedelta, timezone as tm
+
+# Define the Tehran timezone
+tehran_tz = pytz_timezone('Asia/Tehran')
 
 CODE_EXPIRES = 90  # seconds
 
@@ -46,24 +53,35 @@ def check_otp(request):
     data = json.loads(request.body)
     otp_code = data.get('otp')
     phone_number = data.get('phoneNumber')
-
+    
     user = User.objects.filter(phone_number=phone_number).first()
-
     if not user:
         return JsonResponse({"error": "کاربری با این مشخصات یافت نشد"}, status=404)
-
     if user.otp_code != otp_code:
         return JsonResponse({"error": "کد ارسال شده صحیح نمیباشد"}, status=400)
+    
+    # Define the UTC time
+    utc_datetime_str = str(user.otp_expires_in)
 
-    if user.otp_expires_in < datetime.now():
+    # Parse the datetime string into a datetime object with UTC timezone
+    utc_datetime = datetime.fromisoformat(utc_datetime_str)
+
+    # Manually set the new timezone offset (Tehran time +03:30)
+    # Create a new timezone object for +03:30
+    new_offset = tm(timedelta(hours=3, minutes=30))
+
+    # Replace the timezone information without altering the actual time
+    new_datetime = utc_datetime.replace(tzinfo=new_offset)
+    now_in_tehran = timezone.now().astimezone(tehran_tz)
+
+    if new_datetime < now_in_tehran:
         return JsonResponse({"error": "کد اعتبار سنجی منقضی شده است"}, status=400)
 
     user.is_verified_phone_number = True
     user.save()
 
-    welcome_message = "کد تایید شد، به فرانت هوکس خوش آمدید"
-    if not user.is_active:
-        welcome_message = "کد تایید شد، لطفا اطلاعات خود را تکمیل کنید"
+    welcome_message = "کد تایید شد، به چارخونه خوش آمدید"
+    
 
     return JsonResponse({
         "statusCode": 200,
