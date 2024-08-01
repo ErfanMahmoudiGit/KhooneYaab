@@ -1,5 +1,7 @@
 from django.shortcuts import render
 import random
+import os
+from kavenegar import KavenegarAPI, HTTPException, APIException
 
 # Create your views here.
 
@@ -12,6 +14,8 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 
 CODE_EXPIRES = 90  # seconds
+
+KAVENEGAR_API_KEY = "79306A46484F77372B4476373756565968416444784D63435445647857436B55364E5755314758553975493D"
 
 def generate_random_number(length=6):
     return str(random.randint(10**(length-1), 10**length - 1))
@@ -85,8 +89,39 @@ class UserAuthController(View):
         return True
 
     def send_otp(self, phone_number, code):
-        # Here you'd integrate your Kavenegar API call to send the OTP
-        # This is a placeholder.
-        print(f"Sending OTP {code} to {phone_number}")
+        api_key = os.getenv('KAVENEGAR_API_KEY')
+        kavenegar_api = KavenegarAPI(api_key)
 
-# Define the other methods (like complete_profile, update_profile, etc.) below similarly
+        try:
+            response = kavenegar_api.verify_lookup(
+                receptor=phone_number,
+                token=code,
+                template="registerVerify"
+            )
+
+            message_status = str(response)  # This can be adjusted based on the response format you need
+
+            # Logging the message status
+            print("Kavenegar message status:", message_status)
+
+            return JsonResponse({
+                "statusCode": 200,
+                "data": {
+                    "message": f"کد تائید برای شماره موبایل {phone_number} ارسال گردید",
+                    "expiresIn": CODE_EXPIRES,
+                    "phoneNumber": phone_number,
+                }
+            }, status=200)
+
+        except HTTPException as e:
+            print(f"HTTPException: {e}")
+            return JsonResponse({
+                "statusCode": 500,
+                "message": "کد اعتبارسنجی ارسال نشد"
+            }, status=500)
+        except APIException as e:
+            print(f"APIException: {e}")
+            return JsonResponse({
+                "statusCode": 500,
+                "message": "کد اعتبارسنجی ارسال نشد"
+            }, status=500)
