@@ -38,7 +38,8 @@ def get_otp(request):
     if not result:
         return JsonResponse({"error": "ورود شما انجام نشد."}, status=401)
 
-    send_otp(phone_number, code)
+    response = send_otp(phone_number, code)
+    return response
     
 @require_POST
 def check_otp(request):
@@ -93,13 +94,13 @@ def send_otp(phone_number, code):
     kavenegar_api = KavenegarAPI(api_key)
 
     try:
-        """response = kavenegar_api.verify_lookup(
-            receptor=phone_number,
-            token=code,
-            template="registerVerify"
-        )
-        message_status = str(response)  # This can be adjusted based on the response format you need"""
-        message_status = "s"
+        response = kavenegar_api.verify_lookup({
+            "receptor":phone_number,
+            "token":code,
+            "template":"registerVerify"
+        })
+        message_status = str(response)  # This can be adjusted based on the response format you need
+        
         # Logging the message status
         print("Kavenegar message status:", message_status)
 
