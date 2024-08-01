@@ -40,7 +40,6 @@ def create_house(request):
         elevator=utils.convert_persian_text_to_english_digits(data.get('elevator'))
         parking=utils.convert_persian_text_to_english_digits(data.get('parking'))
         warehouse =utils.convert_persian_text_to_english_digits(data.get('warehouse'))
-        facilities = f"[{elevator},{parking},{warehouse}]", # type: ignore
         direction = data.get('direction')
         document_type = data.get('document_type')
         status = data.get('status')
@@ -61,7 +60,7 @@ def create_house(request):
             all_floors = all_floors,
             build_date=build_date,
             rooms=rooms,
-            facilities=facilities,
+            facilities = f"[{elevator},{parking},{warehouse}]",
             latitude=latitude,
             longitude=longitude,
             priorities=priorities,
