@@ -25,7 +25,6 @@ for _, row in df.iterrows():
     warehouse =utils.convert_persian_text_to_english_digits(row['warehouse'])
     
     Building.objects.create(
-        id=row['id'],
         city = row['city'],
         category = row['category'],
         title=row['title'],

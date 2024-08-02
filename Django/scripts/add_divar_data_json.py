@@ -599,7 +599,6 @@ for home in homes:
     warehouse =utils.convert_persian_text_to_english_digits(home['warehouse'])
     
     Building.objects.create(
-        id=home['id'],
         city=home['city'],
         category=home['category'],
         title=home['title'],
