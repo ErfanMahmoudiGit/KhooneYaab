@@ -15,6 +15,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from django.shortcuts import get_object_or_404
+
 from extentions import utils
 # Create your views here.
 
@@ -179,3 +181,30 @@ def find_best_building(request):
         return JsonResponse(response_data, safe=False)
     else:
         return JsonResponse({'error': 'No suitable building found'}, status=404)
+    
+def get_building_by_id(request, id):
+    building = get_object_or_404(Building, id=id)
+    building_data = {
+        'id': building.id,
+        'city': building.city,
+        'category': building.category,
+        'title': building.title,
+        'time': building.time,
+        'meterage': building.meterage,
+        'price': building.price,
+        'price_per_meter': building.price_per_meter,
+        'image': building.image,
+        'description': building.description,
+        'floor': building.floor,
+        'all_floors': building.all_floors,
+        'build_date': building.build_date,
+        'rooms': building.rooms,
+        'facilities': building.facilities,
+        'direction': building.direction,
+        'document_type': building.document_type,
+        'status': building.status,
+        'latitude': building.latitude,
+        'longitude': building.longitude,
+        'priorities': building.priorities,
+    }
+    return JsonResponse(building_data)
