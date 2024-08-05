@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import get_buildings, find_best_building, create_house, search_buildings, get_building_by_id, get_buildings_by_category, get_buildings_by_state
+from .views import get_buildings, recommend_buildings, create_house, search_buildings, get_building_by_id, get_buildings_by_category, get_buildings_by_state
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -9,7 +9,7 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path('api/buildings/', get_buildings, name='get_buildings'),
-    path('api/find_best_building/', find_best_building, name='find_best_building'),
+    path('api/recommend_buildings/', recommend_buildings, name='recommend_buildings'),
     path('api/create_house/', create_house, name='create_house'),
     path('api/search/', search_buildings, name='search_buildings'),
     path('api/building/<int:id>/', get_building_by_id, name='get_building_by_id'),

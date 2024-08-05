@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from .genetic_algorithm import genetic_algorithm
 import json
-import math
+import numpy as np
+from geopy.distance import geodesic
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET, require_POST
 from .models import Building
@@ -188,34 +188,34 @@ def search_buildings(request):
 
     return JsonResponse(buildings_data, safe=False)
 
-@require_GET
-def find_best_building(request):
-    target = {
-        'meterage': int(request.GET.get('meterage', 0)),
-        'price': int(request.GET.get('price', 0)),
-        'build_date': int(request.GET.get('build_date', 0)),
-        'rooms': int(request.GET.get('rooms', 0)),
-        'facilities': json.loads(request.GET.get('facilities', '[]')),
-        'locations': json.loads(request.GET.get('locations', '[]')),
-        'priorities': json.loads(request.GET.get('priorities', '[]')),
-    }
-    
-    best_building = genetic_algorithm(target)
-    
-    if best_building:
-        response_data = {
-            'meterage': best_building.meterage,
-            'price': best_building.price,
-            'build_date': best_building.build_date,
-            'rooms': best_building.rooms,
-            'facilities': best_building.facilities,
-            'latitude': best_building.latitude,
-            'longitude': best_building.longitude,
-            'priorities': best_building.priorities
-        }
-        return JsonResponse(response_data, safe=False)
+
+def recommend_buildings(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            meterage = data.get('meterage')
+            price = data.get('price')
+            build_date = data.get('build_date')
+            rooms = data.get('rooms')
+            facilities = data.get('facilities')
+            location_1 = data.get('location_1')
+            location_2 = data.get('location_2')
+            priorities = data.get('priorities')
+            
+            if not all([meterage, price, build_date, rooms, facilities, location_1, location_2, priorities]):
+                return JsonResponse({'error': 'All fields are required'}, status=400)
+
+            # Get all buildings from the database
+            buildings = list(Building.objects.all().values())
+            
+            # Find the top 3 recommended buildings using a genetic algorithm
+            recommended_buildings = genetic_algorithm(buildings, meterage, price, build_date, rooms, facilities, location_1, location_2, priorities)
+            
+            return JsonResponse(recommended_buildings, safe=False)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
     else:
-        return JsonResponse({'error': 'No suitable building found'}, status=404)
+        return JsonResponse({'error': 'POST request required'}, status=405)
     
 def get_building_by_id(request, id):
     building = get_object_or_404(Building, id=id)
@@ -329,3 +329,80 @@ def get_buildings_by_state(request):
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
     else:
         return JsonResponse({'error': 'POST request required'}, status=405)
+    
+def genetic_algorithm(buildings, meterage, price, build_date, rooms, facilities, location_1, location_2, priorities):
+    def fitness(building):
+        score = 0
+        
+        # Factor: Price
+        score += max(0, (price - abs(price - building['price'])) / price)
+        
+        # Factor: Meterage
+        score += max(0, (meterage - abs(meterage - building['meterage'])) / meterage)
+        
+        # Factor: Build Date
+        score += max(0, (build_date - abs(build_date - building['build_date'])) / build_date)
+        
+        # Factor: Rooms
+        score += max(0, (rooms - abs(rooms - building['rooms'])) / rooms)
+        
+        # Factor: Facilities
+        score += sum(1 for u, b in zip(facilities, building['facilities']) if u == b)
+        
+        # Factor: Priorities
+        score += sum(1 for u, b in zip(priorities, building['priorities']) if u == b)
+        
+        # Factor: Locations
+        loc1_dist = geodesic((building['latitude'], building['longitude']), location_1).km
+        loc2_dist = geodesic((building['latitude'], building['longitude']), location_2).km
+        score += max(0, (1 / (1 + loc1_dist)))
+        score += max(0, (1 / (1 + loc2_dist)))
+        
+        return score
+
+    def crossover(parent1, parent2):
+        child = parent1.copy()
+        for key in parent1.keys():
+            if np.random.rand() > 0.5:
+                child[key] = parent2[key]
+        return child
+
+    def mutate(building):
+        if np.random.rand() < 0.1:
+            key = np.random.choice(list(building.keys()))
+            if isinstance(building[key], int) or isinstance(building[key], float):
+                building[key] += np.random.uniform(-0.1, 0.1) * building[key]
+        return building
+
+    # Genetic algorithm parameters
+    population_size = 100
+    generations = 50
+    mutation_rate = 0.1
+
+    # Initialize population
+    population = np.random.choice(buildings, size=population_size, replace=True).tolist()
+
+    for generation in range(generations):
+        # Calculate fitness for each building
+        fitness_scores = np.array([fitness(building) for building in population])
+        
+        # Select the best buildings
+        selected_indices = np.argsort(fitness_scores)[-population_size//2:]
+        selected_buildings = [population[i] for i in selected_indices]
+
+        # Create the next generation
+        next_generation = []
+        while len(next_generation) < population_size:
+            parent1, parent2 = np.random.choice(selected_buildings, size=2, replace=False)
+            child = crossover(parent1, parent2)
+            if np.random.rand() < mutation_rate:
+                child = mutate(child)
+            next_generation.append(child)
+        
+        population = next_generation
+    
+    # Return the top 3 buildings
+    fitness_scores = np.array([fitness(building) for building in population])
+    top_indices = np.argsort(fitness_scores)[-3:]
+    top_buildings = [population[i] for i in top_indices]
+    return top_buildings
