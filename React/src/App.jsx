@@ -2,20 +2,27 @@ import { Route, Routes } from 'react-router-dom'
 import './App.css'
 import "formik-stepper/dist/style.css";
 import CreateHouse from './CreateHouse'
+import Home from './pages/home/Home';
+import Login from './pages/login/Login';
+import HomeDetails from './pages/home/HomeDetails';
+import BuyApartment from './pages/category/BuyApartment';
 
 function App() {
 
   return (
-    <div>
+    <>
       
       <Routes>
-      {/* <Route path='/' element={<NewFoem />}  /> */}
-      <Route path='/create_house' element={<CreateHouse />}  />
+        <Route path='/' element={<Home />}  />
+        <Route path='/create_house' element={<CreateHouse />}  />
+        <Route path='/login' element={<Login />}  />
+        <Route path='/house/:id' element={<HomeDetails />}  />
+        <Route path='/category="فروش آپارتمان"' element={<BuyApartment />}  />
+        {/* <Route path='/category="فروش خانه و ویلا"' element={<BuyApartment />}  />
+        <Route path='/category="اجاره آپارتمان"' element={<BuyApartment />}  />
+        <Route path='/category="اجاره خانه و ویلا"' element={<BuyApartment />}  /> */}
       </Routes>
-
-
-    </div>
-    
+    </>
   )
 }
 

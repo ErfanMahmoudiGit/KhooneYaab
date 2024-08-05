@@ -7,7 +7,7 @@ import ContactInformation from './ContactInformation';
 import OrgInformation from './OrgInformation';
 import MapInformation from './MapInformation';
 // import { createHouse } from "./services/createHouseService";
-import { API_createHouse } from "./services/createHouseService";
+import { API_createHouse } from "./services/apiServices";
 
 const steps = [ContactInformation, OrgInformation, MapInformation];
 
@@ -30,26 +30,34 @@ export default function CreateHouse() {
         console.log(values);
         const { setSubmitting } = formikBag;
         // ProximityFinder/api/create_house/
+
+        // فقط اخرش ریکوعست بزنه
         let data = {
+            city: "زنجان",
             title : values.title,
-            time : "2024-01-11",
+            category : "فروش آپارتمان",  // select box
+            time : "2024-01-11",   // تاریخ امروز ولی به همین فرمت
             meterage : values.meterage,
             price : values.price ,
             price_per_meter : values.price_per_meter ,
             image : "https://unsplash.com/s/photos/image/3" , 
             description : values.description ,
-            phone : "09127564545",
             floor : values.floors,
             all_floors : values.all_floors,
             build_date : values.build_date,
             rooms : values.rooms,
-            facilities : [0, 1, 1],
-            latitude : "11.9837",
-            // latitude : values.locations[0].latitude,
-            longitude : "24.983",
-            // longitude : values.locations[0].longitude,
-            priorities : [0, 0 , 0],
-        }
+            latitude : 11.9837,
+            longitude : 24.983,
+            elevator: 0,  //  درست کردن امکانات
+            parking: 1,  // 0و1 برعکسن توی امکانات
+            warehouse: 1, 
+            direction: '',  // ضروری نکردن این 4 تا
+            document_type: 'تک برگ', 
+            status: '',
+            priorities : "[1,1,1]"  ,
+            // latitude : values.locations[0].latitude,    // ضروری
+            // longitude : values.locations[0].longitude,   // ضروری
+        } 
         console.log("data",data)
         let resp = API_createHouse(data)
             resp.then((res) => {

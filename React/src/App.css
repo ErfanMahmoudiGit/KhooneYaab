@@ -1,12 +1,112 @@
 @import url("https://unpkg.com/leaflet@1.9.4/dist/leaflet.css");
 @import 'bootstrap/dist/css/bootstrap.min.css';
 
-
 #root {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center !important; 
+  /* height: 100vh; */
+  /* overflow: auto; */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: "IRANSans" !important;
+  /*background-image: url("../../../public/asset/img/background.png");*/
+  background-color: #eaeaea;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  margin: 0 !important;
+  padding: 0 !important;
+  direction: rtl !important;
+}
+.nav-logo-2 {
+  max-width: 100px;
+  height: 68px;
+}
+
+.main-layout {
+  display: flex;
+  flex-direction: column;
+  /* min-height: 100vh; */
+}
+.main-head{
+
+  position: sticky;
+    top: 0;
+    /* left: 0; */
+    width: 100%;
+    z-index: 1001; 
+  
+}
+.btn-search{
+  /* border-radius: 1px; */
+  padding: 8px 25px !important;
+  background-color: var(--text-400);
+  border: var(--text-400);
+}
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  display: none;
+  /* height: 20px;
+  width: 20px;
+  border-radius: 50%; */
+  /* background: url(https://pro.fontawesome.com/releases/v5.10.0/svgs/solid/times-circle.svg) no-repeat 50% 50%; */
+}
+.fixed-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 20%; /* Adjust this width according to your design */
+  background-color: #f8f9fa; /* Bootstrap's light background color */
+  padding: 1rem;
+  overflow-y: auto;
+  /* padding-top: 8%; */
+}
+.sidebar-cont{
+  margin-top: 30%;
+}
+.fixed-sidebar li{
+  text-decoration: none;
+  list-style: none;
+  color: var(--slate-600);
+}
+.main-content {
+  margin-right: 20%; /* Same as the sidebar width */
+  padding: 1rem;
+}
+
+.head-nav {
+  align-items: center;
+  background: #3a7cec;
+  /* border-radius: 0 0 25px 25px; */
+  /* box-shadow: 0 5px 10px #ccc; */
+  display: flex;
+  font-size: 0.8rem;
+  height: 75px;
+  justify-content: right;
+  font-weight: 200;
+}
+
+.head-nav-responsive {
+  align-items: center;
+  background: #3a7cec;
+  /* border-radius: 0 0 25px 25px; */
+  /* box-shadow: 0 5px 10px #ccc; */
+  /*display: flex;*/
+  font-size: 0.8rem;
+  /* height: 80px; */
+  /*justify-content: right;*/
+  padding: 4px;
+  font-weight: 200;
+}
+
+.head-nav-imgs {
+  display: flex;
+  margin-right: 1.75rem;
+  height: 75px;
+  justify-content: right;
+  align-items: center;
 }
 
 .App {
