@@ -208,3 +208,43 @@ def get_building_by_id(request, id):
         'priorities': building.priorities,
     }
     return JsonResponse(building_data)
+
+def get_buildings_by_category(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            category = data.get('category')
+            if not category:
+                return JsonResponse({'error': 'Category is required'}, status=400)
+            
+            buildings = Building.objects.filter(category=category)
+            buildings_data = []
+            for building in buildings:
+                buildings_data.append({
+                    'id': building.id,
+                    'city': building.city,
+                    'category': building.category,
+                    'title': building.title,
+                    'time': building.time,
+                    'meterage': building.meterage,
+                    'price': building.price,
+                    'price_per_meter': building.price_per_meter,
+                    'image': building.image,
+                    'description': building.description,
+                    'floor': building.floor,
+                    'all_floors': building.all_floors,
+                    'build_date': building.build_date,
+                    'rooms': building.rooms,
+                    'facilities': building.facilities,
+                    'direction': building.direction,
+                    'document_type': building.document_type,
+                    'status': building.status,
+                    'latitude': building.latitude,
+                    'longitude': building.longitude,
+                    'priorities': building.priorities,
+                })
+            return JsonResponse(buildings_data, safe=False)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+    else:
+        return JsonResponse({'error': 'POST request required'}, status=405)
