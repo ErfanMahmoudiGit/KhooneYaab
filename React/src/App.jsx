@@ -14,7 +14,7 @@ function App() {
       
       <Routes>
         <Route path='/' element={<Home />}  />
-        <Route path='/create_house' element={<CreateHouse />}  />
+        <Route path='/register_announcement' element={<CreateHouse />}  />
         <Route path='/login' element={<Login />}  />
         <Route path='/house/:id' element={<HomeDetails />}  />
         <Route path='/category="فروش آپارتمان"' element={<BuyApartment />}  />

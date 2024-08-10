@@ -74,6 +74,20 @@ input[type="search"]::-webkit-search-cancel-button {
   border-radius: 30px;
   padding: 10px 15px !important;
 } */
+.login-input{
+  border-radius: 15px;
+  padding: 8px 20px;
+  border-color: #ced4da !important;
+  box-shadow: unset !important;
+}
+.upload-license-image .ant-upload{
+  width: 100%;
+}
+.upload-license-image .btn-primary{
+  width: 100%;
+  border-radius: 9px !important;
+  font-size: 14px;
+}
 .sidebar-cont{
   margin-top: 30%;
 }

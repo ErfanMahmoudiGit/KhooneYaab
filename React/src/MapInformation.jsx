@@ -14,7 +14,7 @@ export default function MapInformation(){
 	const { setFieldValue } = useFormikContext();
 
 	// console.log('markers:',markers);
-	const[mapCenter,setMapCenter] = useState([52.1077703,4.8428184])
+	const[mapCenter,setMapCenter] = useState([32.85971234321241,53.97240877523566])
     const {isLoading:isLoadingPosition , position:geoLocationPosition , getPosition } =useGeoLocation()
    
     const[lat,lng] = [11.9837 , 24.983]

@@ -24,6 +24,7 @@ import {
 } from "react-bootstrap";
 
 import { Link, NavLink } from "react-router-dom";
+import StateDropdown from '../../ui/StateDropdown';
 function NavScrollExample() {
     const[searchValue,setSearchValue] = useState("")
     let navigate = useNavigate()
@@ -88,6 +89,7 @@ function NavScrollExample() {
           />
         </Form.Group>
           </Form>
+          <StateDropdown />
           <Nav
             className="me-auto my-2 my-lg-0"
             style={{display: "flex" , justifyContent:"center" ,alignItems:"center" ,   maxHeight: '100px' }}
@@ -122,11 +124,11 @@ function NavScrollExample() {
                   </Button>
                 </NavLink>
           <NavLink
-                  to="/"
-                  onClick={(e) => {
-                    e.preventDefault();
+                  to="/register_announcement"
+                  // onClick={(e) => {
+                  //   e.preventDefault();
                   
-                  }}
+                  // }}
                 >
                   <Button
                   className='bg-body-tertiary'
