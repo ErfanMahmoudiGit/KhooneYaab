@@ -126,6 +126,7 @@ def write_homes_to_file(homes, filename):
 if __name__ == "__main__":
     
     post_ids = [
+                """
                 "gZ8y318a",
                 "gZwG_pG-",
                 "gZ8qfIBH",
@@ -388,7 +389,8 @@ if __name__ == "__main__":
                 "gZ5OOHpl",
                 "gZ8GOhZL",
                 "gZeWWsa3",
-                "gZi-j0i6",  
+                "gZi-j0i6",
+                """
     ]
     
     counter = 0
