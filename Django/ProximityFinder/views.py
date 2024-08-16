@@ -216,7 +216,9 @@ def recommend_buildings(request):
             facilities = f"[{elevator},{parking},{warehouse}]",
             priorities = f"[{hospital},{park},{school}]",
             
-            if not all([meterage, price, build_date, rooms, facilities, location_1, location_2, priorities]):
+            city = data.get('city')
+            
+            if not all([meterage, price, build_date, rooms, facilities, location_1, location_2, priorities, city]):
                 return JsonResponse({'error': 'All fields are required'}, status=400)
 
             # Get all buildings from the database
