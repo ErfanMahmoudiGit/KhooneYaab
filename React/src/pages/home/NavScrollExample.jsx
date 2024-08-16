@@ -1,14 +1,11 @@
 import { useState } from 'react';
-// import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
-// import Nav from 'react-bootstrap/Nav';
-// import Navbar from 'react-bootstrap/Navbar';
-// import NavDropdown from 'react-bootstrap/NavDropdown';
 import { API_SEARCH } from "../../services/apiServices";
 import { Tooltip } from "antd";
 import { AiOutlineSearch } from 'react-icons/ai';
 import { FaRegUser } from "react-icons/fa6";
+import { FiUserCheck } from "react-icons/fi";
 
 import { useSelector, useDispatch } from "react-redux";
 import { authState, handle_variables } from '../login/Redux/authSlice'; // Update with the correct path
@@ -20,37 +17,34 @@ import { Link, NavLink } from "react-router-dom";
 import StateDropdown from '../../ui/StateDropdown';
 function NavScrollExample() {
   const[searchValue,setSearchValue] = useState("")
-  const dispatch = useDispatch();
   let navigate = useNavigate()
-  const { loginModalStep1 } = useSelector(authState);
-  console.log(loginModalStep1);
+  const { loginModalStep1  , searchResults , is_verified_user,name ,seachedValue} = useSelector(authState);
+  console.log("name",name);
+  console.log("is_verified_user: ",is_verified_user);
+  const dispatch = useDispatch();
+
 
   function handleSearch(){
-    // e.preventDefault()
-      console.log(searchValue)
-      const params = new URLSearchParams(window.location.search);
-      params.set('q', searchValue); // Set the query parameter
-      const newUrl = `${window.location.pathname}?${params.toString()}`;
-      navigate(newUrl); 
-              // Or use window.history.pushState({}, '', newUrl); if not using React Router
+    dispatch(handle_variables({ seachedValue : searchValue }))
 
-      let resp = API_SEARCH(searchValue)
-          resp.then((res) => {
-              if (res.status === 200) {
-                  console.log("success");        
-              } else {
-                  console.log("false");        
+    let resp = API_SEARCH(searchValue)
+      resp.then((res) => {
+          if (res.status === 200) {
+            console.log("search",res.data);
+            dispatch(handle_variables({ searchResults: res.data }))
+            navigate('/search')
+  
+          } else {
+              console.log("false");        
 
-              }
-              })
+          }
+          })
               
   }
     
   return (
     <>
-    
-
-   
+    <div>
     <Navbar expand="lg" className="bg-body-tertiary m-0 main-head">
       <Container fluid className='main-head' >
         {/* <Navbar.Brand href="#">چارخونه</Navbar.Brand> */}
@@ -90,6 +84,31 @@ function NavScrollExample() {
             style={{display: "flex" , justifyContent:"center" ,alignItems:"center" ,   maxHeight: '100px' }}
             navbarScroll
           >
+             <NavLink
+                  to="/recommender"
+                >
+                  <Button
+                  className='bg-body-tertiary'
+                    style={{
+                      color: "black",
+                      fontSize: "15.4px",
+                      padding: 15,
+                      fontWeight: 500,
+                      border: "none",
+                    }}
+                  >
+                   
+                        <Tooltip
+                          placement="right"
+                          color={"#cbd5e1"}
+                          title=" با وارد کردن ملک درخواستی، پیشنهادات ارخونه را دریافت کنید"
+                        >
+                            پیشنهاد دهنده ملک 
+                        </Tooltip>
+                      
+                  </Button>
+                </NavLink>
+
           <NavLink
                   to="/"
                   onClick={(e) => {
@@ -138,33 +157,38 @@ function NavScrollExample() {
                     <span>ثبت آگهی</span> 
                   </Button>
                 </NavLink>
+                {is_verified_user == true ? (
+                  <span className='d-flex align-items-center gap-2'>{name}<FiUserCheck /></span>
+                ) : (
+                  <NavLink
+                  onClick={ ()=>{
+      
+                    dispatch(handle_variables({ loginModalStep1: true }))
+                  }
+      
+                  }  
+                >
+                <Button
+                  className='bg-body-tertiary'
+                    style={{
+                      color: "black",
+                      fontSize: "15.4px",
+                      fontWeight: 500,
+                      border: "none",
+                      display: "flex",
+                      justifyContent : "center",
+                      alignContent:"center",
+                      alignItems:"center",
+                      gap:"4px"
+                    }}
+                >
+                  <span>ورود</span>
+                  <FaRegUser />
+                </Button>
+              </NavLink>
+                )}
 
-          <NavLink
-            onClick={ ()=>{
-
-              dispatch(handle_variables({ loginModalStep1: true }))
-            }
-
-            }  
-          >
-          <Button
-            className='bg-body-tertiary'
-              style={{
-                color: "black",
-                fontSize: "15.4px",
-                fontWeight: 500,
-                border: "none",
-                display: "flex",
-                justifyContent : "center",
-                alignContent:"center",
-                alignItems:"center",
-                gap:"4px"
-              }}
-          >
-            <span>ورود</span>
-            <FaRegUser />
-          </Button>
-        </NavLink>
+        
      </Nav>
           
           
@@ -172,6 +196,7 @@ function NavScrollExample() {
         </Navbar.Collapse>
       </Container>
     </Navbar>
+    </div>
     
 
    <LoginStep1 />

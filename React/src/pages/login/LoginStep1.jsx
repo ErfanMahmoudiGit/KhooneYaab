@@ -18,11 +18,11 @@ let schema = yup.object().shape({
   
   });
 export default function LoginStep1(props){
-    const { loginModalStep1 ,isSendCode , phone , captcha_string , captcha_image , user_string} = useSelector(authState);
+    const { loginModalStep1 ,isSendCode , phoneNumber , captcha_string , captcha_image , user_string} = useSelector(authState);
     const dispatch = useDispatch();
     const [isLoadinging, setIsLoadinging] = useState(false);
 
-    console.log(phone);
+    console.log(phoneNumber);
     console.log("captcha_image: ",captcha_image);
     console.log("captcha_string: ",captcha_string);
     console.log("user_string: ",user_string);
@@ -41,50 +41,45 @@ export default function LoginStep1(props){
         >
             <Modal.Body >
                 <Formik
-                    initialValues={{ phone: phone }}
+                    initialValues={{ phone: phoneNumber }}
                     validationSchema={ schema }
                     onSubmit={(values) => {   
                         setIsLoadinging(true);
-                        // toast.success(" cv ", {
-                        //     position: toast.POSITION.TOP_RIGHT,
-                        // });
                         const data = {
                             phoneNumber: values.phone,
                             user_string : user_string,
                             captcha_string : captcha_string,
-                            captcha_image : captcha_image
                         };
                         console.log("data login step 1: " ,data);
-                        dispatch(handle_variables({
-                                        isSendCode: true,
-                                        loginModalStep1 : false,
-                                        loginModalStep2 : true,
-                                        phoneNumber: data.phoneNumber,
-                                    }));
-                                    setIsLoadinging(false);
+                        
+                        setIsLoadinging(false);
 
-                        // let resp = API_GETOTP(data)
-                        // resp.then((res) => {
-                        //     if (res.data.status === 200) {
-                        //         dispatch(handle_variables({
-                        //             isSendCode: true,
-                        //             loginModalStep2 : true,
-                        //             phone: data.phone,
-                        //         }));
-                        //         setIsLoadinging(false);
-                        //     } else {
-                        //         toast.error(res.data.message, {
-                        //             position: toast.POSITION.TOP_RIGHT,
-                        //         });
-                        //         setIsLoadinging(false);
-                        //     }
-                        // })
-                        // .catch((err) => {
-                        //     console.log(err);
-                        //     dispatch(loadCaptchaImage());
-                        //     toast.error(err.response.data.message);
-                        //     setIsLoadinging(false);
-                        // });
+                        let resp = API_GETOTP(data)
+                        console.log(resp);
+                        
+                        resp.then((res) => {
+                            console.log(res);
+                            
+                            if (res.status == 200) {
+                                dispatch(handle_variables({
+                                    isSendCode: true,
+                                    loginModalStep2 : true,
+                                    phoneNumber: data.phoneNumber,
+                                }));
+                                setIsLoadinging(false);
+                            } else {
+                                toast.error(res.error);
+                                console.log(res.error);
+                                
+                                setIsLoadinging(false);
+                            }
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                            // dispatch(loadCaptchaImage());
+                            // toast.error(err.response.data.message);
+                            setIsLoadinging(false);
+                        });
 
                     }}
                 >

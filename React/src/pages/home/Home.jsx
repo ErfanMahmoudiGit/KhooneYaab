@@ -1,5 +1,5 @@
 import { Card } from "antd";
-import { API_GETHOUSE  } from "../../services/apiServices";
+import { API_GETHOUSE , API_RECOMMENDER } from "../../services/apiServices";
 import NavScrollExample from "./NavScrollExample";
 import { useEffect, useState } from "react";
 import { Col, Row, Container } from "react-bootstrap";
@@ -27,7 +27,22 @@ export default function Home() {
 
     return (
         <>
-            <NavScrollExample />
+        <HomeMap houses={houses} />
+            <Container fluid>
+                <h4>آگهی های اخیر</h4>
+                <Row>
+                    {houses.slice(-15).map((house, index) => (
+                        <Col key={index} md={4} className="mb-4">
+                            <Card>
+                                <div>{house.title}</div>
+                                <img src={house.image} style={{ width: "200px", height: "200px" }} alt={house.title} />
+                                <button onClick={() => navigate(`/house/${house.id}`)}>مشاهده ملک</button>
+                            </Card>
+                        </Col>
+                    ))}
+                </Row>
+            </Container>
+            {/* <NavScrollExample />
             <div className="fixed-sidebar">
                 <div className="sidebar-cont">
 
@@ -38,11 +53,11 @@ export default function Home() {
                     <li><NavLink to={`/category="فروش خانه و ویلا"`}>فروش خانه و ویلا</NavLink></li>
                     <li><NavLink to={`/category="اجاره آپارتمان"`}>اجاره آپارتمان</NavLink></li>
                     <li><NavLink to={`/category="اجاره خانه و ویلا"`}>اجاره خانه و ویلا</NavLink></li>
-                    {/* <li><NavLink to={"/garden"}>فروش باغ</NavLink></li> */}
+                    <li><NavLink to={"/garden"}>فروش باغ</NavLink></li>
 
-                    {/* <CustomNavlink to={"/a"} children={"فروش"}/>
+                    <CustomNavlink to={"/a"} children={"فروش"}/>
                     <CustomNavlink to={"/"} children={"hhh"}/> 
-                     */}
+                    
                 </ul>
                 </div>
             </div>
@@ -51,7 +66,7 @@ export default function Home() {
                 <Container fluid>
                     <h4>آگهی های اخیر</h4>
                     <Row>
-                        {houses.map((house, index) => (
+                        {houses.slice(-15).map((house, index) => (
                             <Col key={index} md={4} className="mb-4">
                                 <Card>
                                     <div>{house.title}</div>
@@ -62,7 +77,7 @@ export default function Home() {
                         ))}
                     </Row>
                 </Container>
-            </div>
+            </div> */}
         </>
     )
 }

@@ -4,6 +4,7 @@ import { API_GET_CAPTCHA_CODE } from "../../../services/apiServices";
 const initialState = {
   loginModalStep1: false,
   loginModalStep2: false,
+  loginModalStep3: false,
   isSendCode : false , 
   phoneNumber: '',
   isModalOpen: false,
@@ -13,7 +14,15 @@ const initialState = {
   captcha_image: "",
   captcha_string : "",
   user_string:"",
-  
+  name : "",
+  email : "",
+  is_verified_user : false,
+  welcome_message : "",
+
+  searchResults : [],
+  seachedValue:"",
+  cityResults :[],
+  selectedCity : "",
   
 
   signInModalopen: false,

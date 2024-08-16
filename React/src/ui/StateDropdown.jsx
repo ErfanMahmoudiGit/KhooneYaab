@@ -1,3 +1,9 @@
+import {DefaultDropDown} from './DefaultDropDown'
+import {API_GET_BY_STATE } from '../services/apiServices'
+import { useNavigate } from 'react-router-dom';
+import { authState, handle_variables } from "../pages/login/Redux/authSlice"; // Update with the correct path
+import { useSelector, useDispatch } from "react-redux";
+
 
 const STATE_DATA = [
     { "name": "آذربايجان شرقی", "center": "تبریز", "latitude": "38.50", "longitude": "46.180", "id": 1 },
@@ -32,25 +38,80 @@ const STATE_DATA = [
     { "name": "همدان", "center": "همدان", "latitude": "34.470", "longitude": "48.300", "id": 30 },
     { "name": "يزد", "center": "يزد", "latitude": "31.530", "longitude": "54.210", "id": 31 },
 ];
+const STATE_OPTIONS = [
+    { "label": "آذربايجان شرقی","value": 1 },
+    { "label": "آذربايجان غربی","value": 2 },
+    { "label": "اردبيل","value": 3 },
+    { "label": "اصفهان","value": 4 },
+    { "label": "ايلام","value": 5 },
+    { "label": "بوشهر","value": 6 },
+    { "label": "تهران","value": 7 },
+    { "label": "چهارمحال بختیاری", "value": 8 },
+    { "label": "خراسان جنوبی", "value": 9 },
+    { "label": "خراسان رضوی","value": 10 },
+    { "label": "خراسان شمالی", "value": 11 },
+    { "label": "خوزستان","value": 12 },
+    { "label": "زنجان", "value": 13 },
+    { "label": "سمنان","value": 14 },
+    { "label": "سيستان و بلوچستان", "value": 15 },
+    { "label": "فارس", "value": 16 },
+    { "label": "قزوين", "value": 17 },
+    { "label": "قم", "value": 18 },
+    { "label": "البرز", "value": 19 },
+    { "label": "كردستان", "value": 20 },
+    { "label": "کرمان", "value": 21 },
+    { "label": "كرمانشاه", "value": 22 },
+    { "label": "كهكيلويه و بويراحمد","value": 23 },
+    { "label": "گلستان","value": 24 },
+    { "label": "گيلان"," value": 25 },
+    { "label": "لرستان","value": 26 },
+    { "label": "مازندران", "value": 27 },
+    { "label": "مرکزی","value": 28 },
+    { "label": "هرمزگان","value": 29 },
+    { "label": "همدان", "value": 30 },
+    { "label": "يزد", "value": 31 },
+];
 
 function StateDropdown() {
+    let navigate = useNavigate()
+    const { cityResults , selectedCity } = useSelector(authState);
+    const dispatch = useDispatch();
+    console.log("selectedCity " , selectedCity);
+
+
     const handleSelectionChange = (event) => {
-        const selectedId = event.target.value;
-        console.log("Selected State ID:", selectedId);
-    };
+        let selectedCitylabel = event.label;
+        let selectedCity = event.value;
+        dispatch(handle_variables({ selectedCity: selectedCitylabel }))
+
+        let data = {state : selectedCity}
+        let resp = API_GET_BY_STATE(data)
+        resp.then((res) => {
+            console.log(res);
+            if (res.status === 200) {
+                console.log("res",res.data);   
+                
+                dispatch(handle_variables({ cityResults: res.data }))
+
+                navigate(`${selectedCitylabel}`)  
+                
+                  
+            } else {
+                console.log("not sent");        
+
+            }
+        })
+        
+    
+
+    }
 
     return (
-        <div>
-            {/* <label htmlFor="state-select">Select a State: </label> */}
-            <select id="state-select" onChange={handleSelectionChange}>
-                <option value="">استان را انتخاب کنید</option>
-                {STATE_DATA.map((state) => (
-                    <option key={state.id} value={state.id}>
-                        {state.name}
-                    </option>
-                ))}
-            </select>
-        </div>
+        <DefaultDropDown
+            label={"استان را انتخاب کنید"}
+            options={STATE_OPTIONS}
+            onChange={(event) => handleSelectionChange(event)}
+        />
     );
 }
 

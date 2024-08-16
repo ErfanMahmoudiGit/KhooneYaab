@@ -90,7 +90,7 @@ export const API_GETOTP = async (data) => {
 };
 export const API_CHECKOTP = async (data) => {
   try {
-    const response = await API_BASE_USER.post('/check-otp',data);
+    const response = await API_BASE_USER.post('/check-otp/',data);
     return response;
   } catch (error) {
     try{
@@ -101,7 +101,18 @@ export const API_CHECKOTP = async (data) => {
   }
 };
 
-
+export const API_LOGIN_USER = async (data) => {
+  try {
+    const response = await API_BASE_USER.post('/update-user/',data);
+    return response;
+  } catch (error) {
+    try{
+      return({...error?.response?.data,status: error.response.status}) ;  // check
+    }catch(err){
+      return({error:{message:'--سرویس در دسترس نیست'}}) ;
+    }  
+  }
+};
 
 export const API_GET_CAPTCHA_CODE = async () => {
   try {
@@ -117,5 +128,30 @@ export const API_GET_CAPTCHA_CODE = async () => {
   }
 };
 
+export const API_GET_BY_STATE= async (data) => {
+  try {
+    const response = await API_BASE.post(`building/state/`,data);
+    return response;
+  } catch (error) {
+    try{
+      return({...error?.response?.data,status: error.response.status}) ;  // check
+    }catch(err){
+      return({error:{message:'--سرویس در دسترس نیست'}}) ;
+    }  
+  }
+};
 // path('api/building/recommend_buildings/', recommend_buildings, name='recommend_buildings'),
 // path('api/building/state/', get_buildings_by_state, name='get_buildings_by_state'),
+
+export const API_RECOMMENDER= async (data) => {
+  try {
+    const response = await API_BASE.post(`building/recommend_buildings/`,data);
+    return response;
+  } catch (error) {
+    try{
+      return({...error?.response?.data,status: error.response.status}) ;  // check
+    }catch(err){
+      return({error:{message:'--سرویس در دسترس نیست'}}) ;
+    }  
+  }
+};

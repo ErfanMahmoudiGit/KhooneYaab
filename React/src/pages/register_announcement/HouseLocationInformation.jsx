@@ -2,9 +2,7 @@ import * as Yup from 'yup';
 import { useEffect, useState } from "react"
 import { MapContainer ,TileLayer, Marker,Popup, useMapEvent, useMap} from 'react-leaflet'
 import { useFormikContext , ErrorMessage } from 'formik';
-import StateDropdown from '../../ui/StateDropdown';
 import { Row, Col, Form } from 'react-bootstrap';
-
 import { DefaultDropDown } from '../../ui/DefaultDropDown';
 
 export default function HouseLocationInformation(){
@@ -200,8 +198,7 @@ HouseLocationInformation.initialValues = {
 HouseLocationInformation.validationSchema = Yup.object().shape({
     city: Yup.string().required('استان را انتخاب کنید'),
     latitude :  Yup.string().required('موقعیت جغرافیایی را انتخاب کنید'),
-    longitude :  Yup.string(),
-    // .required('استان را انتخاب کنید'),
+    longitude :  Yup.string().required('استان را انتخاب کنید'),
     hospital: Yup.string(),
     school :  Yup.string(),
     park :  Yup.string(),

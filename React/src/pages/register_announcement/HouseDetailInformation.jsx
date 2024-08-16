@@ -173,12 +173,9 @@ HouseDetailInformation.initialValues = {
 };
 
 HouseDetailInformation.validationSchema = Yup.object().shape({
-    rooms: Yup.string(),
-    floor: Yup.string(),
-    all_floors: Yup.string(),
-    // rooms: Yup.string().required('انتخاب کنید'),
-    // floor: Yup.string().required('انتخاب کنید'),
-    // all_floors: Yup.string().required('انتخاب کنید'),
+    rooms: Yup.string().required('انتخاب کنید'),
+    floor: Yup.string().required('انتخاب کنید'),
+    all_floors: Yup.string().required('انتخاب کنید'),
     elevator: Yup.string(),
     parking: Yup.string(),
     warehouse: Yup.string(),

@@ -174,22 +174,13 @@ HouseInformation.initialValues = {
 };
 
 HouseInformation.validationSchema = Yup.object().shape({
-    title: Yup.string(),
-    category: Yup.string(),
-    meterage: Yup.string()
+    title: Yup.string().required('عنوان نمیتواند خالی باشد'),
+    category: Yup.string().required('عنوان دسته بندی نمیتواند خالی باشد'),
+    meterage: Yup.string().required('متراژ نمیتواند خالی باشد')
         .matches(/^[0-9]/, "لطفا متراژ را به عدد وارد کنید"),
-    price: Yup.string()
+    price: Yup.string().required('قیمت نمیتواند خالی باشد')
         .matches(/^[0-9]/, "لطفا قیمت را به عدد وارد کنید"),
-    image: Yup.string(),
-    description: Yup.string(),
-    build_date: Yup.string(),
-    // title: Yup.string().required('عنوان نمیتواند خالی باشد'),
-    // category: Yup.string().required('عنوان دسته بندی نمیتواند خالی باشد'),
-    // meterage: Yup.string().required('متراژ نمیتواند خالی باشد')
-    //     .matches(/^[0-9]/, "لطفا متراژ را به عدد وارد کنید"),
-    // price: Yup.string().required('قیمت نمیتواند خالی باشد')
-    //     .matches(/^[0-9]/, "لطفا قیمت را به عدد وارد کنید"),
-    // image: Yup.string().required('تصویر نمیتواند خالی باشد'),
-    // description: Yup.string().required('توضیحات نمیتواند خالی باشد'),
-    // build_date: Yup.string().required('سال ساخت نمیتواند خالی باشد'),
+    image: Yup.string().required('تصویر نمیتواند خالی باشد'),
+    description: Yup.string().required('توضیحات نمیتواند خالی باشد'),
+    build_date: Yup.string().required('سال ساخت نمیتواند خالی باشد'),
 });
