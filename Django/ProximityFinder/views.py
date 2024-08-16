@@ -123,6 +123,7 @@ def get_buildings(request):
 
     for building in buildings:
         building_data = {
+            'id': building.id,
             'meterage': building.meterage,
             'price': building.price,
             'build_date': building.build_date,
@@ -162,6 +163,7 @@ def search_buildings(request):
 
     buildings_data = [
         {
+            'id': building.id,
             'meterage': building.meterage,
             'price': building.price,
             'build_date': building.build_date,
