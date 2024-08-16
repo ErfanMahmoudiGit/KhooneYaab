@@ -1,10 +1,7 @@
 from django.shortcuts import render
 import random
 import os
-from kavenegar import KavenegarAPI, HTTPException, APIException
-
-# Create your views here.
-
+from django.views.decorators.http import require_GET, require_POST
 from datetime import datetime, timedelta
 from django.http import JsonResponse
 from django.views import View
@@ -13,9 +10,7 @@ from django.utils.decorators import method_decorator
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 import json
-
-from django.views.decorators.http import require_GET, require_POST
-
+from kavenegar import KavenegarAPI, HTTPException, APIException
 from pytz import timezone as pytz_timezone
 from datetime import datetime, timedelta, timezone as tm
 
@@ -33,21 +28,25 @@ def generate_random_number(length=6):
 def get_otp(request):
     data = json.loads(request.body)
     phone_number = data.get('phoneNumber')
+    user_string = data.get('user_string')
+    captcha_string = data.get('captcha_string')
     
-    if not phone_number:
-        return JsonResponse({"error": "شماره موبایل معتبر را وارد کنید"}, status=400)
+    if user_string == captcha_string:
+        if not phone_number:
+            return JsonResponse({"error": "شماره موبایل معتبر را وارد کنید"}, status=400)
 
-    phone_number = phone_number.strip()
-    code = generate_random_number(6)
+        phone_number = phone_number.strip()
+        code = generate_random_number(6)
 
-    result = save_user(phone_number, code)
+        result = save_user(phone_number, code)
+        
+        if not result:
+            return JsonResponse({"error": "ورود شما انجام نشد."}, status=401)
+
+        response = send_otp(phone_number, code)
+        return response
     
-    if not result:
-        return JsonResponse({"error": "ورود شما انجام نشد."}, status=401)
 
-    response = send_otp(phone_number, code)
-    return response
-    
 @require_POST
 def check_otp(request):
     data = json.loads(request.body)
