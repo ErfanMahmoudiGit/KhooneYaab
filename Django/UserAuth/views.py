@@ -143,3 +143,68 @@ def send_otp(phone_number, code):
             "statusCode": 500,
             "message": "کد اعتبارسنجی ارسال نشد"
         }, status=500)
+        
+import random
+import base64
+import io
+from django.views import View
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from PIL import Image, ImageDraw, ImageFont
+
+class CaptchaView(View):
+
+    @method_decorator(csrf_exempt)  # Allows CSRF exempt for public access
+    def get(self, request):
+        permitted_chars = '0123456789'
+        string_length = 4
+
+        def generate_string(chars, length):
+            return ''.join(random.choice(chars) for _ in range(length))
+
+        captcha_string = generate_string(permitted_chars, string_length)
+
+        # Create an image with PIL
+        width, height = 200, 50
+        image = Image.new('RGB', (width, height), color=(255, 255, 255))
+        draw = ImageDraw.Draw(image)
+
+        # Draw random lines
+        for _ in range(10):
+            line_color = (
+                random.randint(0, 255),
+                random.randint(0, 255),
+                random.randint(0, 255)
+            )
+            draw.line(
+                [(random.randint(0, width), random.randint(0, height)) for _ in range(2)],
+                fill=line_color,
+                width=random.randint(2, 10)
+            )
+
+        # Draw the text
+        for i in range(string_length):
+            letter_space = width / string_length
+            initial = 35
+            text_color = (0, 0, 0) if random.random() > 0.5 else (255, 255, 255)
+            draw.text(
+                (initial + i * letter_space, random.randint(5, 25)),
+                captcha_string[i],
+                fill=text_color,
+                font = ImageFont.load_default()
+                #font=ImageFont.truetype(FONT_PATH, 24)
+            )
+
+        # Save to a BytesIO object
+        buffered = io.BytesIO()
+        image.save(buffered, format='PNG')
+        imagedata = buffered.getvalue()
+
+        # Base64 encode the image
+        encoded_image = base64.b64encode(imagedata).decode('utf-8')
+
+        # Normally here you would save the captcha string in session or cache
+        request.session['captcha_string'] = captcha_string
+
+        # Return the response
+        return JsonResponse({'image': encoded_image, 'captcha_string': captcha_string})
