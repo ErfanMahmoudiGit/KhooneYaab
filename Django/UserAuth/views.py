@@ -223,4 +223,3 @@ def update_user_info(request):
     user.is_verified_user = is_verified_user
     
     user.save()
-    
