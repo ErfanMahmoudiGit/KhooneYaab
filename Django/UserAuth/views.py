@@ -216,7 +216,7 @@ def update_user_info(request):
     name = data.get('name')
     email = data.get('email')
     is_verified_user = 'true'
-    phone_number = data.get('phone_number')
+    phone_number = data.get('phoneNumber')
     user = User.objects.filter(phone_number=phone_number).first()
     user.name = name
     user.email = email
