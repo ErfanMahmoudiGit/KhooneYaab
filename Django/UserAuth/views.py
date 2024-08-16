@@ -215,7 +215,7 @@ def update_user_info(request):
     data = json.loads(request.body)
     name = data.get('name')
     email = data.get('email')
-    is_verified_user = 'true'
+    is_verified_user = 'True'
     phone_number = data.get('phoneNumber')
     user = User.objects.filter(phone_number=phone_number).first()
     user.name = name
@@ -223,3 +223,5 @@ def update_user_info(request):
     user.is_verified_user = is_verified_user
     
     user.save()
+    return JsonResponse({'message':'welcome'})
+

@@ -307,7 +307,7 @@ def get_buildings_by_category(request):
         return JsonResponse({'error': 'POST request required'}, status=405)
     
 def get_buildings_by_state(request):
-    if request.method == 'GET':
+    if request.method == 'POST':
         try:
             data = json.loads(request.body)
             state_id = data.get('state')
