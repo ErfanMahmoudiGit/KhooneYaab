@@ -163,6 +163,7 @@ def search_buildings(request):
 
     buildings_data = [
         {
+            'id': building.id,
             'meterage': building.meterage,
             'price': building.price,
             'build_date': building.build_date,

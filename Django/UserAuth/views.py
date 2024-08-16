@@ -45,7 +45,8 @@ def get_otp(request):
 
         response = send_otp(phone_number, code)
         return response
-    
+    else:
+        return JsonResponse({"error": "کد امنیتی صحیح نمی‌باشد."}, status=403)
 
 @require_POST
 def check_otp(request):
