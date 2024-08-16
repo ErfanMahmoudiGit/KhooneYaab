@@ -54,9 +54,6 @@ STATE_DATA = [
     {"name": "يزد", "center": "يزد", "latitude": "31.530", "longitude": "54.210", "id": 31},
 ]
 
-
-#@api_view(['POST'])
-#@permission_classes([IsAuthenticated])
 @require_POST
 def create_house(request):
     try:
@@ -82,7 +79,9 @@ def create_house(request):
         status = data.get('status')
         latitude = data.get('latitude')
         longitude = data.get('longitude')
-        priorities = data.get('priorities')
+        hospital=utils.convert_persian_text_to_english_digits(data.get('hospital'))
+        park=utils.convert_persian_text_to_english_digits(data.get('park'))
+        school =utils.convert_persian_text_to_english_digits(data.get('school'))
 
         # Create the new building object
         building = Building(
@@ -100,7 +99,7 @@ def create_house(request):
             facilities = f"[{elevator},{parking},{warehouse}]",
             latitude=latitude,
             longitude=longitude,
-            priorities=priorities,
+            priorities = f"[{hospital},{park},{school}]",
             document_type = document_type,
             status = status,
             direction = direction,
@@ -134,7 +133,9 @@ def get_buildings(request):
             'elevator': 1 if building.facilities[2] else 0,
             'latitude': building.latitude,
             'longitude': building.longitude,
-            'priorities': building.priorities,
+            'hospital': 1 if building.priorities[0] else 0,
+            'park': 1 if building.priorities[1] else 0,
+            'school': 1 if building.priorities[2] else 0,
             'title':building.title,
             'time':building.time,
             'price_per_meter':building.price_per_meter,
@@ -171,7 +172,9 @@ def search_buildings(request):
             'elevator': 1 if building.facilities[2] else 0,
             'latitude': building.latitude,
             'longitude': building.longitude,
-            'priorities': building.priorities,
+            'hospital': 1 if building.priorities[0] else 0,
+            'park': 1 if building.priorities[1] else 0,
+            'school': 1 if building.priorities[2] else 0,
             'title':building.title,
             'time':building.time,
             'price_per_meter':building.price_per_meter,
@@ -198,10 +201,19 @@ def recommend_buildings(request):
             price = data.get('price')
             build_date = data.get('build_date')
             rooms = data.get('rooms')
-            facilities = data.get('facilities')
             location_1 = data.get('location_1')
             location_2 = data.get('location_2')
-            priorities = data.get('priorities')
+            
+            elevator=utils.convert_persian_text_to_english_digits(data.get('elevator'))
+            parking=utils.convert_persian_text_to_english_digits(data.get('parking'))
+            warehouse =utils.convert_persian_text_to_english_digits(data.get('warehouse'))
+            
+            hospital=utils.convert_persian_text_to_english_digits(data.get('hospital'))
+            park=utils.convert_persian_text_to_english_digits(data.get('park'))
+            school =utils.convert_persian_text_to_english_digits(data.get('school'))
+            
+            facilities = f"[{elevator},{parking},{warehouse}]",
+            priorities = f"[{hospital},{park},{school}]",
             
             if not all([meterage, price, build_date, rooms, facilities, location_1, location_2, priorities]):
                 return JsonResponse({'error': 'All fields are required'}, status=400)
@@ -235,13 +247,17 @@ def get_building_by_id(request, id):
         'all_floors': building.all_floors,
         'build_date': building.build_date,
         'rooms': building.rooms,
-        'facilities': building.facilities,
         'direction': building.direction,
         'document_type': building.document_type,
         'status': building.status,
         'latitude': building.latitude,
         'longitude': building.longitude,
-        'priorities': building.priorities,
+        'warehouse': 1 if building.facilities[0] else 0,
+        'parking': 1 if building.facilities[1] else 0,
+        'elevator': 1 if building.facilities[2] else 0,
+        'hospital': 1 if building.priorities[0] else 0,
+        'park': 1 if building.priorities[1] else 0,
+        'school': 1 if building.priorities[2] else 0,
     }
     return JsonResponse(building_data)
 
@@ -271,13 +287,17 @@ def get_buildings_by_category(request):
                     'all_floors': building.all_floors,
                     'build_date': building.build_date,
                     'rooms': building.rooms,
-                    'facilities': building.facilities,
                     'direction': building.direction,
                     'document_type': building.document_type,
                     'status': building.status,
                     'latitude': building.latitude,
                     'longitude': building.longitude,
-                    'priorities': building.priorities,
+                    'warehouse': 1 if building.facilities[0] else 0,
+                    'parking': 1 if building.facilities[1] else 0,
+                    'elevator': 1 if building.facilities[2] else 0,
+                    'hospital': 1 if building.priorities[0] else 0,
+                    'park': 1 if building.priorities[1] else 0,
+                    'school': 1 if building.priorities[2] else 0,
                 })
             return JsonResponse(buildings_data, safe=False)
         except json.JSONDecodeError:
@@ -317,13 +337,17 @@ def get_buildings_by_state(request):
                     'all_floors': building.all_floors,
                     'build_date': building.build_date,
                     'rooms': building.rooms,
-                    'facilities': building.facilities,
                     'direction': building.direction,
                     'document_type': building.document_type,
                     'status': building.status,
                     'latitude': building.latitude,
                     'longitude': building.longitude,
-                    'priorities': building.priorities,
+                    'warehouse': 1 if building.facilities[0] else 0,
+                    'parking': 1 if building.facilities[1] else 0,
+                    'elevator': 1 if building.facilities[2] else 0,
+                    'hospital': 1 if building.priorities[0] else 0,
+                    'park': 1 if building.priorities[1] else 0,
+                    'school': 1 if building.priorities[2] else 0,
                 })
             return JsonResponse(buildings_data, safe=False)
         except json.JSONDecodeError:

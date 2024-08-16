@@ -1,10 +1,7 @@
 from django.shortcuts import render
 import random
 import os
-from kavenegar import KavenegarAPI, HTTPException, APIException
-
-# Create your views here.
-
+from django.views.decorators.http import require_GET, require_POST
 from datetime import datetime, timedelta
 from django.http import JsonResponse
 from django.views import View
@@ -13,9 +10,7 @@ from django.utils.decorators import method_decorator
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 import json
-
-from django.views.decorators.http import require_GET, require_POST
-
+from kavenegar import KavenegarAPI, HTTPException, APIException
 from pytz import timezone as pytz_timezone
 from datetime import datetime, timedelta, timezone as tm
 
@@ -33,21 +28,25 @@ def generate_random_number(length=6):
 def get_otp(request):
     data = json.loads(request.body)
     phone_number = data.get('phoneNumber')
+    user_string = data.get('user_string')
+    captcha_string = data.get('captcha_string')
     
-    if not phone_number:
-        return JsonResponse({"error": "شماره موبایل معتبر را وارد کنید"}, status=400)
+    if user_string == captcha_string:
+        if not phone_number:
+            return JsonResponse({"error": "شماره موبایل معتبر را وارد کنید"}, status=400)
 
-    phone_number = phone_number.strip()
-    code = generate_random_number(6)
+        phone_number = phone_number.strip()
+        code = generate_random_number(6)
 
-    result = save_user(phone_number, code)
+        result = save_user(phone_number, code)
+        
+        if not result:
+            return JsonResponse({"error": "ورود شما انجام نشد."}, status=401)
+
+        response = send_otp(phone_number, code)
+        return response
     
-    if not result:
-        return JsonResponse({"error": "ورود شما انجام نشد."}, status=401)
 
-    response = send_otp(phone_number, code)
-    return response
-    
 @require_POST
 def check_otp(request):
     data = json.loads(request.body)
@@ -143,3 +142,68 @@ def send_otp(phone_number, code):
             "statusCode": 500,
             "message": "کد اعتبارسنجی ارسال نشد"
         }, status=500)
+        
+import random
+import base64
+import io
+from django.views import View
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from PIL import Image, ImageDraw, ImageFont
+
+class CaptchaView(View):
+
+    @method_decorator(csrf_exempt)  # Allows CSRF exempt for public access
+    def get(self, request):
+        permitted_chars = '0123456789'
+        string_length = 4
+
+        def generate_string(chars, length):
+            return ''.join(random.choice(chars) for _ in range(length))
+
+        captcha_string = generate_string(permitted_chars, string_length)
+
+        # Create an image with PIL
+        width, height = 200, 50
+        image = Image.new('RGB', (width, height), color=(255, 255, 255))
+        draw = ImageDraw.Draw(image)
+
+        # Draw random lines
+        for _ in range(10):
+            line_color = (
+                random.randint(0, 255),
+                random.randint(0, 255),
+                random.randint(0, 255)
+            )
+            draw.line(
+                [(random.randint(0, width), random.randint(0, height)) for _ in range(2)],
+                fill=line_color,
+                width=random.randint(2, 10)
+            )
+
+        # Draw the text
+        for i in range(string_length):
+            letter_space = width / string_length
+            initial = 35
+            text_color = (0, 0, 0) if random.random() > 0.5 else (255, 255, 255)
+            draw.text(
+                (initial + i * letter_space, random.randint(5, 25)),
+                captcha_string[i],
+                fill=text_color,
+                font = ImageFont.load_default()
+                #font=ImageFont.truetype(FONT_PATH, 24)
+            )
+
+        # Save to a BytesIO object
+        buffered = io.BytesIO()
+        image.save(buffered, format='PNG')
+        imagedata = buffered.getvalue()
+
+        # Base64 encode the image
+        encoded_image = base64.b64encode(imagedata).decode('utf-8')
+
+        # Normally here you would save the captcha string in session or cache
+        request.session['captcha_string'] = captcha_string
+
+        # Return the response
+        return JsonResponse({'image': encoded_image, 'captcha_string': captcha_string})
