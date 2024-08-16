@@ -88,6 +88,7 @@ def check_otp(request):
         "data": {
             "message": welcome_message,
             "user": {
+                "is_verified_user": user.is_verified_user,
                 "phoneNumber": user.phone_number,
                 "name": user.name,
                 "email": user.email,
@@ -208,3 +209,18 @@ class CaptchaView(View):
 
         # Return the response
         return JsonResponse({'image': encoded_image, 'captcha_string': captcha_string})
+
+@require_POST
+def update_user_info(request):
+    data = json.loads(request.body)
+    name = data.get('name')
+    email = data.get('email')
+    is_verified_user = 'true'
+    phone_number = data.get('phone_number')
+    user = User.objects.filter(phone_number=phone_number).first()
+    user.name = name
+    user.email = email
+    user.is_verified_user = is_verified_user
+    
+    user.save()
+    
