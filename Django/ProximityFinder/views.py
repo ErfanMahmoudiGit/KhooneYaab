@@ -54,9 +54,6 @@ STATE_DATA = [
     {"name": "يزد", "center": "يزد", "latitude": "31.530", "longitude": "54.210", "id": 31},
 ]
 
-
-#@api_view(['POST'])
-#@permission_classes([IsAuthenticated])
 @require_POST
 def create_house(request):
     try:
