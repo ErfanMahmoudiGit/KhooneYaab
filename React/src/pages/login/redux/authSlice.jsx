@@ -1,16 +1,47 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-
+import { API_GET_CAPTCHA_CODE } from "../../../services/apiServices";
 
 const initialState = {
-  loginStep1: false,
-  loginStep2: "idle",
-  modalLoginStep1: "idle",
-  modalLoginStep2: "idle",
-  isLoading : false
+  loginModalStep1: false,
+  loginModalStep2: false,
+  isSendCode : false , 
+  phoneNumber: '',
+  isModalOpen: false,
+  captchaMode: "idle",
+  userLoading: "idle",
+  isAuthorized : false,
+  captcha_image: "",
+  captcha_string : "",
+  user_string:"",
   
+  
+
+  signInModalopen: false,
+  isCompanySelectModalOpen: false,
+  userSignInModal:false,
+  isUserSignIn:false,
+  accessToken: undefined,
+  loginBtnValue: undefined,
+  invalid_captcha: false,
+  genuineAddNewCompany: 0,
+  isLoading: false,
+  access_key: undefined,
+  showGenuineBtn:false,
+  showLegalBtn:false,
+  showForeignersBtn:false,
+  errorModal:false,
+  errorToast:false,
+  errorMessage:null
+
 };
 
-
+export const loadCaptchaImage = createAsyncThunk(
+  "auth/loadCaptchaImage",
+  async () => {
+    const response = await API_GET_CAPTCHA_CODE();
+    return response.data;
+  }
+);
 export const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -23,26 +54,20 @@ export const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-    //   .addCase(loadCaptchaImage.pending, (state) => {
-    //     state.captchaMode = "loading";
-    //   })
-    //   .addCase(loadCaptchaImage.fulfilled, (state, action) => {
-    //     state.captchaMode = "idle";
-    //     state.captcha_text = "";
-    //     state.captcha_ref = action.payload.refId;
-    //     state.captcha_image = action.payload.image;
-    //   })
-    //   .addCase(validateSSoCode.pending, (state) => {
-    //     state.userLoading = "loading";
-    //   })
-    //   .addCase(validateSSoCode.fulfilled, (state) => {
-    //     state.userLoading = "idle";
-    //   });
+      .addCase(loadCaptchaImage.pending, (state) => {
+        state.captchaMode = "loading";
+      })
+      .addCase(loadCaptchaImage.fulfilled, (state, action) => {
+        state.captchaMode = "idle";
+        state.user_string = "";
+        state.captcha_string = action.payload.captcha_string;
+        state.captcha_image = action.payload.image;
+      })
+      
   },
 });
 
 export const { handle_variables } = authSlice.actions;
 
 export const authState = (state) => state.auth;
-
 export default authSlice.reducer;

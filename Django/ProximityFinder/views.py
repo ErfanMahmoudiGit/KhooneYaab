@@ -123,7 +123,7 @@ def get_buildings(request):
 
     for building in buildings:
         building_data = {
-            'id': building.id,
+            'id':building.id,
             'meterage': building.meterage,
             'price': building.price,
             'build_date': building.build_date,

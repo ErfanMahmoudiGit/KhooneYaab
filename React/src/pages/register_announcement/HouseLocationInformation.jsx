@@ -1,9 +1,11 @@
 import * as Yup from 'yup';
 import { useEffect, useState } from "react"
-import { MapContainer ,TileLayer, Marker,Popup, useMapEvent} from 'react-leaflet'
+import { MapContainer ,TileLayer, Marker,Popup, useMapEvent, useMap} from 'react-leaflet'
 import { useFormikContext , ErrorMessage } from 'formik';
 import StateDropdown from '../../ui/StateDropdown';
-import { Col, Row } from 'react-bootstrap';
+import { Row, Col, Form } from 'react-bootstrap';
+
+import { DefaultDropDown } from '../../ui/DefaultDropDown';
 
 export default function HouseLocationInformation(){
     const [markers, setMarkers] = useState([]);
@@ -41,58 +43,124 @@ export default function HouseLocationInformation(){
         { "name": "همدان", "center": "همدان", "latitude": "34.470", "longitude": "48.300", "id": 30 },
         { "name": "يزد", "center": "يزد", "latitude": "31.530", "longitude": "54.210", "id": 31 },
     ];
+    const STATE_OPTIONS = [
+        { "label": "آذربايجان شرقی","value": 1 },
+        { "label": "آذربايجان غربی","value": 2 },
+        { "label": "اردبيل","value": 3 },
+        { "label": "اصفهان","value": 4 },
+        { "label": "ايلام","value": 5 },
+        { "label": "بوشهر","value": 6 },
+        { "label": "تهران","value": 7 },
+        { "label": "چهارمحال بختیاری", "value": 8 },
+        { "label": "خراسان جنوبی", "value": 9 },
+        { "label": "خراسان رضوی","value": 10 },
+        { "label": "خراسان شمالی", "value": 11 },
+        { "label": "خوزستان","value": 12 },
+        { "label": "زنجان", "value": 13 },
+        { "label": "سمنان","value": 14 },
+        { "label": "سيستان و بلوچستان", "value": 15 },
+        { "label": "فارس", "value": 16 },
+        { "label": "قزوين", "value": 17 },
+        { "label": "قم", "value": 18 },
+        { "label": "البرز", "value": 19 },
+        { "label": "كردستان", "value": 20 },
+        { "label": "کرمان", "value": 21 },
+        { "label": "كرمانشاه", "value": 22 },
+        { "label": "كهكيلويه و بويراحمد","value": 23 },
+        { "label": "گلستان","value": 24 },
+        { "label": "گيلان"," value": 25 },
+        { "label": "لرستان","value": 26 },
+        { "label": "مازندران", "value": 27 },
+        { "label": "مرکزی","value": 28 },
+        { "label": "هرمزگان","value": 29 },
+        { "label": "همدان", "value": 30 },
+        { "label": "يزد", "value": 31 },
+    ];
     
-	const[mapCenter,setMapCenter] = useState([32.85971234321241,53.97240877523566])   
+	const[mapCenter,setMapCenter] = useState([32.85971234321241, 53.97240877523566])   
 
-    console.log(mapCenter);
-    
     const addMarker = (newMarker) => {
         console.log(newMarker.latitude);  
         setMarkers([newMarker]);
     };
-    let filtered = {}
-    useEffect(()=>{
 
-    },[mapCenter])
 
     const handleSelectionChange = (event) => {
-        const selectedCity = event.target.value;
-        console.log("selectedCity: ", selectedCity);
-        setFieldValue("city", selectedCity)
-        filtered = STATE_DATA.find((i) => i.name == selectedCity)
-        console.log(filtered.latitude);
-        setMapCenter([filtered.latitude,filtered.longitude])
-        
-        
-    };
+        let selectedCity = event.label;
+        setFieldValue( "city", event.label );
+        const filtered = STATE_DATA.find((state) => state.name === selectedCity);
+        if (filtered) {
+            const { latitude, longitude } = filtered;
+            setMapCenter([parseFloat(latitude), parseFloat(longitude)]);
+            setFieldValue("latitude", parseFloat(latitude));
+            setFieldValue("longitude", parseFloat(longitude));
+        }
+
+    }
+
+    function MapUpdater({ center }) {
+        const map = useMap();
+        useEffect(() => {
+            map.setView(center);
+        }, [center, map]);
+
+        return null;
+    }
 
     return (
-		<section className='bg-warning'>
-            <Row className='gx-4 d-flex justify-content-center mx-5 mb-4 align-right'>
+		<section >
+            <Row className='gx-4 d-flex justify-content-center align-items-center mx-5 m-4 align-right'>
 
-            <Col sm={3}>
-            <div>
-            {/* <label htmlFor="state-select">Select a State: </label> */}
-            <select id="state-select" onChange={handleSelectionChange}>
-                <option value="">استان را انتخاب کنید</option>
-                {STATE_DATA.map((state) => (
-                    <option key={state.id} value={state.name}>
-                        {state.name}
-                    </option>
-                ))}
-            </select>
-            <ErrorMessage name="city" component="div" className="text-danger" />
-
-        </div>
-            </Col>
-            <Col sm={9}>
+                <Col sm={3}>
+                    {/* <span className={"detail-info-text"}> استان</span> */}
+                    <DefaultDropDown
+                        label={"استان"}
+                        options={STATE_OPTIONS}
+                        onChange={(event) => handleSelectionChange(event)}
+                    />
+                    <ErrorMessage name="city" component="div" className="text-danger" />   
+                </Col>
+                <Col sm="9" className='mt-2'>
+                    <Form.Label className='form-label'>به کدام یک از این مکان ها نزدیک است؟</Form.Label>
+                    <Form.Check
+                        inline
+                        label="مدرسه"
+                        name="school"
+                        checked={values.school === 1} 
+                        onChange={(e) => 
+                            setFieldValue('school', e.target.checked ? 1 : 0)
+                        }
+                    />
+                    <Form.Check
+                        inline
+                        label="پارک"
+                        name="park"
+                        checked={values.park === 1} 
+                        onChange={(e) => 
+                            setFieldValue('park', e.target.checked ? 1 : 0)
+                        }
+                    />
+                    <Form.Check
+                        inline
+                        name="hospital"
+                        label="بیمارستان"
+                        checked={values.hospital === 1} 
+                        onChange={(e) => 
+                            setFieldValue('hospital', e.target.checked ? 1 : 0)
+                        }
+                    />
+                </Col>
+            
+        <Row className='gx-4 d-flex justify-content-center mx-5 mt-4'>
+            <Col>
                 <div className="appLayout">
                 <div className="mapContainer" >
-                <MapContainer className="map" zoom={9} scrollWheelZoom={true} center={mapCenter} >
+                <MapContainer className="map" zoom={6} scrollWheelZoom={true} center={mapCenter} >
                     <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
                     />
+                     <MapUpdater center={mapCenter} />
                     
                     <DetectClick onMarkerAdd={addMarker} setFieldValue={setFieldValue}/>
                 {
@@ -106,12 +174,13 @@ export default function HouseLocationInformation(){
                 }
                 </MapContainer>
 
+		<ErrorMessage name="latitude" component="div" className="text-danger" />
             </div>		   
                 </div>
             </Col>
             </Row>
-		<ErrorMessage name="latitude" component="div" className="text-danger" />
-		<ErrorMessage name="longitude" component="div" className="text-danger" />
+
+            </Row>
 
 
 		</section>
@@ -124,11 +193,19 @@ HouseLocationInformation.initialValues = {
     city: '',
     latitude : 0,
     longitude : 0,
+    hospital: 0,  
+    school: 0,  
+    park: 0, 
 };
 HouseLocationInformation.validationSchema = Yup.object().shape({
-    city: Yup.string().required('انتخاب کنید'),
-    latitude :  Yup.string().required('انتخاب کنید'),
-    longitude :  Yup.string().required('انتخاب کنید'),
+    city: Yup.string().required('استان را انتخاب کنید'),
+    latitude :  Yup.string().required('موقعیت جغرافیایی را انتخاب کنید'),
+    longitude :  Yup.string(),
+    // .required('استان را انتخاب کنید'),
+    hospital: Yup.string(),
+    school :  Yup.string(),
+    park :  Yup.string(),
+
 });
 
 export function DetectClick({ onMarkerAdd , setFieldValue}){

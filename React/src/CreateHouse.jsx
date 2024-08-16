@@ -396,6 +396,17 @@ const CreateHouse = () => {
     {}
   );
 
+  const getCurrentDate = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-11
+    const day = String(now.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+};
+
+console.log(getCurrentDate());
+
   const onSubmit = (values, actions) => {
     console.log("here");
     console.log("outside",values);
@@ -411,28 +422,57 @@ const CreateHouse = () => {
       
         // فقط اخرش ریکوعست بزنه
         let data = {
-            city: "زنجان",
-            title : values.title,
-            category : "فروش آپارتمان",  // select box
-            time : "2024-01-11",   // تاریخ امروز ولی به همین فرمت
-            meterage : values.meterage,
-            price : values.price ,
-            price_per_meter : values.price_per_meter ,
-            image : "https://unsplash.com/s/photos/image/3" , 
-            description : values.description ,
-            floor : values.floors,
-            all_floors : values.all_floors,
-            build_date : values.build_date,
-            rooms : values.rooms,
-            latitude : 11.9837,
-            longitude : 24.983,
-            elevator: 0,  //  درست کردن امکانات
-            parking: 1,  // 0و1 برعکسن توی امکانات
-            warehouse: 1, 
-            direction: '',  // ضروری نکردن این 4 تا
-            document_type: 'تک برگ', 
-            status: '',
-            priorities : "[1,1,1]"  ,
+          title: values.title,
+          category : values.category,
+          meterage : values.meterage,
+          price : values.price ,
+          image: values.image,
+          description: values.description,
+          build_date : values.build_date,
+          rooms: values.rooms,
+          floor : values.floor,
+          all_floors : values.all_floors,
+          elevator: values.elevator,  
+          parking: values.parking,  
+          warehouse: values.warehouse, 
+          direction: values.direction,  
+          document_type: values.document_type, 
+          status: values.status,
+          city: values.city,
+          latitude : values.latitude,
+          longitude : values.longitude,
+          hospital: values.hospital,  
+          school: values.school,  
+          park: values.park, 
+
+          time:getCurrentDate(),
+          price_per_meter : values.price / values.meterage ,
+
+
+
+
+            // city: "زنجان",
+            // title : values.title,
+            // category : "فروش آپارتمان",  // select box
+            // time : "2024-01-11",   // تاریخ امروز ولی به همین فرمت
+            // meterage : values.meterage,
+            // price : values.price ,
+            // price_per_meter : values.price_per_meter ,
+            // image : "https://unsplash.com/s/photos/image/3" , 
+            // description : values.description ,
+            // floor : values.floors,
+            // all_floors : values.all_floors,
+            // build_date : values.build_date,
+            // rooms : values.rooms,
+            // latitude : 11.9837,
+            // longitude : 24.983,
+            // elevator: 0,  //  درست کردن امکانات
+            // parking: 1,  // 0و1 برعکسن توی امکانات
+            // warehouse: 1, 
+            // direction: '',  // ضروری نکردن این 4 تا
+            // document_type: 'تک برگ', 
+            // status: '',
+            // priorities : "[1,1,1]"  ,
             // latitude : values.locations[0].latitude,    // ضروری
             // longitude : values.locations[0].longitude,   // ضروری
         } 
