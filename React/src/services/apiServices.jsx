@@ -101,3 +101,18 @@ export const API_CHECKOTP = async (data) => {
   }
 };
 
+
+
+export const API_GET_CAPTCHA_CODE = async () => {
+  try {
+    const response = await API_BASE.get('captcha/');
+    return response;    // response.data , response.status
+
+  } catch (error) {
+    try{
+      return({...error?.response?.data,status: error.response.status}) ;  // check
+    }catch(err){
+      return({error:{message:'--سرویس در دسترس نیست'}}) ;
+    }  
+  }
+};

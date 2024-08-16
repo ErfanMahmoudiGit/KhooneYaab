@@ -22,6 +22,8 @@ function App() {
         <Route path='/category="اجاره آپارتمان"' element={<BuyApartment />}  />
         <Route path='/category="اجاره خانه و ویلا"' element={<BuyApartment />}  /> */}
       </Routes>
+
+    
     </>
   )
 }

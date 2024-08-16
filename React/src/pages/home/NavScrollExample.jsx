@@ -10,49 +10,44 @@ import { Tooltip } from "antd";
 import { AiOutlineSearch } from 'react-icons/ai';
 import { FaRegUser } from "react-icons/fa6";
 
+import { useSelector, useDispatch } from "react-redux";
+import { authState, handle_variables } from '../login/Redux/authSlice'; // Update with the correct path
 
 import { useNavigate } from 'react-router-dom';
-import {
-  Nav,
-  Button,
-  Dropdown,
-  Navbar,
-  NavDropdown,
-  Modal,
-  Row,
-  Col,
-} from "react-bootstrap";
-
+import { Nav, Button, Navbar } from "react-bootstrap";
+import LoginStep1 from '../login/LoginStep1';
 import { Link, NavLink } from "react-router-dom";
 import StateDropdown from '../../ui/StateDropdown';
 function NavScrollExample() {
-    const[searchValue,setSearchValue] = useState("")
-    let navigate = useNavigate()
-    function handleSearch(){
-      // e.preventDefault()
-        console.log(searchValue)
-        const params = new URLSearchParams(window.location.search);
-        params.set('q', searchValue); // Set the query parameter
-        const newUrl = `${window.location.pathname}?${params.toString()}`;
-        navigate(newUrl); 
-                // Or use window.history.pushState({}, '', newUrl); if not using React Router
+  const[searchValue,setSearchValue] = useState("")
+  const dispatch = useDispatch();
+  let navigate = useNavigate()
+  const { loginModalStep1 } = useSelector(authState);
+  console.log(loginModalStep1);
 
-        let resp = API_SEARCH(searchValue)
-            resp.then((res) => {
-                if (res.status === 200) {
-                    console.log("success");        
-                } else {
-                    console.log("false");        
+  function handleSearch(){
+    // e.preventDefault()
+      console.log(searchValue)
+      const params = new URLSearchParams(window.location.search);
+      params.set('q', searchValue); // Set the query parameter
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      navigate(newUrl); 
+              // Or use window.history.pushState({}, '', newUrl); if not using React Router
 
-                }
-                })
-                
-    }
-    function handleLogin (){
-        console.log("login");
-        // navigate("/login")
-    }
+      let resp = API_SEARCH(searchValue)
+          resp.then((res) => {
+              if (res.status === 200) {
+                  console.log("success");        
+              } else {
+                  console.log("false");        
+
+              }
+              })
+              
+  }
+    
   return (
+    <>
     
 
    
@@ -145,8 +140,12 @@ function NavScrollExample() {
                 </NavLink>
 
           <NavLink
-            to="/login"
-            onClick={handleLogin}
+            onClick={ ()=>{
+
+              dispatch(handle_variables({ loginModalStep1: true }))
+            }
+
+            }  
           >
           <Button
             className='bg-body-tertiary'
@@ -173,6 +172,11 @@ function NavScrollExample() {
         </Navbar.Collapse>
       </Container>
     </Navbar>
+    
+
+   <LoginStep1 />
+    </>
+   
   )
 }
 

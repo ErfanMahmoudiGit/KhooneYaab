@@ -19,6 +19,14 @@ body {
   padding: 0 !important;
   direction: rtl !important;
 }
+.bg-refresh {
+  width: 30px;
+  height: 30px;
+  background: url("../../../public/logo-sprite.png") -10px -98px;
+}
+.pointer-cursor {
+  cursor: pointer;
+}
 .nav-logo-2 {
   max-width: 100px;
   height: 68px;
@@ -87,6 +95,66 @@ input[type="search"]::-webkit-search-cancel-button {
   width: 100%;
   border-radius: 9px !important;
   font-size: 14px;
+}
+.default-select-box > div:first-child {
+  border-radius: 8px !important;
+}
+.detail-info-text {
+  color: #17a2b8 !important;
+  margin-left: 10px;
+  font-size: 14px;
+  font-weight: 700;
+}
+.auth-modal .modal-dialog .modal-content {
+  border-radius: 30px;
+  padding: 10px 15px !important;
+}
+.login-pill{
+  /* border-radius: 30px; */
+  padding: 35px 10px;
+  display: inline-block;
+  font-size: 0.875rem !important;
+  width: 100%;
+}
+.login-input{
+  border-radius: 15px;
+  padding: 8px 20px;
+}
+.login-btn{
+  width: 100%;
+  border-radius: 15px;
+}
+.login-btn{
+  width: 100%;
+  border-radius: 15px;
+}
+.captcha-panel {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.default-input-box {
+  padding: 10px 15px;
+  border-radius: 19px;
+  font-size: 12px;
+}
+input.default-input-box.invalid,
+.invalid-input div[class*="-control"],
+.invalid-input input,
+.invalid-input textarea {
+  border-color: #cf3d6e !important;
+}
+
+input.default-input-box.invalid::placeholder,
+.invalid-input .detail-info-text,
+.invalid-input span,
+.invalid-input div[class*="-placeholder"] {
+  color: #cf3d6e !important;
+}
+.ci-div .react-code-input{
+  direction: ltr !important;
+  display: flex !important;
+  justify-content: center;
 }
 .sidebar-cont{
   margin-top: 30%;
