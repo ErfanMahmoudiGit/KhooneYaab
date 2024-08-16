@@ -6,13 +6,14 @@ const initialState = {
   loginModalStep2: false,
   isSendCode : false , 
   phoneNumber: '',
-  captcha_text: "",
-  captcha_ref: "",
-  captcha_image: "",
   isModalOpen: false,
   captchaMode: "idle",
   userLoading: "idle",
   isAuthorized : false,
+  captcha_image: "",
+  captcha_string : "",
+  user_string:"",
+  
   
 
   signInModalopen: false,
@@ -50,6 +51,19 @@ export const authSlice = createSlice({
       state = { ...state, ...data };
       return state;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(loadCaptchaImage.pending, (state) => {
+        state.captchaMode = "loading";
+      })
+      .addCase(loadCaptchaImage.fulfilled, (state, action) => {
+        state.captchaMode = "idle";
+        state.user_string = "";
+        state.captcha_string = action.payload.captcha_string;
+        state.captcha_image = action.payload.image;
+      })
+      
   },
 });
 

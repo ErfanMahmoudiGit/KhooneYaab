@@ -7,7 +7,7 @@ const API_BASE = axios.create({
     },
   });
 const API_BASE_USER = axios.create({
-    baseURL: 'http://localhost:8000/userauth/',
+    baseURL: 'http://localhost:8000/UserAuth/',
     headers: {
       'Content-Type': 'application/json',
       
@@ -16,7 +16,7 @@ const API_BASE_USER = axios.create({
 
 export const API_createHouse = async (data) => {
   try {
-    const response = await API_BASE.post('create_house/',data);
+    const response = await API_BASE.post('building/create_house/',data);
     return response;
   } catch (error) {
     try{
@@ -28,7 +28,7 @@ export const API_createHouse = async (data) => {
 };
 export const API_GETHOUSE = async () => {
   try {
-    const response = await API_BASE.get('buildings/');
+    const response = await API_BASE.get('building/buildings/');
     return response;    // response.data , response.status
 
   } catch (error) {
@@ -54,7 +54,7 @@ export const API_GETHOUSE_DETAILS = async (id) => {
 };
 export const API_SEARCH = async (q) => {
   try {
-    const response = await API_BASE.get(`search/?q=${q}`);
+    const response = await API_BASE.get(`building/search/?q=${q}`);
     return response;
   } catch (error) {
     try{
@@ -105,7 +105,7 @@ export const API_CHECKOTP = async (data) => {
 
 export const API_GET_CAPTCHA_CODE = async () => {
   try {
-    const response = await API_BASE.get('captcha/');
+    const response = await API_BASE_USER.get('captcha/');
     return response;    // response.data , response.status
 
   } catch (error) {
@@ -116,3 +116,6 @@ export const API_GET_CAPTCHA_CODE = async () => {
     }  
   }
 };
+
+// path('api/building/recommend_buildings/', recommend_buildings, name='recommend_buildings'),
+// path('api/building/state/', get_buildings_by_state, name='get_buildings_by_state'),

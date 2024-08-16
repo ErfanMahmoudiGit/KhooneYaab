@@ -7,7 +7,7 @@ import { useState } from "react";
 import { API_GETOTP} from "../../services/apiServices";
 import {  toast } from 'react-toastify';
 import { BeatLoader } from "react-spinners";
-// import {CaptchaComponent} from './CaptchaComponent'
+import {CaptchaComponent} from './CaptchaComponent'
 import LoginStep2 from "./LoginStep2";
 
 let schema = yup.object().shape({
@@ -18,11 +18,15 @@ let schema = yup.object().shape({
   
   });
 export default function LoginStep1(props){
-    const { loginModalStep1 ,isSendCode , phone} = useSelector(authState);
+    const { loginModalStep1 ,isSendCode , phone , captcha_string , captcha_image , user_string} = useSelector(authState);
     const dispatch = useDispatch();
     const [isLoadinging, setIsLoadinging] = useState(false);
 
     console.log(phone);
+    console.log("captcha_image: ",captcha_image);
+    console.log("captcha_string: ",captcha_string);
+    console.log("user_string: ",user_string);
+    
     
     return(
         <>
@@ -46,10 +50,11 @@ export default function LoginStep1(props){
                         // });
                         const data = {
                             phoneNumber: values.phone,
-                        //   captcha_text,
-                        //   captcha_ref,
+                            user_string : user_string,
+                            captcha_string : captcha_string,
+                            captcha_image : captcha_image
                         };
-                        console.log("data: " ,data);
+                        console.log("data login step 1: " ,data);
                         dispatch(handle_variables({
                                         isSendCode: true,
                                         loginModalStep1 : false,
@@ -118,11 +123,11 @@ export default function LoginStep1(props){
                                 ) : null}{" "}          
                             </Col>
                         </Row>
-                        {/* <Row className="d-flex justify-content-center mt-3">
+                        <Row className="d-flex justify-content-center mt-3">
                         <Col xs={12} md={9}>
                             <CaptchaComponent /> 
                         </Col>
-                        </Row> */}
+                        </Row>
 
                         <Row className="d-flex justify-content-center mt-3">
                             <Col xs={6} md={4}>
