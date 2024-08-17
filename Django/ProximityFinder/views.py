@@ -369,76 +369,49 @@ def genetic_algorithm(buildings, meterage, price, build_date, rooms, facilities,
     def fitness(building):
         score = 0
         
-        # Factor: Price
-        score += max(0, (price - abs(price - building['price'])) / price)
+        # Assign weights to each factor based on their importance
+        weight_price = 0.25
+        weight_meterage = 0.25
+        weight_build_date = 0.1
+        weight_rooms = 0.1
+        weight_facilities = 0.15
+        weight_priorities = 0.1
+        weight_location = 0.25
+
+        # Factor: Price (Closer to target price is better)
+        price_score = max(0, (price - abs(price - building['price'])) / price)
+        score += weight_price * price_score
         
-        # Factor: Meterage
-        score += max(0, (meterage - abs(meterage - building['meterage'])) / meterage)
+        # Factor: Meterage (Closer to target meterage is better)
+        meterage_score = max(0, (meterage - abs(meterage - building['meterage'])) / meterage)
+        score += weight_meterage * meterage_score
         
-        # Factor: Build Date
-        score += max(0, (build_date - abs(build_date - building['build_date'])) / build_date)
+        # Factor: Build Date (Newer is often better, but closer to the desired build date)
+        build_date_score = max(0, (build_date - abs(build_date - building['build_date'])) / build_date)
+        score += weight_build_date * build_date_score
         
-        # Factor: Rooms
-        score += max(0, (rooms - abs(rooms - building['rooms'])) / rooms)
+        # Factor: Rooms (Closer to target number of rooms is better)
+        rooms_score = max(0, (rooms - abs(rooms - building['rooms'])) / rooms)
+        score += weight_rooms * rooms_score
         
-        # Factor: Facilities
-        score += sum(1 for u, b in zip(facilities, building['facilities']) if u == b)
+        # Factor: Facilities (Count matching facilities)
+        facilities_score = sum(1 for u, b in zip(facilities, building['facilities']) if u == b)
+        score += weight_facilities * facilities_score
         
-        # Factor: Priorities
-        score += sum(1 for u, b in zip(priorities, building['priorities']) if u == b)
+        # Factor: Priorities (Count matching priorities)
+        priorities_score = sum(1 for u, b in zip(priorities, building['priorities']) if u == b)
+        score += weight_priorities * priorities_score
         
-        # Factor: Locations
+        # Factor: Locations (Closer to the key locations is better)
         loc1_dist = geodesic((building['latitude'], building['longitude']), location_1).km
         loc2_dist = geodesic((building['latitude'], building['longitude']), location_2).km
-        score += max(0, (1 / (1 + loc1_dist)))
-        score += max(0, (1 / (1 + loc2_dist)))
+        location_score = max(0, (1 / (1 + loc1_dist))) + max(0, (1 / (1 + loc2_dist)))
+        score += weight_location * location_score
         
         return score
-
-    def crossover(parent1, parent2):
-        child = parent1.copy()
-        for key in parent1.keys():
-            if np.random.rand() > 0.5:
-                child[key] = parent2[key]
-        return child
-
-    def mutate(building):
-        if np.random.rand() < 0.1:
-            key = np.random.choice(list(building.keys()))
-            if isinstance(building[key], int) or isinstance(building[key], float):
-                building[key] += np.random.uniform(-0.1, 0.1) * building[key]
-        return building
-
-    # Genetic algorithm parameters
-    population_size = len (buildings)
-    generations = 100
-    mutation_rate = 0.1
-
-    # Initialize population
-    population = buildings.copy()
-    
-    for generation in range(generations):
-        # Calculate fitness for each building
-        fitness_scores = np.array([fitness(building) for building in population])
-        
-        # Select the best buildings
-        selected_indices = np.argsort(fitness_scores)[-population_size//2:]
-        selected_buildings = [population[i] for i in selected_indices]
-
-        # Create the next generation
-        next_generation = []
-        while len(next_generation) < population_size:
-            parent1, parent2 = np.random.choice(selected_buildings, size=2, replace=False)
-            child = crossover(parent1, parent2)
-            if np.random.rand() < mutation_rate:
-                child = mutate(child)
-            next_generation.append(child)
-        
-        population = next_generation
-    
     
     # Calculate fitness for each building
-    fitness_scores = np.array([fitness(building) for building in population])
+    fitness_scores = np.array([fitness(building) for building in buildings])
 
     # Sort the buildings by fitness score in descending order
     sorted_indices = np.argsort(fitness_scores)[::-1]
@@ -448,7 +421,7 @@ def genetic_algorithm(buildings, meterage, price, build_date, rooms, facilities,
     seen_ids = set()
 
     for index in sorted_indices:
-        building = population[index]
+        building = buildings[index]
         building_id = building['id']  # Assuming each building has a unique 'id' field
         if building_id not in seen_ids:
             top_buildings.append(building)
