@@ -89,6 +89,12 @@ const rooms = [
     { label: 3, value: 3 },
     { label: 4, value: 4 },
 ];
+const build = [
+    { label: "1398 - 1403", value: 1398 },
+    { label: "1393 - 1398", value: 1393 },
+    { label: "1388 - 1393", value: 1388 },
+    { label: "1383 - 1388", value: 1383 },
+];
 export default function Recommender(){
     const [buildDateValue, setBuildDateValue] = useState(1370);
     const [markers, setMarkers] = useState([]);
@@ -187,7 +193,7 @@ export default function Recommender(){
                             </Col>
                         </Row>
                         <Row className='gx-4 d-flex justify-content-center mx-5 mb-4 align-right'>
-                            <Col sm={3}>
+                            {/* <Col sm={3}>
                                 <div className='d-flex flex-column'>
                                     <Form.Label>سال ساخت</Form.Label>
                                     <Form.Range
@@ -204,10 +210,24 @@ export default function Recommender(){
                                     />
                                     <p>سال ساخت انتخابی: {buildDateValue}</p>
                                 </div>
+                            </Col> */}
+                            <Col sm="3">
+                                <Form.Label className='form-label margin-left-x'>سال ساخت</Form.Label>
+                                <Field as="select" name="build_date" className="form-control"
+                                    onChange={(e) => {props.setFieldValue("build_date", parseInt(e.target.value))}}
+                                >
+                                    <option value="" label="انتخاب کنید" />
+                                    {build.map((item, index) => (
+                                        <option key={index} value={item.value}>
+                                            {item.label}
+                                        </option>
+                                    ))}
+                                </Field>
+                                <ErrorMessage name="build_date" component="div" className="text-danger" />
                             </Col>
                             <Col sm={3}>
                                 <div className='d-flex flex-column'>
-                                    <Form.Label>سال ساخت</Form.Label>
+                                    <Form.Label>استان را انتخاب کنید</Form.Label>
                                     <DefaultDropDown
                                         label={"استان"}
                                         options={STATE_OPTIONS}
@@ -232,6 +252,7 @@ export default function Recommender(){
                                 </Field>
                                 <ErrorMessage name="rooms" component="div" className="text-danger" />
                             </Col>
+                            
                         </Row>
                         <Row className='gx-4 d-flex justify-content-center mx-5 mt-4'>
                     
@@ -296,16 +317,7 @@ export default function Recommender(){
                 />
             </Col>
                         </Row>
-                        <Row className="d-flex justify-content-center mt-3">
-                            <Col xs={6} md={4}>
-                            <Button
-                                        type="submit"
-                                        className="btn btn-primary login-btn"
-                                    >
-                                        ثبت
-                                    </Button>
-                            </Col>
-                        </Row>
+                       
                         <Row className='gx-4 d-flex justify-content-center mx-5 mt-4'>
             <Col>
                 <div className="appLayout">
@@ -333,6 +345,16 @@ export default function Recommender(){
                 </div>
             </Col>
             </Row>
+            <Row className="d-flex justify-content-center mt-3">
+                            <Col xs={6} md={4}>
+                            <Button
+                                        type="submit"
+                                        className="btn btn-primary login-btn"
+                                    >
+                                        ثبت
+                                    </Button>
+                            </Col>
+                        </Row>
                     </form>
                 
                 {recommended_homes.length > 0 && (
