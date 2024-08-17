@@ -6,20 +6,27 @@ import { Col, Row, Container } from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
 import HomeMap from "./HomeMap";
 import CustomNavlink from "../../ui/CustomNavlink";
+import { BeatLoader } from "react-spinners";
 
 export default function Home() { 
     const [houses, setHouses] = useState([])
     const navigate = useNavigate()
+    const[loading,setIsLoading] = useState(true)
 
     useEffect(() => {
+        setIsLoading(true)
         let resp = API_GETHOUSE()
         resp.then((res) => {
             if (res.status === 200) {
                 console.log("success");        
                 console.log(res.data);  
-                setHouses(res.data)      
+                setHouses(res.data)   
+                setIsLoading(false)
+   
             } else {
-                console.log("false");        
+                console.log("false"); 
+                setIsLoading(false)
+       
             }
         })
     }, [])
@@ -27,7 +34,13 @@ export default function Home() {
 
     return (
         <>
-        <HomeMap houses={houses} />
+
+        {loading ?         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <BeatLoader style={{display:"flex",justifyContent:"center"}}/>
+            </div>
+        : (
+            <>
+            <HomeMap houses={houses} />
             <Container fluid>
                 <h4>آگهی های اخیر</h4>
                 <Row>
@@ -42,6 +55,9 @@ export default function Home() {
                     ))}
                 </Row>
             </Container>
+            </>
+        )}
+            
             {/* <NavScrollExample />
             <div className="fixed-sidebar">
                 <div className="sidebar-cont">
