@@ -193,46 +193,6 @@ def search_buildings(request):
 
     return JsonResponse(buildings_data, safe=False)
 
-
-def recommend_buildings(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            meterage = data.get('meterage')
-            price = data.get('price')
-            build_date = data.get('build_date')
-            rooms = data.get('rooms')
-            location_1 = data.get('location_1')
-            location_2 = data.get('location_2')
-            
-            elevator=utils.convert_persian_text_to_english_digits(data.get('elevator'))
-            parking=utils.convert_persian_text_to_english_digits(data.get('parking'))
-            warehouse =utils.convert_persian_text_to_english_digits(data.get('warehouse'))
-            
-            hospital=utils.convert_persian_text_to_english_digits(data.get('hospital'))
-            park=utils.convert_persian_text_to_english_digits(data.get('park'))
-            school =utils.convert_persian_text_to_english_digits(data.get('school'))
-            
-            facilities = f"[{elevator},{parking},{warehouse}]",
-            priorities = f"[{hospital},{park},{school}]",
-            
-            city = data.get('city')
-            
-            if not all([meterage, price, build_date, rooms, facilities, location_1, location_2, priorities, city]):
-                return JsonResponse({'error': 'All fields are required'}, status=400)
-
-            # Get all buildings from the database
-            buildings = list(Building.objects.all().values())
-            
-            # Find the top 3 recommended buildings using a genetic algorithm
-            recommended_buildings = genetic_algorithm(buildings, meterage, price, build_date, rooms, facilities, location_1, location_2, priorities)
-            
-            return JsonResponse(recommended_buildings, safe=False)
-        except json.JSONDecodeError:
-            return JsonResponse({'error': 'Invalid JSON'}, status=400)
-    else:
-        return JsonResponse({'error': 'POST request required'}, status=405)
-    
 def get_building_by_id(request, id):
     building = get_object_or_404(Building, id=id)
     building_data = {
@@ -357,6 +317,53 @@ def get_buildings_by_state(request):
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
     else:
         return JsonResponse({'error': 'POST request required'}, status=405)
+
+def recommend_buildings(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            
+            meterage = int(utils.convert_persian_text_to_english_digits(data.get('meterage')))
+            price = int(utils.convert_persian_text_to_english_digits(data.get('price')))
+            build_date = int(utils.convert_persian_text_to_english_digits(data.get('build_date')))
+            rooms = int(utils.convert_persian_text_to_english_digits(data.get('rooms')))
+            location_1 = data.get('location_1')
+            location_2 = data.get('location_2')
+            elevator= utils.convert_persian_text_to_english_digits(data.get('elevator'))
+            parking= utils.convert_persian_text_to_english_digits(data.get('parking'))
+            warehouse = utils.convert_persian_text_to_english_digits(data.get('warehouse'))
+            hospital= utils.convert_persian_text_to_english_digits(data.get('hospital'))
+            park= utils.convert_persian_text_to_english_digits(data.get('park'))
+            school = utils.convert_persian_text_to_english_digits(data.get('school'))
+            facilities = f"[{elevator},{parking},{warehouse}]",
+            priorities = f"[{hospital},{park},{school}]",
+            state_id = data.get('city')
+            
+            if not all([meterage, price, build_date, rooms, elevator, parking, warehouse,
+                        hospital, park, school, location_1, location_2, state_id]):
+                return JsonResponse({'error': 'All fields are required'}, status=400)
+            
+            # Find the city center corresponding to the state_id
+            state = next((item for item in STATE_DATA if item["id"] == state_id), None)
+            if not state:
+                return JsonResponse({'error': 'Invalid state ID'}, status=400)
+            
+            # Get all buildings in that city from the database
+            city_center = state["center"]
+            buildings = list(Building.objects.filter(city=city_center).values())
+
+            if buildings:
+                # Find the top 3 recommended buildings using a genetic algorithm
+                recommended_buildings = genetic_algorithm(buildings, meterage, price, build_date, rooms, facilities, location_1, location_2, priorities)
+            
+                return JsonResponse(recommended_buildings, safe=False)
+            else:
+                return JsonResponse({'error': 'No Houses Available in that city.'}, status=400)
+            
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+    else:
+        return JsonResponse({'error': 'POST request required'}, status=405)
     
 def genetic_algorithm(buildings, meterage, price, build_date, rooms, facilities, location_1, location_2, priorities):
     def fitness(building):
@@ -403,13 +410,13 @@ def genetic_algorithm(buildings, meterage, price, build_date, rooms, facilities,
         return building
 
     # Genetic algorithm parameters
-    population_size = 100
-    generations = 50
+    population_size = len (buildings)
+    generations = 100
     mutation_rate = 0.1
 
     # Initialize population
-    population = np.random.choice(buildings, size=population_size, replace=True).tolist()
-
+    population = buildings.copy()
+    
     for generation in range(generations):
         # Calculate fitness for each building
         fitness_scores = np.array([fitness(building) for building in population])
@@ -429,8 +436,24 @@ def genetic_algorithm(buildings, meterage, price, build_date, rooms, facilities,
         
         population = next_generation
     
-    # Return the top 3 buildings
+    
+    # Calculate fitness for each building
     fitness_scores = np.array([fitness(building) for building in population])
-    top_indices = np.argsort(fitness_scores)[-3:]
-    top_buildings = [population[i] for i in top_indices]
+
+    # Sort the buildings by fitness score in descending order
+    sorted_indices = np.argsort(fitness_scores)[::-1]
+
+    # Collect the top 3 unique buildings based on their ID
+    top_buildings = []
+    seen_ids = set()
+
+    for index in sorted_indices:
+        building = population[index]
+        building_id = building['id']  # Assuming each building has a unique 'id' field
+        if building_id not in seen_ids:
+            top_buildings.append(building)
+            seen_ids.add(building_id)
+        if len(top_buildings) == 3:
+            break
+    
     return top_buildings
