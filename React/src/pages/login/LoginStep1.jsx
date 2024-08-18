@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Button, Col, Modal, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {handle_variables, authState } from './Redux/authSlice';
@@ -9,6 +10,7 @@ import {  toast } from 'react-toastify';
 import { BeatLoader } from "react-spinners";
 import {CaptchaComponent} from './CaptchaComponent'
 import LoginStep2 from "./LoginStep2";
+import loadCaptchaImage from './Redux/authSlice'
 
 let schema = yup.object().shape({
     phone: yup
@@ -18,13 +20,13 @@ let schema = yup.object().shape({
   
   });
 export default function LoginStep1(props){
-    const { loginModalStep1 ,isSendCode , phoneNumber , captcha_string , captcha_image , user_string} = useSelector(authState);
+    const { loginModalStep1 ,isSendCode , phoneNumber , captcha_string , user_string} = useSelector(authState);
     const dispatch = useDispatch();
     const [isLoadinging, setIsLoadinging] = useState(false);
 
-    console.log(phoneNumber);
-    console.log("captcha_image: ",captcha_image);
+    console.log("phoneNumber",phoneNumber);
     console.log("captcha_string: ",captcha_string);
+    console.log("isSendCode: ",isSendCode);
     console.log("user_string: ",user_string);
     
     
@@ -52,31 +54,29 @@ export default function LoginStep1(props){
                         };
                         console.log("data login step 1: " ,data);
                         
-                        setIsLoadinging(false);
-
                         let resp = API_GETOTP(data)
-                        console.log(resp);
+                        console.log("resp login step 1",resp);
                         
                         resp.then((res) => {
-                            console.log(res);
+                            console.log("res: ",res);
                             
                             if (res.status == 200) {
                                 dispatch(handle_variables({
                                     isSendCode: true,
                                     loginModalStep2 : true,
+                                    loginModalStep1 : false,
                                     phoneNumber: data.phoneNumber,
                                 }));
                                 setIsLoadinging(false);
                             } else {
-                                toast.error(res.error);
-                                console.log(res.error);
-                                
+                                toast.error(res.error);                                
                                 setIsLoadinging(false);
                             }
                         })
                         .catch((error) => {
                             console.log(error);
-                            // dispatch(loadCaptchaImage());
+                            toast.error(error);                                
+                            dispatch(loadCaptchaImage());
                             // toast.error(err.response.data.message);
                             setIsLoadinging(false);
                         });

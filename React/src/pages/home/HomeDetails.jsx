@@ -9,6 +9,7 @@ import { LuWarehouse } from "react-icons/lu";
 import { Tabs, Tab, Box } from '@mui/material';
 import React from 'react';
 import { FaSchool, FaHospital , FaTree } from 'react-icons/fa';
+import { FaChevronLeft } from 'react-icons/fa';
 
 export default function HomeDetails() { 
     const params =useParams()
@@ -88,7 +89,7 @@ export default function HomeDetails() {
         <Container className="bg-light">
             <Row className="d-flex p-5">
                 <Row className="mb-4">  
-                    <span>{detail.city} / {detail.category} / {detail.title}</span>
+                    <span>{detail.city} <FaChevronLeft /> {detail.category} <FaChevronLeft /> {detail.title}</span>
                 </Row>
                 <Col lg={6} >
                     <h2>{detail.title}</h2>
@@ -147,7 +148,13 @@ export default function HomeDetails() {
                         
                     </Col>
                     <Col sm={12} className="d-flex flex-column align-items-center mb-2">
-                        <img className="rounded" src={detail.image} alt="" style={{width:"500px", height:"400px"}} />
+                        <img
+                            src={detail.image ? detail.image : '/1.png'}
+                            style={{width:"500px", height:"400px"}}          
+                            className="rounded"
+                            alt={detail.title}
+                        />
+                        {/* <img className="rounded" src={detail.image} alt="" style={{width:"500px", height:"400px"}} /> */}
                     </Col>
                     <Button onClick={()=>setShow(true)} className="mt-3">نمایش جزییات</Button>
                     <Col>
@@ -160,48 +167,41 @@ export default function HomeDetails() {
                             centered
                             show={show}
                         >
-                            <Modal.Header >
+                            <Modal.Header>
                             <Modal.Title id="contained-modal-title-vcenter">
                                 ویژگی ها و امکانات
                             </Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
                             <Container className="p-4">
-                            <h3>ویژگی ها</h3>
+                                <h3>ویژگی ها</h3>
+                                <div className="d-flex justify-content-between align-items-center pt-1">
+                                    <p>نوع سند</p>
+                                    <p>{detail?.document_type ? detail.document_type : '-'}</p>
+                                </div>
+                                <div className="d-flex justify-content-between align-items-center pt-1">
+                                    <p>جهت ساختمان</p>
+                                    <p>{detail?.direction ? detail.direction : '-'}</p>
+                                </div>
+                                <div className="d-flex justify-content-between align-items-center pt-1">
+                                    <p>وضعیت واحد</p>
+                                    <p>{detail?.status ? detail.status : '-'}</p>
+                                </div>
 
-                            {detail?.document_type ? (
+                                <h3>امکانات</h3>
                                 <div className="d-flex justify-content-between align-items-center pt-1">
-                                        <p>نوع سند</p>
-                                        <p>{detail.document_type}</p>
-                                    </div>
-                            ): null}
-                            {detail?.direction ? (
+                                    <p>آسانسور</p>
+                                    <p>{elevator ==1 ? "دارد" : "ندارد"}</p>
+                                    
+                                </div>
                                 <div className="d-flex justify-content-between align-items-center pt-1">
-                                        <p>جهت ساختمان</p>
-                                        <p>{detail.direction}</p>
-                                    </div>
-                            ): null}
-                            {detail?.status ? (
+                                    <p>پارکینگ</p>
+                                    <p>{parking ==1 ? "دارد" : "ندارد"}</p>
+                                </div>
                                 <div className="d-flex justify-content-between align-items-center pt-1">
-                                        <p>وضعیت واحد</p>
-                                        <p>{detail.status}</p>
-                                    </div>
-                            ): null}
-                                    <h3>امکانات</h3>
-                                    <div className="d-flex justify-content-between align-items-center pt-1">
-                                        <p>آسانسور</p>
-                                        <p>{elevator ==1 ? "دارد" : "ندارد"}</p>
-                                        
-                                    </div>
-                                    <div className="d-flex justify-content-between align-items-center pt-1">
-                                        <p>پارکینگ</p>
-                                        <p>{parking ==1 ? "دارد" : "ندارد"}</p>
-                                    </div>
-                                    <div className="d-flex justify-content-between align-items-center pt-1">
-                                        <p>انباری</p>
-                                        <p>{warehouse ==1 ? "دارد" : "ندارد"}</p>
-                                    </div>
-
+                                    <p>انباری</p>
+                                    <p>{warehouse ==1 ? "دارد" : "ندارد"}</p>
+                                </div>
                             </Container>
                             </Modal.Body>
                             <Modal.Footer>

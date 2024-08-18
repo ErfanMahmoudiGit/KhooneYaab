@@ -21,13 +21,15 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/search" element={<SearchResults />} />
             <Route path="/:selectedcity" element={<CityResults />} />
+            <Route path='/category="فروش آپارتمان"' element={<BuyApartment />}  />
+
         </Route>
         {/* <Route path='/' element={<Home />}  /> */}
         <Route path='/register_announcement' element={<CreateHouse />}  />
         <Route path='/login' element={<Login />}  />
         <Route path='/house/:id' element={<HomeDetails />}  />
         <Route path='/recommender' element={<Recommender />}  />
-        <Route path='/category="فروش آپارتمان"' element={<BuyApartment />}  />
+        {/* <Route path='/category="فروش آپارتمان"' element={<BuyApartment />}  /> */}
         {/* <Route path='/category="فروش خانه و ویلا"' element={<BuyApartment />}  />
         <Route path='/category="اجاره آپارتمان"' element={<BuyApartment />}  />
         <Route path='/category="اجاره خانه و ویلا"' element={<BuyApartment />}  /> */}
