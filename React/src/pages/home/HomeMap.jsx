@@ -1,34 +1,37 @@
-import * as Yup from 'yup';
 import { useEffect, useState } from "react"
 import { MapContainer ,TileLayer, Marker,Popup, useMapEvent} from 'react-leaflet'
 import useGeoLocation from "../../hooks/useGeoLocation"
+import { Modal } from 'react-bootstrap';
+import { useNavigate } from "react-router-dom";
 
 export default function HomeMap({houses}){
 	const [markers, setMarkers] = useState([]);
     console.log(houses);
-    
-	// const[mapCenter,setMapCenter] = useState([32.717369808807,51.661074112828])
+    const navigate = useNavigate()
 	const[mapCenter,setMapCenter] = useState([32.85971234321241,53.97240877523566])
-	// const[mapCenter,setMapCenter] = useState([36.6257983,48.6099383])
     const {isLoading:isLoadingPosition , position:geoLocationPosition , getPosition } =useGeoLocation()
-   
     const[lat,lng] = [32.85971234321241,53.97240877523566]
 
     useEffect(()=>{
         if(lat && lng ) setMapCenter([lat,lng])
     },[lat,lng])
 
+
     useEffect(()=>{
         if(geoLocationPosition?.lat && geoLocationPosition?.lng)
             setMapCenter([geoLocationPosition.lat , geoLocationPosition.lng])
     },[geoLocationPosition])
+
+    function formatNumber(number) {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
 
 
     return (
 		<section>
 			<div className="appLayout w-100">
 			<div className="mapContainer" >
-            <MapContainer className="map" zoom={6} scrollWheelZoom={true} center={mapCenter} >
+            <MapContainer className="map" zoom={5} scrollWheelZoom={true} center={mapCenter} >
                 <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
@@ -40,8 +43,17 @@ export default function HomeMap({houses}){
                 {/* <ChangeCenter position={mapCenter}/> */}
                 {houses.map((item)=>(
                     <Marker key={item.id} position={[item.latitude,item.longitude]} > 
-                        <Popup>
-                            {item.description}
+                       <Popup>
+                            <div className="d-flex flex-column justify-content-center align-items-center text-right">
+                           
+                                <p>{item.title}</p>
+                                <p>{formatNumber(item.price)} تومان</p>
+                                {/* <Button variant="primary" onClick={() => handleMarkerClick(item)}>
+                                    
+                                </Button> */}
+                                <button onClick={() => navigate(`/house/${item.id}`)} className="smsButton">جزئیات بیشتر</button>
+
+                            </div>
                         </Popup>
                     </Marker>
                 ))}
@@ -72,9 +84,7 @@ export function DetectClick(){
     
 
 
-    // const navigate = useNavigate()
-    useMapEvent({   // useMapEvent bara ine k age rooye map click krd che kone
-        // click : (e) => console.log(e)
+    useMapEvent({   
         
         click(e) {
             const { lat, lng } = e.latlng;
