@@ -227,3 +227,12 @@ def update_user_info(request):
     user.save()
     return JsonResponse({'message':'welcome'})
 
+'''
+{
+    "min_price": 1000,
+    "max_price": 2000,
+    "min_meterage": 10,
+    "max_meterage": 50,
+    "room_count": 3
+}
+'''

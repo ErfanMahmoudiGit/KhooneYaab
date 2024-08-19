@@ -3,6 +3,7 @@ from django.utils import timezone
 
 class Building(models.Model):
     id = models.AutoField(primary_key=True)
+    owner_id = models.IntegerField()
     city = models.CharField(max_length=255)
     category = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
