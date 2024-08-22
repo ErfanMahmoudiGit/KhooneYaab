@@ -81,7 +81,7 @@ def check_otp(request):
     user.login_expires_in = now_in_tehran + timedelta(days=2)
     user.save()
 
-    welcome_message = "کد تایید شد، به چارخونه خوش آمدید"
+    welcome_message = "کد تایید شد، به خونه‌یاب خوش آمدید"
     
 
     return JsonResponse({
