@@ -9,7 +9,6 @@ import { FiUserCheck } from "react-icons/fi";
 
 import { useSelector, useDispatch } from "react-redux";
 import { authState, handle_variables } from '../login/Redux/authSlice'; // Update with the correct path
-
 import { useNavigate } from 'react-router-dom';
 import { Nav, Button, Navbar } from "react-bootstrap";
 import LoginStep1 from '../login/LoginStep1';
@@ -162,11 +161,8 @@ function NavScrollExample() {
                 ) : (
                   <NavLink
                   onClick={ ()=>{
-      
                     dispatch(handle_variables({ loginModalStep1: true }))
-                  }
-      
-                  }  
+                  }}  
                 >
                 <Button
                   className='bg-body-tertiary'

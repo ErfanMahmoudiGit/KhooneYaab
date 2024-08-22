@@ -67,6 +67,7 @@ body {
   flex-direction: column;
   /* min-height: 100vh; */
 }
+
 .main-head{
 
   position: sticky;
@@ -75,6 +76,47 @@ body {
     width: 100%;
     z-index: 1001; 
   
+}
+
+.ant-menu {
+  color:#001529;
+  background-color: #f8f9fa !important; /* Change background for the entire menu */
+}
+.ant-menu-dark .ant-menu-item{
+  color:#001529;
+  background-color: #f8f9fa !important; /* Change background for the entire menu */
+}
+.ant-menu-dark .ant-menu-item:hover{
+  color:#001529;
+  background-color: rgb(190, 186, 186) !important; /* Change background for selected item */
+}
+.ant-menu-item, .ant-menu-submenu-title {
+  color:#001529 !important;
+  background-color: #f8f9fa !important; /* Change background for the entire menu */
+}
+.ant-layout .ant-layout-sider-trigger{
+  color:#001529 !important;
+  background-color: #f8f9fa !important; /* Change background for the entire menu */
+}
+.ant-menu-item:hover, .ant-menu-submenu-title:hover {
+  background-color: rgb(190, 186, 186) !important; /* Change background for selected item */
+}
+
+.ant-menu-inline.ant-menu-root .ant-menu-item{
+  color:#001529 !important;
+  background-color: #f8f9fa !important;
+}
+.ant-menu-inline.ant-menu-root .ant-menu-item:hover{
+  color:#001529 !important;
+  background-color: rgb(190, 186, 186) !important; /* Change background for selected item */
+}
+.ant-menu-item-selected {
+  background-color: rgb(190, 186, 186) !important; /* Change background for selected item */
+}
+
+.ant-menu-dark.ant-menu-inline .ant-menu-sub.ant-menu-inline, .ant-menu-dark>.ant-menu.ant-menu-inline .ant-menu-sub.ant-menu-inline{
+  color:#001529;
+  background-color: #f8f9fa !important;
 }
 .btn-search{
   /* border-radius: 1px; */
@@ -189,6 +231,21 @@ input.default-input-box.invalid::placeholder,
 .sidebar-cont{
   margin-top: 30%;
 }
+.ant-select-dropdown {
+  z-index: 1050 !important;  /* Ensure dropdown options appear above other content */
+}
+
+.ant-select-selector {
+  max-height: 40px;          /* Limit the height */
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.ant-select-selection-item {
+  display: flex;
+  align-items: center;
+}
+
 .fixed-sidebar li{
   text-decoration: none;
   list-style: none;
