@@ -29,6 +29,7 @@ for home in homes:
     
     if home['latitude']:
         Building.objects.create(
+            owner_id=0,
             city=home['city'],
             category=home['category'],
             title=home['title'],

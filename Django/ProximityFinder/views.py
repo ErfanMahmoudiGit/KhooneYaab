@@ -58,6 +58,7 @@ STATE_DATA = [
 def create_house(request):
     try:
         data = json.loads(request.body)
+        owner_id = data.get('owner_id')
         city = data.get('city')
         category = data.get('category')
         title = data.get('title')
@@ -85,6 +86,7 @@ def create_house(request):
 
         # Create the new building object
         building = Building(
+            owner_id = owner_id,
             title=title,
             time=time,
             meterage=meterage,
@@ -119,6 +121,45 @@ def create_house(request):
 @require_GET
 def get_buildings(request):
     buildings = Building.objects.all()
+    building_list = []
+
+    for building in buildings:
+        building_data = {
+            'id':building.id,
+            'meterage': building.meterage,
+            'price': building.price,
+            'build_date': building.build_date,
+            'rooms': building.rooms,
+            'warehouse': 1 if building.facilities[0] else 0,
+            'parking': 1 if building.facilities[1] else 0,
+            'elevator': 1 if building.facilities[2] else 0,
+            'latitude': building.latitude,
+            'longitude': building.longitude,
+            'hospital': 1 if building.priorities[0] else 0,
+            'park': 1 if building.priorities[1] else 0,
+            'school': 1 if building.priorities[2] else 0,
+            'title':building.title,
+            'time':building.time,
+            'price_per_meter':building.price_per_meter,
+            'image':building.image,
+            'description':building.description,
+            'floor':building.floor,
+            'all_floors' :building.all_floors,
+            'document_type' :building.document_type,
+            'status':building.status,
+            'direction' :building.direction,
+            'city' :building.city,
+            'category' :building.category
+        }
+        building_list.append(building_data)
+
+    return JsonResponse(building_list, safe=False)
+
+@require_GET
+def get_buildings_by_owner_id(request):
+    data = json.loads(request.body)
+    owner_id = data.get('owner_id')
+    buildings = Building.objects.filter(owner_id = owner_id)
     building_list = []
 
     for building in buildings:

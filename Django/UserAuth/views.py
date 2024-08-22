@@ -78,6 +78,7 @@ def check_otp(request):
         return JsonResponse({"error": "کد اعتبار سنجی منقضی شده است"}, status=400)
 
     user.is_verified_phone_number = True
+    user.login_expires_in = now_in_tehran + timedelta(days=2)
     user.save()
 
     welcome_message = "کد تایید شد، به چارخونه خوش آمدید"
@@ -92,6 +93,7 @@ def check_otp(request):
                 "phoneNumber": user.phone_number,
                 "name": user.name,
                 "email": user.email,
+                "login_expires_in": user.login_expires_in,
             }
         }
     }, status=200)
@@ -225,3 +227,12 @@ def update_user_info(request):
     user.save()
     return JsonResponse({'message':'welcome'})
 
+'''
+{
+    "min_price": 1000,
+    "max_price": 2000,
+    "min_meterage": 10,
+    "max_meterage": 50,
+    "room_count": 3
+}
+'''
