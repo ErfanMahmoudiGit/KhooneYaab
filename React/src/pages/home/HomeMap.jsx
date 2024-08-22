@@ -177,8 +177,8 @@ export default function HomeMap({ houses }) {
         shadowSize: [41, 41]
     });
 
-    var greyIcon = new L.Icon({
-        iconUrl: 'marker-icon-grey.png',
+    var goldIcon = new L.Icon({
+        iconUrl: 'marker-icon-gold.png',
         shadowUrl: 'marker-shadow.png',
         iconSize: [25, 41],
         iconAnchor: [12, 41],
@@ -220,7 +220,8 @@ export default function HomeMap({ houses }) {
                     <Option value="All">همه</Option>
                     <Option value="فروش آپارتمان">فروش آپارتمان</Option>
                     <Option value="فروش خانه و ویلا">فروش خانه و ویلا</Option>
-                    <Option value="اجاره آپارتمان">اجاره آپارتمان</Option>
+                    <Option value="اجارهٔ آپارتمان">اجاره آپارتمان</Option>
+                    <Option value="اجارهٔ خانه و ویلا">اجاره خانه و ویلا</Option>
                 </Select>
             </div>
             <div className="appLayout w-100 mt-0">
@@ -241,8 +242,9 @@ export default function HomeMap({ houses }) {
                                     item.category === "فروش آپارتمان"
                                         ? blueIcon
                                         : item.category === "فروش خانه و ویلا"
-                                            ? greyIcon
-                                            : redIcon
+                                            ? goldIcon 
+                                            : item.category === "اجارهٔ آپارتمان" ?
+                                                redIcon : blackIcon
                                 }
                             >
                                 <Popup>
