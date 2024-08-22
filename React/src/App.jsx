@@ -5,12 +5,13 @@ import CreateHouse from './CreateHouse'
 import Home from './pages/home/Home';
 import Login from './pages/login/Login';
 import HomeDetails from './pages/home/HomeDetails';
-import BuyApartment from './pages/category/BuyApartment';
 import HomeLayout from './pages/home/HomeLayout';
 import SearchResults from './pages/home/SearchResults';
 import CityResults from './pages/home/CityResults';
 import Recommender from './pages/home/Recommender';
 import NewLayout from './pages/home/NewLayout';
+import Bookmarks from './pages/bookmarks/Bookmarks';
+import CategoryPage from './pages/category/CategoryPage';
 
 function App() {
 
@@ -22,7 +23,9 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/search" element={<SearchResults />} />
             <Route path="/:selectedcity" element={<CityResults />} />
-            <Route path='/category="فروش آپارتمان"' element={<BuyApartment />}  />
+            <Route path="/bookmarks" element={<Bookmarks />} />
+            <Route path='/category/:category' element={<CategoryPage />}  />
+            {/* <Route path='/category=BuyApartment' element={<BuyApartment />}  /> */}
 
         </Route>
 {/* <Route element={<HomeLayout />}>
