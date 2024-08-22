@@ -227,6 +227,22 @@ def update_user_info(request):
     user.save()
     return JsonResponse({'message':'welcome'})
 
+@require_GET
+def get_user_info(request):
+    data = json.loads(request.body)
+    id = data.get('owner_id')
+    if id != 0:
+        user = User.objects.filter(id=id).first()
+        if user:
+            phone_number = user.phone_number
+            email = user.email
+    else:
+        phone_number = "not available"
+        email = "not available"
+    
+    return JsonResponse({'email': email,
+                         'phone_number': phone_number})
+
 '''
 {
     "min_price": 1000,
