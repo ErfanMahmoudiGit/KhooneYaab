@@ -96,12 +96,22 @@ export default function HomeDetails() {
                     <p className="caption ">اطلاعات ملک</p>
                     <Col className=" border p-4 rounded" style={{border:"#94a3b8"}}>
                     <div className="d-flex justify-content-between align-items-center pt-1">
-                        <p>قیمت کل</p>
+                        {/* <p>قیمت کل</p> */}
+                        {detail.category == "فروش آپارتمان" || detail.category == "فروش خانه و ویلا" ? (
+                            <p>قیمت کل</p>
+                        ):(
+                            <p>ودیعه</p>
+                        )}
                         <p>{detail.price} تومان</p>
                     </div>
                     <hr />
                     <div className="d-flex justify-content-between align-items-center pt-1">
-                        <p>قیمت هر متر</p>
+                        {/* <p>قیمت هر متر</p> */}
+                        {detail.category == "فروش آپارتمان" || detail.category == "فروش خانه و ویلا" ? (
+                            <p>قیمت هر متر</p>
+                        ):(
+                            <p>کرایه</p>
+                        )}
                         <p>{detail.price_per_meter} تومان</p>
                     </div>
                     <hr />

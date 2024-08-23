@@ -1,4 +1,4 @@
-import{ useState } from 'react';
+import{ useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Layout } from 'antd';
 import { Button} from "react-bootstrap";
@@ -17,25 +17,19 @@ import NewFilters from './NewFilters';
 
 const FilterLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const[searchValue,setSearchValue] = useState("")
   let navigate = useNavigate()
   const { loginModalStep1  , is_verified_user,name ,seachedValue } = useSelector(authState);
+  const[searchValue,setSearchValue] = useState("")
   console.log("name",name);
   console.log("is_verified_user: ",is_verified_user);
   console.log("seachedValue: ",seachedValue);
   const dispatch = useDispatch();
 
 
+
   function handleSearch(filters){
     dispatch(handle_variables({ seachedValue : searchValue }))
 
-    // const body = { 
-    //     min_price :'',
-    //     max_price : '',
-    //     min_meterage : '',
-    //     max_meterage : '',
-    //     room_count: 3 
-    // };
     const body = {
         min_price: filters.min_price || '',
         max_price: filters.max_price || '',
@@ -44,7 +38,7 @@ const FilterLayout = () => {
         room_count: filters.room_count || ''
       };
 
-      console.log("here");
+      console.log("seachedValue");
       
     let resp = API_SEARCH(seachedValue ,body)
       resp.then((res) => {
@@ -60,7 +54,6 @@ const FilterLayout = () => {
           })
               
   }
-    
  
   return (
     <>
