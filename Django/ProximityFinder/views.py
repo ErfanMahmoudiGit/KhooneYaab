@@ -358,11 +358,22 @@ def get_buildings_by_category(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
+            state_id = data.get('state')
             category = data.get('category')
             if not category:
                 return JsonResponse({'error': 'Category is required'}, status=400)
             
             buildings = Building.objects.filter(category=category)
+            
+            if state_id:
+                # Find the city center corresponding to the state_id
+                state = next((item for item in STATE_DATA if item["id"] == state_id), None)
+                if not state:
+                    return JsonResponse({'error': 'Invalid state ID'}, status=400)
+                
+                city_center = state["center"]
+                buildings = buildings.filter(city=city_center)
+                
             buildings_data = []
             for building in buildings:
                 buildings_data.append({
@@ -398,56 +409,6 @@ def get_buildings_by_category(request):
     else:
         return JsonResponse({'error': 'POST request required'}, status=405)
     
-def get_buildings_by_state(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            state_id = data.get('state')
-            if not state_id:
-                return JsonResponse({'error': 'State ID is required'}, status=400)
-            
-            # Find the city center corresponding to the state_id
-            state = next((item for item in STATE_DATA if item["id"] == state_id), None)
-            if not state:
-                return JsonResponse({'error': 'Invalid state ID'}, status=400)
-            
-            city_center = state["center"]
-            buildings = Building.objects.filter(city=city_center)
-            buildings_data = []
-            for building in buildings:
-                buildings_data.append({
-                    'id': building.id,
-                    'city': building.city,
-                    'category': building.category,
-                    'title': building.title,
-                    'time': building.time,
-                    'meterage': building.meterage,
-                    'price': building.price,
-                    'price_per_meter': building.price_per_meter,
-                    'image': building.image,
-                    'description': building.description,
-                    'floor': building.floor,
-                    'all_floors': building.all_floors,
-                    'build_date': building.build_date,
-                    'rooms': building.rooms,
-                    'direction': building.direction,
-                    'document_type': building.document_type,
-                    'status': building.status,
-                    'latitude': building.latitude,
-                    'longitude': building.longitude,
-                    'warehouse': 1 if building.facilities[0] else 0,
-                    'parking': 1 if building.facilities[1] else 0,
-                    'elevator': 1 if building.facilities[2] else 0,
-                    'hospital': 1 if building.priorities[0] else 0,
-                    'park': 1 if building.priorities[1] else 0,
-                    'school': 1 if building.priorities[2] else 0,
-                })
-            return JsonResponse(buildings_data, safe=False)
-        except json.JSONDecodeError:
-            return JsonResponse({'error': 'Invalid JSON'}, status=400)
-    else:
-        return JsonResponse({'error': 'POST request required'}, status=405)
-
 def recommend_buildings(request):
     if request.method == 'POST':
         try:
