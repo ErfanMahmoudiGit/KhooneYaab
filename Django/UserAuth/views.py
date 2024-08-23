@@ -242,13 +242,4 @@ def get_user_info(request):
     
     return JsonResponse({'email': email,
                          'phone_number': phone_number})
-
-'''
-{
-    "min_price": 1000,
-    "max_price": 2000,
-    "min_meterage": 10,
-    "max_meterage": 50,
-    "room_count": 3
-}
-'''
+    

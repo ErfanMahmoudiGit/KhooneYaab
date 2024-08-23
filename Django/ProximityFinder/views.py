@@ -201,6 +201,30 @@ def search_buildings(request):
         buildings = Building.objects.filter(Q(title__icontains=query) | Q(description__icontains=query))
     else:
         buildings = Building.objects.none()
+        
+    data = json.loads(request.body)
+    min_price = data.get('min_price')
+    max_price = data.get('max_price')
+    min_meterage = data.get('min_meterage')
+    max_meterage = data.get('max_meterage')
+    room_count = data.get('room_count')
+    
+    # Apply filters based on the provided parameters
+    if min_price:
+        buildings = buildings.filter(price__gte=min_price)
+    
+    if max_price:
+        buildings = buildings.filter(price__lte=max_price)
+        
+    if min_meterage:
+        buildings = buildings.filter(meterage__gte=min_meterage)
+        
+    if max_meterage:
+        buildings = buildings.filter(meterage__lte=max_meterage)
+        
+    if room_count:
+        buildings = buildings.filter(rooms=room_count)
+    
 
     buildings_data = [
         {
