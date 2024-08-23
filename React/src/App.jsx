@@ -12,6 +12,7 @@ import Recommender from './pages/home/Recommender';
 import NewLayout from './pages/home/NewLayout';
 import Bookmarks from './pages/bookmarks/Bookmarks';
 import CategoryPage from './pages/category/CategoryPage';
+import FilterLayout from './pages/home/FilterLayout';
 
 function App() {
 
@@ -21,11 +22,15 @@ function App() {
       <Routes>
         <Route element={<NewLayout />}>
             <Route path="/" element={<Home />} />
-            <Route path="/search" element={<SearchResults />} />
+            {/* <Route path="/search" element={<SearchResults />} /> */}
             <Route path="/:selectedcity" element={<CityResults />} />
             <Route path="/bookmarks" element={<Bookmarks />} />
             <Route path='/category/:category' element={<CategoryPage />}  />
             {/* <Route path='/category=BuyApartment' element={<BuyApartment />}  /> */}
+
+        </Route>
+        <Route element={<FilterLayout />}>
+        <Route path="/search" element={<SearchResults />} />
 
         </Route>
 {/* <Route element={<HomeLayout />}>

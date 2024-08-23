@@ -52,9 +52,19 @@ export const API_GETHOUSE_DETAILS = async (id) => {
     }  
   }
 };
-export const API_SEARCH = async (q) => {
+export const API_SEARCH = async (q,body) => {
   try {
-    const response = await API_BASE.get(`building/search/?q=${q}`);
+    // const response = await API_BASE.get(`building/search/?q=${q}`,body);
+    const response = await API_BASE.get('building/search/', {
+      params: {
+          q: q,
+          min_price: body.min_price,
+          max_price: body.max_price,
+          min_meterage: body.min_meterage,
+          max_meterage: body.max_meterage,
+          room_count: body.room_count,
+      }
+  });
     return response;
   } catch (error) {
     try{

@@ -197,35 +197,32 @@ def get_buildings_by_owner_id(request):
 @require_GET
 def search_buildings(request):
     query = request.GET.get('q', '')
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+    min_meterage = request.GET.get('min_meterage')
+    max_meterage = request.GET.get('max_meterage')
+    room_count = request.GET.get('room_count')
+
+    # Initialize queryset
+    buildings = Building.objects.all()
+
+    # Apply search filter if query is present
     if query:
-        buildings = Building.objects.filter(Q(title__icontains=query) | Q(description__icontains=query))
-    else:
-        buildings = Building.objects.none()
-        
-    data = json.loads(request.body)
-    min_price = data.get('min_price')
-    max_price = data.get('max_price')
-    min_meterage = data.get('min_meterage')
-    max_meterage = data.get('max_meterage')
-    room_count = data.get('room_count')
-    
-    # Apply filters based on the provided parameters
+        buildings = buildings.filter(Q(title__icontains=query) | Q(description__icontains=query))
+
+    # Apply other filters based on provided parameters
     if min_price:
         buildings = buildings.filter(price__gte=min_price)
-    
     if max_price:
         buildings = buildings.filter(price__lte=max_price)
-        
     if min_meterage:
         buildings = buildings.filter(meterage__gte=min_meterage)
-        
     if max_meterage:
         buildings = buildings.filter(meterage__lte=max_meterage)
-        
     if room_count:
         buildings = buildings.filter(rooms=room_count)
-    
 
+    # Prepare data for JSON response
     buildings_data = [
         {
             'id': building.id,
@@ -241,22 +238,90 @@ def search_buildings(request):
             'hospital': 1 if building.priorities[0] else 0,
             'park': 1 if building.priorities[1] else 0,
             'school': 1 if building.priorities[2] else 0,
-            'title':building.title,
-            'time':building.time,
-            'price_per_meter':building.price_per_meter,
-            'image':building.image,
-            'description':building.description,
-            'floor':building.floor,
-            'all_floors' :building.all_floors,
-            'document_type' :building.document_type,
-            'status':building.status,
-            'direction' :building.direction,
-            'city' :building.city,
-            'category' :building.category
+            'title': building.title,
+            'time': building.time,
+            'price_per_meter': building.price_per_meter,
+            'image': building.image,
+            'description': building.description,
+            'floor': building.floor,
+            'all_floors': building.all_floors,
+            'document_type': building.document_type,
+            'status': building.status,
+            'direction': building.direction,
+            'city': building.city,
+            'category': building.category
         } for building in buildings
     ]
 
     return JsonResponse(buildings_data, safe=False)
+# def search_buildings(request):
+#     query = request.GET.get('q', '')
+#     if query:
+#         buildings = Building.objects.filter(Q(title__icontains=query) | Q(description__icontains=query))
+#     else:
+#         buildings = Building.objects.none()
+        
+#     # data = json.loads(request.body)
+#     # min_price = data.get('min_price')
+#     # max_price = data.get('max_price')
+#     # min_meterage = data.get('min_meterage')
+#     # max_meterage = data.get('max_meterage')
+#     # room_count = data.get('room_count')
+#     min_price = request.GET.get('min_price')
+#     max_price = request.GET.get('max_price')
+#     min_meterage = request.GET.get('min_meterage')
+#     max_meterage = request.GET.get('max_meterage')
+#     room_count = request.GET.get('room_count')
+#     print(room_count)
+    
+#     # Apply filters based on the provided parameters
+#     if min_price:
+#         buildings = buildings.filter(price__gte=min_price)
+    
+#     if max_price:
+#         buildings = buildings.filter(price__lte=max_price)
+        
+#     if min_meterage:
+#         buildings = buildings.filter(meterage__gte=min_meterage)
+        
+#     if max_meterage:
+#         buildings = buildings.filter(meterage__lte=max_meterage)
+        
+#     if room_count:
+#         buildings = buildings.filter(rooms=room_count)
+    
+
+#     buildings_data = [
+#         {
+#             'id': building.id,
+#             'meterage': building.meterage,
+#             'price': building.price,
+#             'build_date': building.build_date,
+#             'rooms': building.rooms,
+#             'warehouse': 1 if building.facilities[0] else 0,
+#             'parking': 1 if building.facilities[1] else 0,
+#             'elevator': 1 if building.facilities[2] else 0,
+#             'latitude': building.latitude,
+#             'longitude': building.longitude,
+#             'hospital': 1 if building.priorities[0] else 0,
+#             'park': 1 if building.priorities[1] else 0,
+#             'school': 1 if building.priorities[2] else 0,
+#             'title':building.title,
+#             'time':building.time,
+#             'price_per_meter':building.price_per_meter,
+#             'image':building.image,
+#             'description':building.description,
+#             'floor':building.floor,
+#             'all_floors' :building.all_floors,
+#             'document_type' :building.document_type,
+#             'status':building.status,
+#             'direction' :building.direction,
+#             'city' :building.city,
+#             'category' :building.category
+#         } for building in buildings
+#     ]
+
+#     return JsonResponse(buildings_data, safe=False)
 
 def get_building_by_id(request, id):
     building = get_object_or_404(Building, id=id)

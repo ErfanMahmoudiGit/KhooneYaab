@@ -1,12 +1,6 @@
 import{ useState } from 'react';
-import { TeamOutlined } from '@ant-design/icons';
 import { Outlet } from 'react-router-dom';
-import { FaPen } from "react-icons/fa";
-import { MdRecommend } from "react-icons/md";
-import { GoHomeFill } from "react-icons/go";
-import { GiVillage } from "react-icons/gi";
-import { BiSolidCategoryAlt } from "react-icons/bi";
-import { Layout, Menu } from 'antd';
+import { Layout } from 'antd';
 import { Button} from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 const { Header, Content, Sider } = Layout;
@@ -18,40 +12,17 @@ import { useSelector, useDispatch } from "react-redux";
 import { authState, handle_variables } from '../login/Redux/authSlice'; 
 import { useNavigate } from 'react-router-dom';
 import { API_SEARCH } from "../../services/apiServices";
-import LoginStep1 from '../login/LoginStep1';
 import { FiUserCheck } from 'react-icons/fi';
-import { FaBookmark } from 'react-icons/fa';
 import NewFilters from './NewFilters';
 
-function getItem(label, key, icon, children, link) {
-    return {
-      key,
-      icon,
-      children,
-      label: link ? <NavLink to={link}>{label}</NavLink> : label,
-    };
-}
-
-const items = [
-    getItem('دسته بندی ها', 'categories', <BiSolidCategoryAlt />, [
-      getItem('فروش آپارتمان', 'BuyApartment', <GoHomeFill  />, null, '/category/BuyApartment'),
-      getItem('اجاره آپارتمان', 'RentApartment', <GoHomeFill />, null, '/category/RentApartment'),
-      getItem('فروش خانه و ویلا', 'BuyHome', <GiVillage />, null, '/category/BuyHome'),
-      getItem('اجاره خانه و ویلا', 'RentHome', <GiVillage />, null, '/category/RentHome'),
-    ]),
-    getItem('ثبت آگهی', 'register_announcement', <FaPen />, null, '/register_announcement'),
-    getItem('آگهی های من', 'register_announcement', <TeamOutlined />, null, '/register_announcement'),
-    getItem('پیشنهاد دهنده ملک', 'recommender', <MdRecommend />, null, '/recommender'),    
-    getItem('نشان شده ها', 'bookmarks', <FaBookmark />, null, '/bookmarks'),    
-  ];
-
-const NewLayout = () => {
+const FilterLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const[searchValue,setSearchValue] = useState("")
   let navigate = useNavigate()
-  const { loginModalStep1  , is_verified_user,name } = useSelector(authState);
+  const { loginModalStep1  , is_verified_user,name ,seachedValue } = useSelector(authState);
   console.log("name",name);
   console.log("is_verified_user: ",is_verified_user);
+  console.log("seachedValue: ",seachedValue);
   const dispatch = useDispatch();
 
 
@@ -65,18 +36,17 @@ const NewLayout = () => {
     //     max_meterage : '',
     //     room_count: 3 
     // };
-    // const body = {
-    //     min_price: filters.min_price || '',
-    //     max_price: filters.max_price || '',
-    //     min_meterage: filters.min_meterage || '',
-    //     max_meterage: filters.max_meterage || '',
-    //     room_count: filters.room_count || ''
-    //   };
-    let body = {
-        
-    }
+    const body = {
+        min_price: filters.min_price || '',
+        max_price: filters.max_price || '',
+        min_meterage: filters.min_meterage || '',
+        max_meterage: filters.max_meterage || '',
+        room_count: filters.room_count || ''
+      };
 
-    let resp = API_SEARCH(searchValue ,body)
+      console.log("here");
+      
+    let resp = API_SEARCH(seachedValue ,body)
       resp.then((res) => {
           if (res.status === 200) {
             console.log("search",res.data);
@@ -103,6 +73,7 @@ const NewLayout = () => {
             }}
         >
             <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} breakpoint="lg"
+            width={250}
                 style={{
                     position: 'sticky',
                     color:"black",
@@ -113,15 +84,15 @@ const NewLayout = () => {
                 }}
         
             >
-                <div className="demo-logo-vertical" />
-                    <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} 
+                <div className="demo-logo-vertical w-[25%]" />
+                    {/* <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} 
                         style={{    
                             color:'#001529',
                             backgroundColor: '#f8f9fa', 
                         }}
                         defaultOpenKeys={['categories']} // Set the 'دسته بندی ها' key to be open by default
-                    />
-                    {/* <NewFilters onSearch={handleSearch} />  */}
+                    /> */}
+                    <NewFilters onSearch={handleSearch} /> 
             </Sider>
         <Layout>
             <Header
@@ -209,8 +180,7 @@ const NewLayout = () => {
         </Content>
     </Layout>
     </Layout>
-        {loginModalStep1 && <LoginStep1 />}
     </>
   );
 };
-export default NewLayout;
+export default FilterLayout;

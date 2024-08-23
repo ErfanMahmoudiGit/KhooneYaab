@@ -41,6 +41,7 @@ body {
   color: white;
   text-decoration: none;
   background: #979696;
+  border: #979696;
   padding: 5px 15px;
   display: flex;
   justify-content: center;
@@ -142,6 +143,10 @@ input[type="search"]::-webkit-search-cancel-button {
   padding: 1rem;
   overflow-y: auto;
   /* padding-top: 8%; */
+}
+.rotate-180 {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
 }
 .login-pill{
   /* border-radius: 30px; */
