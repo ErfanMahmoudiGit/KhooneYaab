@@ -20,6 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { API_SEARCH } from "../../services/apiServices";
 import LoginStep1 from '../login/LoginStep1';
 import { FiUserCheck } from 'react-icons/fi';
+import { FaBookmark } from 'react-icons/fa';
 
 function getItem(label, key, icon, children, link) {
     return {
@@ -32,14 +33,15 @@ function getItem(label, key, icon, children, link) {
 
 const items = [
     getItem('دسته بندی ها', 'categories', <BiSolidCategoryAlt />, [
-      getItem('فروش آپارتمان', 'BuyApartment', <GoHomeFill />, null, '/category="فروش آپارتمان'),
-      getItem('اجاره آپارتمان', 'BuyApartment', <GoHomeFill />, null, '/category="فروش آپارتمان'),
-      getItem('فروش خانه و ویلا', 'BuyApartment', <GiVillage />, null, '/category="فروش آپارتمان'),
-      getItem('اجاره خانه و ویلا', 'BuyApartment', <GiVillage />, null, '/category="فروش آپارتمان'),
+      getItem('فروش آپارتمان', 'BuyApartment', <GoHomeFill  />, null, '/category/BuyApartment'),
+      getItem('اجاره آپارتمان', 'RentApartment', <GoHomeFill />, null, '/category/RentApartment'),
+      getItem('فروش خانه و ویلا', 'BuyHome', <GiVillage />, null, '/category/BuyHome'),
+      getItem('اجاره خانه و ویلا', 'RentHome', <GiVillage />, null, '/category/RentHome'),
     ]),
     getItem('ثبت آگهی', 'register_announcement', <FaPen />, null, '/register_announcement'),
     getItem('آگهی های من', 'register_announcement', <TeamOutlined />, null, '/register_announcement'),
     getItem('پیشنهاد دهنده ملک', 'recommender', <MdRecommend />, null, '/recommender'),    
+    getItem('نشان شده ها', 'bookmarks', <FaBookmark />, null, '/bookmarks'),    
   ];
 
 const NewLayout = () => {
