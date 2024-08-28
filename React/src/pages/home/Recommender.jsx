@@ -113,6 +113,12 @@ export default function Recommender(){
             toast.error("فقط دو لوکیشن باید انتخاب شود");
         }
     };
+    // const center = [51.505, -0.09]
+    // <CircleMarker center={mapCenter} pathOptions={redOptions} radius={20}>
+    //                     <Popup>Popup in CircleMarker</Popup>
+    //                 </CircleMarker>
+    //                     const redOptions = { color: 'red' }
+
  
     return(
         <>

@@ -165,3 +165,20 @@ export const API_RECOMMENDER= async (data) => {
     }  
   }
 };
+
+
+export const API_POSTALCODE= async (data) => {
+  try {
+    if(data == 1212121212) return 'سعدی شمالی کوچه ناصری'
+    if(data == 3434343434) return 'کوچمشکی انجم شعاغ '
+    if(data == 1234567890) return 'کرجججججججججججججججج'
+    // const response = await API_BASE.post(`building/recommend_buildings/`,data);
+    // return response;
+  } catch (error) {
+    try{
+      return({...error?.response?.data,status: error.response.status}) ;  // check
+    }catch(err){
+      return({error:{message:'--سرویس در دسترس نیست'}}) ;
+    }  
+  }
+};

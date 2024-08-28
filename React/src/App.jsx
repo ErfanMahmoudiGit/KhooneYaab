@@ -3,7 +3,6 @@ import './App.css'
 import "formik-stepper/dist/style.css";
 import CreateHouse from './CreateHouse'
 import Home from './pages/home/Home';
-import Login from './pages/login/Login';
 import HomeDetails from './pages/home/HomeDetails';
 import HomeLayout from './pages/home/HomeLayout';
 import SearchResults from './pages/home/SearchResults';
@@ -26,8 +25,7 @@ function App() {
             <Route path="/:selectedcity" element={<CityResults />} />
             <Route path="/bookmarks" element={<Bookmarks />} />
             <Route path='/category/:category' element={<CategoryPage />}  />
-            {/* <Route path='/category=BuyApartment' element={<BuyApartment />}  /> */}
-
+            <Route path='/house/:id' element={<HomeDetails />}  />
         </Route>
         <Route element={<FilterLayout />}>
         <Route path="/search" element={<SearchResults />} />
@@ -40,16 +38,8 @@ function App() {
             <Route path='/category="فروش آپارتمان"' element={<BuyApartment />}  />
 
         </Route> */}
-        {/* <Route path='/' element={<Home />}  /> */}
         <Route path='/register_announcement' element={<CreateHouse />}  />
-        <Route path='/login' element={<Login />}  />
-        <Route path='/house/:id' element={<HomeDetails />}  />
         <Route path='/recommender' element={<Recommender />}  />
-        <Route path='/layout' element={<NewLayout />}  />
-        {/* <Route path='/category="فروش آپارتمان"' element={<BuyApartment />}  /> */}
-        {/* <Route path='/category="فروش خانه و ویلا"' element={<BuyApartment />}  />
-        <Route path='/category="اجاره آپارتمان"' element={<BuyApartment />}  />
-        <Route path='/category="اجاره خانه و ویلا"' element={<BuyApartment />}  /> */}
       </Routes>
 
     

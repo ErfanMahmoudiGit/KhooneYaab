@@ -9,6 +9,7 @@ export default function Bookmarks() {
     const [id, setID] = useState([]);
     const [loading, setIsLoading] = useState(false);
     const navigate = useNavigate()
+
     useEffect(() => {
         // Retrieve bookmarked IDs from localStorage
         const bookmarks = localStorage.getItem('BOOKMARKS');
@@ -76,19 +77,6 @@ export default function Bookmarks() {
                     )}
                 </div>
             )}
-            {/* <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px' }}>
-                {detail.length == 0 ? (
-                    <>no</>
-                ):(
-                    detail.map((house, index) => (
-                        <div key={index} style={{ border: '1px solid #ddd', padding: '16px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>
-                            <h3 style={{ fontSize: '18px', marginBottom: '8px' }}>{house.title}</h3>
-                            <p style={{ fontSize: '14px', color: '#666' }}>{house.description || 'No description available'}</p>
-                        </div>
-                    ))
-                )}
-                
-            </div> */}
         </>
     );
 }

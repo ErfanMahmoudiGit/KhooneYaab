@@ -137,6 +137,7 @@ const NewLayout = () => {
             }}
         >   
             <div className='d-flex gap-2'>
+                {/* <img src={'/logo.png'} style={{width:"200px", height:"100px"}}/> */}
                 <Form className='d-flex me-5'>
                     <Form.Group style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
                     <Form.Control
