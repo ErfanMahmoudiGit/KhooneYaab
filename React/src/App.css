@@ -108,6 +108,31 @@ body {
   background: #5e5d5d;
   border: #5e5d5d;
 }
+/* Tooltip.css */
+.tooltip {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.75);
+  color: white;
+  padding: 5px;
+  border-radius: 3px;
+  font-size: 12px;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.custom-slider .ant-slider-handle {
+  border: 2px solid #1890ff; /* Customize the handle border color */
+  background-color: #1890ff; /* Customize the handle background color */
+}
+.ant-tooltip {
+  background-color: #ff5722 !important; /* Change to your desired color */
+  color: #ffffff; /* Optional: change text color */
+  border-radius: 4px; /* Optional: adjust border radius */
+  font-size: 14px; /* Optional: adjust font size */
+}
+.custom-slider .ant-slider-track {
+  background-color: #1890ff; /* Customize the track color */
+}
 .bg-refresh {
   width: 30px;
   height: 30px;

@@ -2,16 +2,17 @@ import * as Yup from 'yup';
 import { useState } from 'react';
 import { useFormikContext, ErrorMessage, Field } from 'formik';
 import { Row, Col, Form, Button } from 'react-bootstrap';
-import { Upload } from "antd";
+import { Upload , Tooltip} from "antd";
 import { UploadOutlined } from "@ant-design/icons";
+import { Slider } from 'antd';
 
 export default function HouseInformation(){
     const { setFieldValue, values } = useFormikContext();
-    const [buildDateValue, setBuildDateValue] = useState(1370);
+    const [buildDateValue, setBuildDateValue] = useState();
 
     const handleSliderChange = (e) => {
-        setBuildDateValue(e.target.value);
-        setFieldValue('build_date', parseInt(e.target.value));
+        setBuildDateValue(e);        
+        setFieldValue('build_date', parseInt(e));
     };
     const categories = [
         {label : "فروش آپارتمان" , value : "فروش آپارتمان"},
@@ -30,13 +31,9 @@ export default function HouseInformation(){
         return false;  // Prevent default behavior
     };
 
-    console.log("title: ", values.title);
-    console.log("meterage: ", values.meterage);
-    console.log("price: ", values.price);
-    console.log("image: ", values.image);  // This will now contain the image src
-    console.log("description: ", values.description);
-    console.log("build_date: ", values.build_date);
-    console.log("category: ", values.category);
+    const tipFormatter = (value) => {
+        return `سال ساخت: ${value}`;
+    };
 
     return (
         <section>
@@ -99,18 +96,22 @@ export default function HouseInformation(){
             </Row>
             <Row className='gx-4 d-flex justify-content-center mx-5 mb-4 align-right'>
                 <Col sm={6}>
-                    <div className='d-flex flex-column'>
+                    <div className='d-flex flex-column p-3'>
                         <Form.Label>سال ساخت</Form.Label>
-                        <Form.Range
+                        <Slider
                             value={buildDateValue}
-                            name='build_date'
-                            max={1403}
                             min={1370}
+                            max={1403}
+                            name='build_date'
                             onChange={handleSliderChange}
+                            tooltip={{ formatter: tipFormatter }}
                             className="custom-slider"
                         />
-                        <p>سال ساخت انتخابی: {buildDateValue}</p>
-                    </div>
+                        <ErrorMessage name="build_date" component="div" className="text-danger" />
+                        {buildDateValue ? <p>{1403 - buildDateValue} سال ساخت</p> : ''}
+                       
+
+                    </div>   
                 </Col>
                 <Col sm={6}>
                     <Form.Label>توضیحات</Form.Label>
@@ -144,6 +145,7 @@ export default function HouseInformation(){
                         >
                             <Button
                                 style={{ width: "100% !important" }}
+                                // className='login-button'
                                 icon={<UploadOutlined />}
                             >
                                 آپلود تصویر

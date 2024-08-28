@@ -26,6 +26,10 @@ function App() {
             <Route path="/bookmarks" element={<Bookmarks />} />
             <Route path='/category/:category' element={<CategoryPage />}  />
             <Route path='/house/:id' element={<HomeDetails />}  />
+            <Route path='/recommender' element={<Recommender />}  />
+            <Route path='/register_announcement' element={<CreateHouse />}  />
+
+
         </Route>
         <Route element={<FilterLayout />}>
         <Route path="/search" element={<SearchResults />} />
@@ -38,8 +42,8 @@ function App() {
             <Route path='/category="فروش آپارتمان"' element={<BuyApartment />}  />
 
         </Route> */}
-        <Route path='/register_announcement' element={<CreateHouse />}  />
-        <Route path='/recommender' element={<Recommender />}  />
+        {/* <Route path='/register_announcement' element={<CreateHouse />}  /> */}
+        {/* <Route path='/recommender' element={<Recommender />}  /> */}
       </Routes>
 
     

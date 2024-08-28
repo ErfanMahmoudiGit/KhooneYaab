@@ -3,13 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import {handle_variables, authState } from '../login/Redux/authSlice';
 import { Formik,useFormikContext, ErrorMessage, Field } from 'formik';
 import { DefaultDropDown } from '../../ui/DefaultDropDown';
-import { MapContainer ,TileLayer, Marker,Popup, useMapEvent, useMap} from 'react-leaflet'
+import { MapContainer ,TileLayer, Marker,Popup, useMapEvent, CircleMarker , useMap ,useMapEvents} from 'react-leaflet'
 import * as Yup from "yup";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { API_RECOMMENDER} from "../../services/apiServices";
 import {  toast } from 'react-toastify';
 import { BeatLoader } from "react-spinners";
 import HomeMap from './HomeMap';
+import useGeoLocation from '../../hooks/useGeoLocation';
 
 let schema = Yup.object().shape({
       meterage: Yup.string().required('متراژ نمیتواند خالی باشد')
@@ -100,25 +101,97 @@ export default function Recommender(){
     const [markers, setMarkers] = useState([]);
     const [recommended_homes, setRecommended_homes] = useState([]);
     const[mapCenter,setMapCenter] = useState([32.85971234321241, 53.97240877523566])   
+    const { isLoading: isLoadingPosition, position: geoLocationPosition, getPosition } = useGeoLocation();
+    const [zoomLevel, setZoomLevel] = useState(5); // New state for zoom level
+    const mapRef = useRef();
+    
+    const getCityFromCoordinates = async (lat, lon) => {
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`
+        );
+        const data = await response.json();
+        const address = data.address || {};
+        return address.city || address.town || address.village || 'Unknown';
+    };
+    // const MapUpdater = ({ center }) => {
+    //     const map = useMapEvents({
+    //       click(e) {
+    //         const { lat, lng } = e.latlng;
+    //         getCityFromCoordinates(lat, lng).then(city => {
+    //         //   alert(`City: ${city}`);
+    //           toast.success(`منطقه انتخاب شده شما: ${city}`)
+    //         });
+    //       }
+    //     });
+      
+    //     return null;
+    //   };
+    useEffect(() => {
+      if (geoLocationPosition?.lat && geoLocationPosition?.lng) {
+        setMapCenter([geoLocationPosition.lat, geoLocationPosition.lng]);
+        setZoomLevel(16); // Set zoom level to 13 when location is updated
+  
+        console.log("here",geoLocationPosition);
+        
+        // Pan map to the new center
+        if (mapRef.current) {
+          mapRef.current.setView([geoLocationPosition.lat, geoLocationPosition.lng], 13);
+        }
+      }
+    }, [geoLocationPosition]);
 
-    const addMarker = (newMarker,setFieldValue) => {
+    function MapUpdater({ center, zoom }) {
+        const map = useMap();
+        
+        useEffect(() => {
+          if (center && zoom) {
+            map.setView(center, zoom);
+          }
+        }, [center, zoom, map]);
+      
+        return null;
+      }
+
+      const addMarker = (newMarker, setFieldValue) => {
         if (markers.length < 2) {
             setMarkers([...markers, newMarker]);
+    
+            // Trigger the toast inside the addMarker function
+            getCityFromCoordinates(newMarker.latitude, newMarker.longitude).then(city => {
+                toast.success(`منطقه انتخاب شده شما: ${city}`);
+            });
+    
             if (markers.length === 0) {
-                setFieldValue('location_1', [newMarker.latitude,newMarker.longitude]);
+                setFieldValue('location_1', [newMarker.latitude, newMarker.longitude]);
             } else if (markers.length === 1) {
-                setFieldValue('location_2', [newMarker.latitude,newMarker.longitude]);
+                setFieldValue('location_2', [newMarker.latitude, newMarker.longitude]);
             }
         } else {
             toast.error("فقط دو لوکیشن باید انتخاب شود");
         }
     };
-    // const center = [51.505, -0.09]
-    // <CircleMarker center={mapCenter} pathOptions={redOptions} radius={20}>
-    //                     <Popup>Popup in CircleMarker</Popup>
-    //                 </CircleMarker>
-    //                     const redOptions = { color: 'red' }
-
+    
+    // const addMarker = (newMarker,setFieldValue) => {
+    //     if (markers.length < 2) {
+    //         setMarkers([...markers, newMarker]);
+    //         const map = useMapEvents({
+    //             click(e) {
+    //             const { lat, lng } = e.latlng;
+    //             getCityFromCoordinates(lat, lng).then(city => {
+    //             //   alert(`City: ${city}`);
+    //                 toast.success(`منطقه انتخاب شده شما: ${city}`)
+    //             });
+    //             }
+    //         });
+    //         if (markers.length === 0) {
+    //             setFieldValue('location_1', [newMarker.latitude,newMarker.longitude]);
+    //         } else if (markers.length === 1) {
+    //             setFieldValue('location_2', [newMarker.latitude,newMarker.longitude]);
+    //         }
+    //     } else {
+    //         toast.error("فقط دو لوکیشن باید انتخاب شود");
+    //     }
+    // };
  
     return(
         <>
@@ -328,11 +401,31 @@ export default function Recommender(){
             <Col>
                 <div className="appLayout">
                 <div className="mapContainer" >
-                <MapContainer className="map" zoom={6} scrollWheelZoom={true} center={mapCenter} >
+                <MapContainer className="map" 
+                // zoom={6} 
+                zoom={zoomLevel}
+                whenCreated={(mapInstance) => (mapRef.current = mapInstance)} // Capture the map instance
+
+                scrollWheelZoom={true} center={mapCenter} >
                     <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
-                    />                    
+                    />      
+                    <MapUpdater center={mapCenter} zoom={zoomLevel} />
+                    <button onClick={getPosition} className="getLocation">
+              {isLoadingPosition ? "در حال بروزرسانی..." : "استفاده از موقعیت من"}
+            </button>
+
+            {/* Add Circle to show the user's location with a radius of 20 meters */}
+            {geoLocationPosition?.lat && geoLocationPosition?.lng && (
+              <CircleMarker
+                center={[geoLocationPosition.lat, geoLocationPosition.lng]}
+                radius={20}  // Radius in meters
+                
+                pathOptions={{ color: 'red', fillColor: 'red',fillOpacity: 0.8}}
+              />
+            )}
+              
                     <DetectClick onMarkerAdd={addMarker} setFieldValue={props.setFieldValue}/>
                 {
                     markers?.map((marker) => (
@@ -404,12 +497,22 @@ export default function Recommender(){
     )
 }
 
-export function DetectClick({ onMarkerAdd , setFieldValue}){
-    useMapEvent({
+// export function DetectClick({ onMarkerAdd , setFieldValue}){
+//     useMapEvent({
+//         click(e) {
+//             const { lat, lng } = e.latlng;
+//             onMarkerAdd({ latitude: lat, longitude: lng },setFieldValue);
+//         }
+//     });
+//     return null 
+// }
+export function DetectClick({ onMarkerAdd, setFieldValue }) {
+    useMapEvents({
         click(e) {
             const { lat, lng } = e.latlng;
-            onMarkerAdd({ latitude: lat, longitude: lng },setFieldValue);
+            onMarkerAdd({ latitude: lat, longitude: lng }, setFieldValue);
         }
     });
-    return null 
+
+    return null;
 }
