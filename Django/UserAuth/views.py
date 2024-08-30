@@ -229,7 +229,7 @@ def update_user_info(request):
     user.save()
     return JsonResponse({'message':'welcome'})
 
-@require_GET
+@require_POST
 def get_user_info(request):
     data = json.loads(request.body)
     id = data.get('owner_id')
@@ -239,8 +239,8 @@ def get_user_info(request):
             phone_number = user.phone_number
             email = user.email
     else:
-        phone_number = "not available"
-        email = "not available"
+        phone_number = "شماره همراه این کاربر قابل نمایش نیست"
+        email = "ایمیل این کاربر قابل نمایش نیست"
     
     return JsonResponse({'email': email,
                          'phone_number': phone_number})
