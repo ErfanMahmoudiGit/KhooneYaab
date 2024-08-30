@@ -83,17 +83,19 @@ def check_otp(request):
 
     welcome_message = "کد تایید شد، به خونه‌یاب خوش آمدید"
     
+    user_from_db = User.objects.filter(phone_number=phone_number).first()
 
     return JsonResponse({
         "statusCode": 200,
         "data": {
             "message": welcome_message,
             "user": {
-                "is_verified_user": user.is_verified_user,
-                "phoneNumber": user.phone_number,
-                "name": user.name,
-                "email": user.email,
-                "login_expires_in": user.login_expires_in,
+                "is_verified_user": user_from_db.is_verified_user,
+                "phoneNumber": user_from_db.phone_number,
+                "name": user_from_db.name,
+                "email": user_from_db.email,
+                "login_expires_in": user_from_db.login_expires_in,
+                "user_id": user_from_db.id,
             }
         }
     }, status=200)
