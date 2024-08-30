@@ -227,6 +227,7 @@ def search_buildings(request):
     buildings_data = [
         {
             'id': building.id,
+            'owner_id': building.owner_id,
             'meterage': building.meterage,
             'price': building.price,
             'build_date': building.build_date,
@@ -260,6 +261,7 @@ def get_building_by_id(request, id):
     building = get_object_or_404(Building, id=id)
     building_data = {
         'id': building.id,
+        'owner_id':building.owner_id,
         'city': building.city,
         'category': building.category,
         'title': building.title,
@@ -330,6 +332,7 @@ def get_buildings_by_category(request):
             for building in buildings:
                 buildings_data.append({
                     'id': building.id,
+                    'owner_id': building.owner_id,
                     'city': building.city,
                     'category': building.category,
                     'title': building.title,
