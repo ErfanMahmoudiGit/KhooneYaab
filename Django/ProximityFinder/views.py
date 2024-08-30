@@ -126,6 +126,7 @@ def get_buildings(request):
     for building in buildings:
         building_data = {
             'id':building.id,
+            'owner_id':building.owner_id,
             'meterage': building.meterage,
             'price': building.price,
             'build_date': building.build_date,
