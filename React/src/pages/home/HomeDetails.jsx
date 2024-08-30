@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { API_GETHOUSE_DETAILS } from "../../services/apiServices";
+import { API_GETHOUSE_DETAILS ,API_GET_CONTACT_INFO} from "../../services/apiServices";
 import { Button, Col, Container, Row ,Modal } from "react-bootstrap";
 import { MapContainer ,TileLayer, Marker,Popup} from 'react-leaflet'
 import { GrElevator } from "react-icons/gr";
@@ -18,7 +18,9 @@ export default function HomeDetails() {
     console.log(houseId);
     const[detail,setDetail] = useState([])
     const[show,setShow] = useState(false)
+    const[showContactModal,setShowContactModal] = useState(false)
     const [loading, setIsLoading] = useState(false);
+    const[contactInfo,setContactInfo] = useState([])
 
     useEffect(()=>{
         setIsLoading(true)
@@ -45,10 +47,23 @@ export default function HomeDetails() {
         fetchHouseDetails();
     },[])
 
-    // {
-    //     "id": 1,
-    //     "time": "2001-01-01",
-    // }
+    useEffect(() => {
+        const fetchContactInfo = async () => {
+            if (showContactModal) {
+                try {
+                    let res = await API_GET_CONTACT_INFO({owner_id : detail?.owner_id});  
+                    if (res.status === 200) {
+                        setContactInfo(res.data);
+                    }
+                } catch (error) {
+                    console.error("Error fetching contact info:", error);
+                }
+            }
+        };
+
+        fetchContactInfo();
+    }, [showContactModal, houseId]);
+    
 
   
     const [value, setValue] = React.useState(0);
@@ -57,7 +72,7 @@ export default function HomeDetails() {
       setValue(newValue);
     };
   
-    console.log(show);
+    console.log(detail?.owner_id);
     
     return(
         <>
@@ -153,7 +168,7 @@ export default function HomeDetails() {
     
                        
                         <Button onClick={()=>setShow(true)} className="mt-3 login-button">نمایش جزییات</Button>
-                        <Button onClick={()=>setShow(true)} className="mt-3 login-button">اطلاعات تماس</Button>
+                        <Button onClick={()=>setShowContactModal(true)} className="mt-3 login-button">اطلاعات تماس</Button>
                         </Row>
                         <Col>
                         </Col>
@@ -206,7 +221,36 @@ export default function HomeDetails() {
                                 <Button onClick={()=>setShow(false)} className="smsButton">بستن</Button>
                                 </Modal.Footer>
                             </Modal>
-         )}
+                        )}
+                        {showContactModal && (
+                            <Modal
+                            size="lg"
+                            aria-labelledby="contained-modal-title-vcenter"
+                            centered
+                            show={showContactModal}
+                        >
+                            <Modal.Header>
+                            <Modal.Title id="contained-modal-title-vcenter">
+                              اطلاعات تماس این آگهی
+                            </Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                            <Container className="p-4">
+                                <div className="d-flex justify-content-between align-items-center pt-1">
+                                    <p>شماره تماس</p>
+                                    <p>{contactInfo?.phone_number ? contactInfo?.phone_number : '-'}</p>
+                                </div>
+                                <div className="d-flex justify-content-between align-items-center pt-1">
+                                    <p>ایمیل</p>
+                                    <p>{contactInfo?.email ? contactInfo?.email : '-'}</p>
+                                </div>
+                            </Container>
+                            </Modal.Body>
+                            <Modal.Footer>
+                            <Button onClick={()=>setShowContactModal(false)} className="smsButton">بستن</Button>
+                            </Modal.Footer>
+                        </Modal>
+                        )}
                        
                     </Col>
     
@@ -231,8 +275,7 @@ export default function HomeDetails() {
             نزدیک به : {detail?.school == 1 && <span><FaSchool /> مدرسه</span>} {detail?.hospital == 1 && <span><FaHospital /> بیمارستان</span>}{detail?.park == 1 && <span><FaTree /> پارک</span>} 
     
             </div>
-          {detail.latitude && detail.longitude ? (
-                    
+            {detail.latitude && detail.longitude ? (   
                 <section>
                      <div className="appLayout w-100">
                      <div className="mapContainer" >
@@ -252,31 +295,25 @@ export default function HomeDetails() {
          
                  </div>		   
                  </div>
-                 </section>
-    
-                    
-    
-                ): null}
+                </section>    
+            ): null}
           </TabPanel>
-          <TabPanel value={value} index={2}>
-            <h3>روش‌های رایج کلاهبرداری در املاک</h3>
-            <p>- دریافت بیعانه</p>
-            <p>- دریافت پول به بهانهٔ ارسال عکس و بازدید </p>
-            <p>- اجاره یا فروش همزمان ملک به چند نفر</p>
-            <p>- اجاره یا فروش ملک با سند یا شرایط مشکل‌دار</p>
-            <h4>در این موارد به شدت احتیاط کنید</h4>
-            <p>آگهی‌گذار درخواست بیعانه دارد</p>
-            <p>قیمت ملک پایین و وسوسه‌کننده‌ است</p>
-            <p>آگهی‌گذار به جای چت دیوار، مکالمه در خارج دیوار را پیشنهاد می‌کند</p>
-            <p>وضعیت سند مشخص نیست</p>
-    
-          </TabPanel>
+            <TabPanel value={value} index={2}>
+                <h3>روش‌های رایج کلاهبرداری در املاک</h3>
+                <p>- دریافت بیعانه</p>
+                <p>- دریافت پول به بهانهٔ ارسال عکس و بازدید </p>
+                <p>- اجاره یا فروش همزمان ملک به چند نفر</p>
+                <p>- اجاره یا فروش ملک با سند یا شرایط مشکل‌دار</p>
+                <h4>در این موارد به شدت احتیاط کنید</h4>
+                <p>آگهی‌گذار درخواست بیعانه دارد</p>
+                <p>قیمت ملک پایین و وسوسه‌کننده‌ است</p>
+                <p>آگهی‌گذار به جای چت دیوار، مکالمه در خارج دیوار را پیشنهاد می‌کند</p>
+                <p>وضعیت سند مشخص نیست</p>
+        
+            </TabPanel>
         </Box>
     
                 </Row>
-               
-    
-            
             </Container>
 
             )

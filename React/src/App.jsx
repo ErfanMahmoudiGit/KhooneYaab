@@ -12,6 +12,7 @@ import NewLayout from './pages/home/NewLayout';
 import Bookmarks from './pages/bookmarks/Bookmarks';
 import CategoryPage from './pages/category/CategoryPage';
 import FilterLayout from './pages/home/FilterLayout';
+import MyRegistered from './pages/register_announcement/MyRegistered';
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
             <Route path='/house/:id' element={<HomeDetails />}  />
             <Route path='/recommender' element={<Recommender />}  />
             <Route path='/register_announcement' element={<CreateHouse />}  />
+            <Route path='/my_registered' element={<MyRegistered />}  />
 
 
         </Route>

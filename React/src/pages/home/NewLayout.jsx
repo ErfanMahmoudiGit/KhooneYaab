@@ -40,7 +40,7 @@ const items = [
       getItem('اجاره خانه و ویلا', 'RentHome', <GiVillage />, null, '/category/RentHome'),
     ]),
     getItem('ثبت آگهی', 'register_announcement', <FaPen />, null, '/register_announcement'),
-    getItem('آگهی های من', 'register_announcement', <TeamOutlined />, null, '/register_announcement'),
+    getItem('آگهی های من', 'my_registered', <TeamOutlined />, null, '/my_registered'),
     getItem('پیشنهاد دهنده ملک', 'recommender', <MdRecommend />, null, '/recommender'),    
     getItem('نشان شده ها', 'bookmarks', <FaBookmark />, null, '/bookmarks'),    
   ];

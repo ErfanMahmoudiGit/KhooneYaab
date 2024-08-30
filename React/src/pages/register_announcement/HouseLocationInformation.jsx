@@ -76,6 +76,8 @@ export default function HouseLocationInformation(){
     ];
     
 	const[mapCenter,setMapCenter] = useState([32.85971234321241, 53.97240877523566])   
+    const [zoomLevel, setZoomLevel] = useState(6); // New state for zoom level
+
 
     const addMarker = (newMarker) => {
         console.log(newMarker.latitude);  
@@ -92,15 +94,16 @@ export default function HouseLocationInformation(){
             setMapCenter([parseFloat(latitude), parseFloat(longitude)]);
             setFieldValue("latitude", parseFloat(latitude));
             setFieldValue("longitude", parseFloat(longitude));
+            setZoomLevel(9)
         }
 
     }
 
-    function MapUpdater({ center }) {
+    function MapUpdater({ center , zoom }) {
         const map = useMap();
         useEffect(() => {
-            map.setView(center);
-        }, [center, map]);
+            map.setView(center , zoom);
+        }, [center, map, zoom]);
 
         return null;
     }
@@ -153,12 +156,16 @@ export default function HouseLocationInformation(){
             <Col>
                 <div className="appLayout">
                 <div className="mapContainer" >
-                <MapContainer className="map" zoom={6} scrollWheelZoom={true} center={mapCenter} >
+                <MapContainer className="map" 
+                // zoom={6} 
+                zoom={zoomLevel} 
+                
+                scrollWheelZoom={true} center={mapCenter} >
                     <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
                     />
-                     <MapUpdater center={mapCenter} />
+                     <MapUpdater center={mapCenter} zoom={zoomLevel} />
                     
                     <DetectClick onMarkerAdd={addMarker} setFieldValue={setFieldValue}/>
                 {

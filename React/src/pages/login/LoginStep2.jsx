@@ -9,6 +9,7 @@ import OTPInput from 'react-otp-input';
 import {API_CHECKOTP} from '../../services/apiServices'
 import LoginStep3 from "./LoginStep3";
 import {  toast } from 'react-toastify';
+import Timer from "./Timer";
 
 // Validation schema
 const validationSchema = yup.object().shape({
@@ -123,6 +124,11 @@ export default function LoginStep2() {
                                 {props.touched.code && props.errors.code && (
                                     <div style={{ color: 'red' }}>{props.errors.code}</div>
                                 )}
+                                <Row className="d-flex justify-content-center mt-3">
+                                    <Col xs={12} md={9}>
+                                        <Timer />
+                                    </Col>
+                                </Row>
                                 <div className="mb-4 text-secondary">
                                     {/* {time > 0 ? (
                                         <p>{time} ثانیه تا ارسال مجدد کد</p>
