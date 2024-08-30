@@ -3,6 +3,7 @@ import { API_GETHOUSE_DETAILS } from "../../services/apiServices";
 import { BeatLoader } from "react-spinners";
 import { FaChevronLeft, FaRegBookmark, FaBookmark } from 'react-icons/fa';
 import { useNavigate } from "react-router-dom";
+import { Row ,Button} from "react-bootstrap";
 
 export default function Bookmarks() {
     const [detail, setDetail] = useState([]);
@@ -49,8 +50,13 @@ export default function Bookmarks() {
     }
 
     return (
-        <>
-            <h2>نشان شده ها</h2>
+        <>  
+            <div className="d-flex flex-row justify-content-between m-3">
+                <h2>نشان شده ها</h2>
+                <Button className="back-btn" onClick={()=> navigate('/')}>رفتن به صفحه اصلی</Button>
+            </div>
+
+         
             {loading ? (
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
                     <BeatLoader />

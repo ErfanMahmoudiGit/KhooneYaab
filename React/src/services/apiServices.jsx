@@ -178,3 +178,19 @@ export const API_GET_CONTACT_INFO = async (data) => {
     }  
   }
 };
+
+
+
+
+export const API_GET_MY_BUILDINGS= async (data) => {
+  try {
+    const response = await API_BASE.post(`building/my_buildings/`,data);
+    return response;
+  } catch (error) {
+    try{
+      return({...error?.response?.data,status: error.response.status}) ;  // check
+    }catch(err){
+      return({error:{message:'--سرویس در دسترس نیست'}}) ;
+    }  
+  }
+};

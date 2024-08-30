@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Select } from 'antd'; // Import Ant Design Select
-import { API_GET_BY_STATE } from '../services/apiServices';
 import { useNavigate } from 'react-router-dom';
 import { authState, handle_variables } from "../pages/login/Redux/authSlice";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FaTimes } from 'react-icons/fa'; // Import close icon
 
 const { Option } = Select;
@@ -44,26 +43,20 @@ const STATE_OPTIONS = [
 
 function NewDropdown() {
     const navigate = useNavigate();
-    const { cityResults } = useSelector(authState);
     const dispatch = useDispatch();
     const [selectedValue, setSelectedValue] = useState(null); // Local state for selected value
+    const {  selectedCityId  , selectedCity} = useSelector(authState);
+    console.log(selectedCityId,selectedCity);
 
     const handleSelectionChange = (value) => {
         const selectedState = STATE_OPTIONS.find(option => option.value === value);
         if (selectedState) {
             setSelectedValue(value); // Update local state
-            dispatch(handle_variables({ selectedCity: selectedState.label }));
+            dispatch(handle_variables({ selectedCity: selectedState.label  , selectedCityId : selectedState.value}));
+            localStorage.setItem('CITY', JSON.stringify(selectedState.value));
+            
 
-            let data = { state: value };
-            let resp = API_GET_BY_STATE(data);
-            resp.then((res) => {
-                if (res.status === 200) {
-                    dispatch(handle_variables({ cityResults: res.data }));
-                    navigate(`${selectedState.label}`);
-                } else {
-                    console.log("not sent");
-                }
-            });
+          
         } else {
             // Clear city results if no selection
             dispatch(handle_variables({ cityResults: [] }));
@@ -82,7 +75,7 @@ function NewDropdown() {
         <div style={{ position: 'relative', height: "100%" }}>
             <Select
                 placeholder="استان را انتخاب کنید"
-                style={{ width: '100%' }}
+                style={{ width: '180px' }}
                 value={selectedValue}
                 onChange={handleSelectionChange}
                 allowClear

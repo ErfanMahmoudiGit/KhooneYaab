@@ -47,7 +47,7 @@ function MyTimer({ expiryTimestamp }) {
   );
 }
 
-function Timer() {
+export default function Timer() {
   const time = new Date();
   time.setSeconds(time.getSeconds() + 119); // 10 minutes timer
   return (
@@ -56,5 +56,3 @@ function Timer() {
     </div>
   );
 }
-
-export default Timer;

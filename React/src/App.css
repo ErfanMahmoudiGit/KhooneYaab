@@ -79,6 +79,51 @@ body {
   border-radius: 10px;
   font-weight: 600;
 }
+.back-btn{
+  background-color: #dddcdc;
+  color: #000;
+  border: none;
+  padding: 40px 0px;
+  display: inline-block;
+  font-size: 16px!important;
+  width: 20%;
+  border-radius: 10px;
+  font-weight: 600;
+}
+.btn-login{
+  background-color: #dddcdc;
+  color: #000;
+  border: none;
+  padding: 40px 0px;
+  display: inline-block;
+  font-size: 16px!important;
+  width: 100%;
+  font-weight: 600;
+}
+.btn-login-back{
+  background-color: #e6316d;
+  color: #d6d6d6;
+  border: none;
+  padding: 40px 0px;
+  display: inline-block;
+  font-size: 16px!important;
+  width: 100%;
+  font-weight: 600;
+}
+.btn-login-back:hover{
+  background-color: #cf3d6e;
+
+}
+
+.btn-login:hover , .btn-login:active , .btn-login:focus , .btn-login:visited{
+  background-color: #b9b9b9;
+  color: #000;
+  border: none;
+  display: inline-block;
+  font-size: 16px!important;
+  width: 100%;
+  font-weight: 600;
+}
 .custom-size {
   width: 250px;
   height: 200px;
@@ -245,6 +290,7 @@ input[type="search"]::-webkit-search-cancel-button {
 .login-input{
   border-radius: 15px;
   padding: 8px 20px;
+  font-size: 18px;
   border-color: #ced4da !important;
   box-shadow: unset !important;
 }
@@ -276,14 +322,10 @@ input[type="search"]::-webkit-search-cancel-button {
   font-size: 0.875rem !important;
   width: 100%;
 }
-.login-input{
+/* .login-input{
   border-radius: 15px;
   padding: 8px 20px;
-}
-.login-btn{
-  width: 100%;
-  border-radius: 15px;
-}
+} */
 .login-btn{
   width: 100%;
   border-radius: 15px;
@@ -296,7 +338,7 @@ input[type="search"]::-webkit-search-cancel-button {
 .default-input-box {
   padding: 10px 15px;
   border-radius: 19px;
-  font-size: 12px;
+  font-size: 18px;
 }
 input.default-input-box.invalid,
 .invalid-input div[class*="-control"],

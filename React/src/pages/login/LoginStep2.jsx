@@ -22,21 +22,9 @@ export default function LoginStep2() {
     const { loginModalStep2, isSendCode, phoneNumber ,loginModalStep3 , is_verified_user , welcome_message} = useSelector(authState);
     const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false);
-    const RESEND_TIME = 90;
     const [otp, setOtp] = useState("");
-    const [time, setTime] = useState(RESEND_TIME);
 
     console.log("loginModalStep3",loginModalStep3);
-
-
-    // useEffect(() => {
-    //     const timer = time > 0 && setInterval(() => {
-    //         setTime((t) => t - 1);
-    //     }, 1000);
-    //     return () => {
-    //         if (timer) clearInterval(timer);
-    //     };
-    // }, [time]);
     
     return (
         <>
@@ -95,9 +83,10 @@ export default function LoginStep2() {
                                 <h5>کد فعالسازی 6 رقمی به شماره همراه {phoneNumber} ارسال گردید</h5>
                             </Col>
                         </Row>
+                        <p className="font-weight-bold text-secondary text-center d-flex justify-content-center">کد تایید را وارد کنید</p>
                         <Row className="d-flex justify-content-center mt-3">
+
                             <Col className="ci-div" xs={12} md={9}>
-                                <p className="font-weight-bold text-secondary">کد تایید را وارد کنید</p>
                                 <OTPInput 
                                     numInputs={6}
                                     value={otp} 
@@ -115,7 +104,8 @@ export default function LoginStep2() {
                                                 padding: "0.5rem 0.2rem",
                                                 border: "1px solid rgb(183, 197, 255)",
                                                 borderRadius: "0.5rem",
-                                                textAlign: "center"
+                                                textAlign: "center",
+                                                fontSize:"18px"
                                             }} 
                                         />
                                     )}
@@ -130,30 +120,28 @@ export default function LoginStep2() {
                                     </Col>
                                 </Row>
                                 <div className="mb-4 text-secondary">
-                                    {/* {time > 0 ? (
-                                        <p>{time} ثانیه تا ارسال مجدد کد</p>
-                                    ) : (
-                                        <button className="text-primary">ارسال مجدد کد تایید</button>
-                                    )} */}
                                 </div>
                             </Col>
                         </Row>
                         <Row className="d-flex justify-content-center mt-3">
                             <Col xs={6} md={4}>
-                                {!isLoading ? (
-                                    <Button type="submit" className="btn btn-primary login-btn">
+                                {/* {!isLoading ? (
+                                    <Button type="submit" className="btn-login">
                                         تایید 
                                     </Button>
                                 ) : (
-                                    <div style={{ borderRadius: "15px", padding: "2px" }} className="btn btn-primary login-btn">
+                                    <div className="btn-login">
                                         <BeatLoader size={9} color={"black"} />
                                     </div>
-                                )}
+                                )} */}
+                                 <Button type="submit" className="btn-login">
+                                        {isLoading ? <BeatLoader size={9} color={"black"} /> : "تایید"} 
+                                    </Button>
                             </Col>
                             <Col xs={6} md={4}>
                                 <Button
                                     type="button"
-                                    className="btn login-btn btn-danger btn-red"
+                                    className="btn-login-back"
                                     onClick={() => {
                                         dispatch(handle_variables({
                                             isSendCode: false,

@@ -41,7 +41,7 @@ const items = [
     ]),
     getItem('ثبت آگهی', 'register_announcement', <FaPen />, null, '/register_announcement'),
     getItem('آگهی های من', 'my_registered', <TeamOutlined />, null, '/my_registered'),
-    getItem('پیشنهاد دهنده ملک', 'recommender', <MdRecommend />, null, '/recommender'),    
+    getItem('پیشنهاد ملک', 'recommender', <MdRecommend />, null, '/recommender'),    
     getItem('نشان شده ها', 'bookmarks', <FaBookmark />, null, '/bookmarks'),    
   ];
 
@@ -49,11 +49,13 @@ const NewLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const[searchValue,setSearchValue] = useState("")
   let navigate = useNavigate()
-  const { loginModalStep1  , is_verified_user,name } = useSelector(authState);
+  const { loginModalStep1  , is_verified_user,name , seachedValue} = useSelector(authState);
   console.log("name",name);
   console.log("is_verified_user: ",is_verified_user);
   const dispatch = useDispatch();
 
+  console.log("seachedValue:",seachedValue);
+  
 
   function handleSearch(filters){
     dispatch(handle_variables({ seachedValue : searchValue }))
@@ -91,6 +93,11 @@ const NewLayout = () => {
               
   }
     
+  function searchHandler(e){
+    console.log('e',e.target.value);
+    
+    // setSearchValue(e.target.value)
+  }
  
   return (
     <>

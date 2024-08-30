@@ -20,15 +20,16 @@ const FilterLayout = () => {
   let navigate = useNavigate()
   const { loginModalStep1  , is_verified_user,name ,seachedValue } = useSelector(authState);
   const[searchValue,setSearchValue] = useState("")
-  console.log("name",name);
-  console.log("is_verified_user: ",is_verified_user);
-  console.log("seachedValue: ",seachedValue);
+//   console.log("name",name);
+//   console.log("is_verified_user: ",is_verified_user);
   const dispatch = useDispatch();
 
 
 
   function handleSearch(filters){
-    dispatch(handle_variables({ seachedValue : searchValue }))
+    dispatch(handle_variables({ searchedValue : searchValue }))
+    console.log('filters',filters);
+    
 
     const body = {
         min_price: filters.min_price || '',
@@ -38,7 +39,7 @@ const FilterLayout = () => {
         room_count: filters.room_count || ''
       };
 
-      console.log("seachedValue");
+      console.log("seachedValue in filter layot",seachedValue);
       
     let resp = API_SEARCH(seachedValue ,body)
       resp.then((res) => {

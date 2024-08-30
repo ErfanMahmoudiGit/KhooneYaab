@@ -58,7 +58,7 @@ export default function LoginStep1(props){
                         console.log("resp login step 1",resp);
                         
                         resp.then((res) => {
-                            console.log("res: ",res);
+                            console.log("res login 1: ",res);
                             
                             if (res.status == 200) {
                                 dispatch(handle_variables({
@@ -87,7 +87,7 @@ export default function LoginStep1(props){
                     <form onSubmit={props.handleSubmit}>
                         <Row className={"text-center"}>
                             <Col xs={12}>
-                                <h5>ورود به چارخونه</h5>
+                                <h3>ورود به خونه یاب</h3>
                             </Col>
                         </Row>
                         <Row className="d-flex justify-content-center mt-3">
@@ -126,21 +126,28 @@ export default function LoginStep1(props){
 
                         <Row className="d-flex justify-content-center mt-3">
                             <Col xs={6} md={4}>
-                                {!isLoadinging ? (
+                            <Button
+                                        type="submit"
+                                        className="btn-login"
+                                    >
+                            {isLoadinging ? <BeatLoader size={9} color={"black"} /> : " ارسال کد فعالسازی"}
+                            </Button>
+                                {/* {!isLoadinging ? (
                                     <Button
                                         type="submit"
-                                        className="btn btn-primary login-btn"
+                                        className="btn-login"
                                     >
                                         ارسال کد فعالسازی
+                                        {isLoadinging ? <BeatLoader size={9} color={"black"} /> : " ارسال کد فعالسازی"}
                                     </Button>
                                     ) : (
                                     <div
-                                        style={{ borderRadius: "15px", padding: "2px" }}
-                                        className="btn btn-primary login-btn"
+                                        // style={{ borderRadius: "15px", padding: "2px" }}
+                                        className="btn-login"
                                     >
                                         <BeatLoader size={9} color={"black"} />
                                     </div>
-                                )}
+                                )} */}
                             </Col>
                         </Row>
                     </form>

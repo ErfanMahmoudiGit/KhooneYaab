@@ -23,6 +23,7 @@ const initialState = {
   seachedValue:"",
   cityResults :[],
   selectedCity : "",
+  selectedCityId : "",
   
 
   signInModalopen: false,

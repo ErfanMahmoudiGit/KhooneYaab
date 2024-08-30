@@ -6,7 +6,6 @@ import Home from './pages/home/Home';
 import HomeDetails from './pages/home/HomeDetails';
 import HomeLayout from './pages/home/HomeLayout';
 import SearchResults from './pages/home/SearchResults';
-import CityResults from './pages/home/CityResults';
 import Recommender from './pages/home/Recommender';
 import NewLayout from './pages/home/NewLayout';
 import Bookmarks from './pages/bookmarks/Bookmarks';
@@ -23,7 +22,6 @@ function App() {
         <Route element={<NewLayout />}>
             <Route path="/" element={<Home />} />
             {/* <Route path="/search" element={<SearchResults />} /> */}
-            <Route path="/:selectedcity" element={<CityResults />} />
             <Route path="/bookmarks" element={<Bookmarks />} />
             <Route path='/category/:category' element={<CategoryPage />}  />
             <Route path='/house/:id' element={<HomeDetails />}  />

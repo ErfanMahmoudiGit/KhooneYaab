@@ -3,6 +3,9 @@ import { API_CATEGORY } from "../../services/apiServices";
 import { BeatLoader } from "react-spinners";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaChevronLeft } from 'react-icons/fa';
+import { authState } from "../login/Redux/authSlice";
+import { useSelector } from "react-redux";
+import { Button } from "react-bootstrap";
 
 export default function CategoryPage() {
     const [houses, setHouses] = useState([]);
@@ -14,7 +17,8 @@ export default function CategoryPage() {
     const loadMoreRef = useRef(null);
     const navigate = useNavigate();
     const { category } = useParams();
-
+    const {  selectedCityId } = useSelector(authState);
+    
     let cat;
     if (category === 'BuyApartment') {
         cat = "فروش آپارتمان";
@@ -27,26 +31,26 @@ export default function CategoryPage() {
     } else {
         cat = "";
     }
+    const fetchHouses = async () => {
+        setIsLoading(true);
+        try {
+            const res = await API_CATEGORY({ category: cat , state : selectedCityId});
+            if (res.status === 200) {
+                setHouses(res.data);
+                setDisplayedHouses(res.data.slice(0, 12)); // Display the first 12 houses
+            } else {
+                console.error("Error fetching houses");
+            }
+        } catch (error) {
+            console.error("Error fetching houses:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchHouses = async () => {
-            setIsLoading(true);
-            try {
-                const res = await API_CATEGORY({ category: cat });
-                if (res.status === 200) {
-                    setHouses(res.data);
-                    setDisplayedHouses(res.data.slice(0, 12)); // Display the first 12 houses
-                } else {
-                    console.error("Error fetching houses");
-                }
-            } catch (error) {
-                console.error("Error fetching houses:", error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
         fetchHouses();
-    }, [category]);
+    }, [selectedCityId]);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -112,14 +116,19 @@ export default function CategoryPage() {
             ) : (
                 <>
                     <div className="d-flex justify-content-between align-items-center m-3">
-                        <h5>آگهی های {cat}</h5>
-                        {/* Sort Dropdown */}
-                        <select onChange={handleSortChange} value={sortOrder} style={{ border: '1px solid #ddd', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }} className="form-select w-auto">
+                        <div className="d-flex align-items-center gap-4">
+                            <h5>آگهی های {cat}</h5>
+                            <select onChange={handleSortChange} value={sortOrder} style={{ border: '1px solid #ddd', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }} className="form-select w-auto">
                             <option value="">مرتب سازی بر اساس</option>
                             <option value="price-asc">قیمت: کم به زیاد</option>
                             <option value="price-desc">قیمت: زیاد به کم</option>
                         </select>
+                        </div>
+                        
+                       
+                    <Button className="back-btn" onClick={()=> navigate('/')}>رفتن به صفحه اصلی</Button>
                     </div>
+
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '16px' }}>
                         {displayedHouses.length === 0 ? (
                             <div style={{ display: 'flex', justifyContent: 'center', height: '100vh', marginTop: "20px" }}>
