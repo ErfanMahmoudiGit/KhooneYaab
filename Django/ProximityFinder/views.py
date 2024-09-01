@@ -381,8 +381,8 @@ def recommend_buildings(request):
             hospital= utils.convert_persian_text_to_english_digits(data.get('hospital'))
             park= utils.convert_persian_text_to_english_digits(data.get('park'))
             school = utils.convert_persian_text_to_english_digits(data.get('school'))
-            facilities = f"[{elevator},{parking},{warehouse}]",
-            priorities = f"[{hospital},{park},{school}]",
+            facilities = [int(elevator), int(parking), int(warehouse)]
+            priorities = [int (hospital), int(park), int(school)]
             state_id = data.get('city')
             
             if not all([meterage, price, build_date, rooms, elevator, parking, warehouse,
@@ -400,8 +400,9 @@ def recommend_buildings(request):
 
             if buildings:
                 # Find the top 3 recommended buildings using a genetic algorithm
-                recommended_buildings = genetic_algorithm(buildings, meterage, price, build_date, rooms, facilities, location_1, location_2, priorities)
-            
+                #recommended_buildings = genetic_algorithm(buildings, meterage, price, build_date, rooms, facilities, location_1, location_2, priorities)
+                recommended_buildings = cosine_similarity_algorithm(buildings, meterage, price, build_date, rooms, facilities, location_1, location_2, priorities)
+
                 return JsonResponse(recommended_buildings, safe=False)
             else:
                 return JsonResponse({'error': 'No Houses Available in that city.'}, status=400)
@@ -475,4 +476,116 @@ def genetic_algorithm(buildings, meterage, price, build_date, rooms, facilities,
         if len(top_buildings) == 3:
             break
     
+    return top_buildings
+
+import ast
+
+def cosine_similarity_algorithm(buildings, meterage, price, build_date, rooms, facilities, location_1, location_2, priorities):
+    """
+    Finds the top N buildings that best match the user's preferences using cosine similarity.
+
+    Parameters:
+        buildings (list of dict): List of building data with their features.
+        meterage (int): User's desired meterage.
+        price (int): User's desired price.
+        build_date (int): User's desired build date.
+        rooms (int): User's desired number of rooms.
+        facilities (list of int): List of user's desired facilities as binary values (1 or 0).
+        location_1 (tuple): Tuple (latitude, longitude) of the first preferred location.
+        location_2 (tuple): Tuple (latitude, longitude) of the second preferred location.
+        priorities (list of int): List of user's priorities as binary values (1 or 0).
+        top_n (int): Number of top matching buildings to return.
+
+    Returns:
+        list of dict: Top N buildings that best match the user's preferences.
+    """
+    top_n = 3
+    
+    # Ensure facilities and priorities are numeric lists
+    facilities = list(map(float, facilities))  # Convert all elements to float
+    priorities = list(map(float, priorities))  # Convert all elements to float
+    
+    # Combine facilities and priorities as part of the user vector
+    user_vector = np.array([
+        float(price),    # Ensure each value is a float
+        float(meterage),
+        float(build_date),
+        float(rooms)
+    ] + facilities + priorities + [0, 0])  # Add placeholders for location similarity
+    
+    # Normalize the user vector
+    user_vector_norm = np.linalg.norm(user_vector)
+    if user_vector_norm == 0:
+        raise ValueError("User preference vector cannot be zero.")
+    
+    user_vector = user_vector / user_vector_norm  # Normalize user vector
+
+    building_vectors = []
+    building_ids = []
+    similarity_scores = []
+
+    for building in buildings:
+        # Parse facilities and priorities if they are in string format
+        building_facilities = building.get('facilities', [])
+        building_priorities = building.get('priorities', [])
+
+        if isinstance(building_facilities, str):
+            building_facilities = ast.literal_eval(building_facilities)
+        if isinstance(building_priorities, str):
+            building_priorities = ast.literal_eval(building_priorities)
+
+        # Convert to float
+        building_facilities = list(map(float, building_facilities))
+        building_priorities = list(map(float, building_priorities))
+
+        # Calculate location similarity
+        loc1_dist = geodesic(
+            (building.get('latitude'), building.get('longitude')),
+            location_1
+        ).kilometers
+        loc2_dist = geodesic(
+            (building.get('latitude'), building.get('longitude')),
+            location_2
+        ).kilometers
+
+        location_similarity = [(1 / (1 + loc1_dist)), (1 / (1 + loc2_dist))]
+
+        # Build the building vector
+        building_vector = np.array([
+            float(building.get('price', 0)),
+            float(building.get('meterage', 0)),
+            float(building.get('build_date', 0)),
+            float(building.get('rooms', 0))
+        ] + building_facilities + building_priorities + location_similarity)
+
+        # Ensure the building vector matches the length of the user vector
+        if len(building_vector) != len(user_vector):
+            raise ValueError(f"Building vector length {len(building_vector)} does not match user vector length {len(user_vector)}.")
+
+        # Normalize building vector
+        building_vector_norm = np.linalg.norm(building_vector)
+        if building_vector_norm == 0:
+            continue  # Skip buildings with zero vector
+        building_vector = building_vector / building_vector_norm
+
+        # Compute cosine similarity (dot product since vectors are normalized)
+        similarity = np.dot(user_vector, building_vector)
+
+        building_vectors.append(building_vector)
+        building_ids.append(building.get('id'))
+        similarity_scores.append(similarity)
+
+    # Combine building data with their similarity scores
+    building_similarity_data = list(zip(building_ids, similarity_scores, buildings))
+
+    # Sort buildings by similarity score in descending order
+    sorted_buildings = sorted(
+        building_similarity_data,
+        key=lambda x: x[1],
+        reverse=True
+    )
+
+    # Select top N buildings
+    top_buildings = [item[2] for item in sorted_buildings[:top_n]]
+
     return top_buildings
