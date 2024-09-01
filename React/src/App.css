@@ -209,43 +209,62 @@ body {
 
 .ant-menu {
   color:#001529;
-  background-color: #f8f9fa !important; /* Change background for the entire menu */
+  background-color: #E7E8D8 !important;;
+  /* background-color: #f8f9fa !important;  */
 }
 .ant-menu-dark .ant-menu-item{
   color:#001529;
-  background-color: #f8f9fa !important; /* Change background for the entire menu */
+  background-color: #E7E8D8;
+  /* background-color: #f8f9fa !important;  */
 }
 .ant-menu-dark .ant-menu-item:hover{
   color:#001529;
-  background-color: rgb(190, 186, 186) !important; /* Change background for selected item */
+  /* background-color: rgb(190, 186, 186) !important;  */
+  background-color: #E7E8D8;
+
 }
 .ant-menu-item, .ant-menu-submenu-title {
   color:#001529 !important;
-  background-color: #f8f9fa !important; /* Change background for the entire menu */
+  /* background-color: #f8f9fa !important;  */
+  background-color: #E7E8D8;
+
+}
+.ant-layout-header{
+  /* background-color: #AAB396; */
+  background-color: #E7E8D8;
 }
 .ant-layout .ant-layout-sider-trigger{
   color:#001529 !important;
-  background-color: #f8f9fa !important; /* Change background for the entire menu */
+  background-color: #E7E8D8;
 }
 .ant-menu-item:hover, .ant-menu-submenu-title:hover {
-  background-color: rgb(190, 186, 186) !important; /* Change background for selected item */
-}
+  background-color: rgb(190, 186, 186) !important; 
+  /* background-color: #E7E8D8; */
 
+
+}
+.ant-layout .ant-layout-sider-children{
+  background-color: #E7E8D8;
+}
 .ant-menu-inline.ant-menu-root .ant-menu-item{
   color:#001529 !important;
-  background-color: #f8f9fa !important;
+  background-color: #E7E8D8;
+
+  /* background-color: #f8f9fa !important; */
 }
 .ant-menu-inline.ant-menu-root .ant-menu-item:hover{
   color:#001529 !important;
-  background-color: rgb(190, 186, 186) !important; /* Change background for selected item */
+  background-color: #E7E8D8;
 }
 .ant-menu-item-selected {
-  background-color: rgb(190, 186, 186) !important; /* Change background for selected item */
+  background-color: #E7E8D8;
 }
 
 .ant-menu-dark.ant-menu-inline .ant-menu-sub.ant-menu-inline, .ant-menu-dark>.ant-menu.ant-menu-inline .ant-menu-sub.ant-menu-inline{
   color:#001529;
-  background-color: #f8f9fa !important;
+  /* background-color: #f8f9fa !important; */
+  background-color: #E7E8D8;
+
 }
 .btn-search{
   /* border-radius: 1px; */
