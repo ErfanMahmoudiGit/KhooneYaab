@@ -116,6 +116,75 @@ def create_house(request):
         return JsonResponse({'error': str(e)}, status=400)
 
 @require_POST
+def delete_building(request, building_id):
+    try:
+        # Retrieve the building object
+        building = get_object_or_404(Building, id=building_id)
+        
+        # Delete the building object
+        building.delete()
+        
+        # Return a success message
+        return JsonResponse({'message': 'Building deleted successfully'}, status=200)
+    
+    except Building.DoesNotExist:
+        return JsonResponse({'error': 'Building not found'}, status=404)
+    
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+@require_POST
+def update_building(request, building_id):
+    try:
+        # Retrieve the building object
+        building = get_object_or_404(Building, id=building_id)
+        
+        # Load the data from the request
+        data = json.loads(request.body)
+        
+        # Update fields if present in the request
+        building.owner_id = data.get('owner_id', building.owner_id)
+        building.city = data.get('city', building.city)
+        building.category = data.get('category', building.category)
+        building.title = data.get('title', building.title)
+        building.time = parse_date(data.get('time')) if data.get('time') else building.time
+        building.prioritized = utils.convert_persian_text_to_english_digits(data.get('prioritized', building.prioritized))
+        building.meterage = utils.convert_persian_text_to_english_digits(data.get('meterage', building.meterage))
+        building.price = utils.convert_persian_text_to_english_digits(data.get('price', building.price))
+        building.price_per_meter = utils.convert_persian_text_to_english_digits(data.get('price_per_meter', building.price_per_meter))
+        building.image = data.get('image', building.image)
+        building.description = data.get('description', building.description)
+        building.floor = utils.convert_persian_text_to_english_digits(data.get('floor', building.floor))
+        building.all_floors = utils.convert_persian_text_to_english_digits(data.get('all_floors', building.all_floors))
+        building.build_date = data.get('build_date', building.build_date)
+        building.rooms = utils.convert_persian_text_to_english_digits(data.get('rooms', building.rooms))
+        elevator = utils.convert_persian_text_to_english_digits(data.get('elevator', building.facilities[0]))
+        parking = utils.convert_persian_text_to_english_digits(data.get('parking', building.facilities[1]))
+        warehouse = utils.convert_persian_text_to_english_digits(data.get('warehouse', building.facilities[2]))
+        building.facilities = f"[{elevator},{parking},{warehouse}]"
+        building.direction = data.get('direction', building.direction)
+        building.document_type = data.get('document_type', building.document_type)
+        building.status = data.get('status', building.status)
+        building.latitude = data.get('latitude', building.latitude)
+        building.longitude = data.get('longitude', building.longitude)
+        hospital = utils.convert_persian_text_to_english_digits(data.get('hospital', building.priorities[0]))
+        park = utils.convert_persian_text_to_english_digits(data.get('park', building.priorities[1]))
+        school = utils.convert_persian_text_to_english_digits(data.get('school', building.priorities[2]))
+        building.priorities = f"[{hospital},{park},{school}]"
+        
+        # Save the updated building object
+        building.save()
+        
+        # Return a success message
+        return JsonResponse({'message': 'Building updated successfully'}, status=200)
+    
+    except (KeyError, TypeError, ValueError, ValidationError) as e:
+        return JsonResponse({'error': str(e)}, status=400)
+    
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+@require_POST
 def toggle_prioritized(request, building_id):
     try:
         # Retrieve the building object
