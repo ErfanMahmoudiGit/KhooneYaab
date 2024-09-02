@@ -147,12 +147,7 @@ const NewLayout = () => {
             }}
         >   
             <div className='d-flex gap-2 align-items-center'>
-                {/* <span className='d-flex align-items-center gap-3'>
-                     <FcHome size={32}/>
-                    <span style={{fontSize:"20px" , fontStyle:"revert-layer",color:"#ec4f28"}}> خونه یاب</span>
-                </span> */}
-               
-                {/* <img src={'/1.jpeg'} style={{width:"200px", height:"100px"}}/> */}
+                <img src={'/logo.png'} style={{width:"200px", height:"50px"}}/>
                 <Form className='d-flex me-5'>
                     <Form.Group style={{ position: 'relative', display: 'flex', alignItems: 'center' }} id='search_box'>
                     <Form.Control

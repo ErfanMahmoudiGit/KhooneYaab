@@ -28,7 +28,7 @@ export default function SelectSellCategory(){
                             <div className='iconBox rounded-4 bg-green hv-center'>
                             <FcHome size={80} className='p-2 text-white' />
                         </div>
-                        <span className='ps-4 fw-bold'>فروش خانه و ویلا</span>
+                        <span className='fw-bold'>فروش خانه و ویلا</span>
                         </div>
                 </Col>
                 <Col xs="12" md="3" className="m-4">
@@ -40,7 +40,7 @@ export default function SelectSellCategory(){
                             <div className='iconBox rounded-4 bg-green hv-center'>
                             <MdApartment size={80} className='p-2 text-danger' />
                         </div>
-                        <span className='ps-4 fw-bold '>فروش آپارتمان</span>
+                        <span className='fw-bold '>فروش آپارتمان</span>
                     </div>
                 </Col>
         </div>

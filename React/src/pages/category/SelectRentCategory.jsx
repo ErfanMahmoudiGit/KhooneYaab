@@ -20,15 +20,15 @@ export default function SelectRentCategory(){
             </div>
             <div className='g-5 d-flex justify-content-center align-items-center' style={{marginTop:"80px",}}>
                 <Col xs="12" md="3" className=" m-4">
-                    <div  className="d-flex flex-column justify-content-center align-items-center card-bookmark"
+                    <div  className="text-center d-flex flex-column justify-content-center align-items-center card-bookmark"
                         style={{ border: '1px solid #ddd', padding: '16px', borderRadius: '8px', height:"200px",backgroundColor:"#ffffff",
                         boxShadow: "0 4px 4px rgba(0, 0, 0, 0.2)"}}
                         onClick={()=>{navigate('/category/RentHome')}}
                         >
-                            <div className='iconBox rounded-4 bg-green hv-center'>
+                            {/* <div className='iconBox rounded-4 bg-green hv-center'> */}
                             <FcHome size={80} className='p-2 text-white' />
-                        </div>
-                        <span className='ps-4 fw-bold'>اجاره خانه و ویلا</span>
+                        {/* </div> */}
+                        <span className='fw-bold text-center'>اجاره خانه و ویلا</span>
                         </div>
                 </Col>
                 <Col xs="12" md="3" className="m-4">
@@ -40,7 +40,7 @@ export default function SelectRentCategory(){
                             <div className='iconBox rounded-4 bg-green hv-center'>
                             <MdApartment size={80} className='p-2 text-danger' />
                         </div>
-                        <span className='ps-4 fw-bold '>اجاره آپارتمان</span>
+                        <span className='fw-bold '>اجاره آپارتمان</span>
                     </div>
                 </Col>
             </div>
