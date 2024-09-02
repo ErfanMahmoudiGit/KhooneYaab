@@ -149,12 +149,8 @@ def send_otp(phone_number, code):
             "message": "کد اعتبارسنجی ارسال نشد"
         }, status=500)
         
-import random
 import base64
 import io
-from django.views import View
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
 from PIL import Image, ImageDraw, ImageFont
 
 class CaptchaView(View):
@@ -245,3 +241,47 @@ def get_user_info(request):
     return JsonResponse({'email': email,
                          'phone_number': phone_number})
     
+    
+@require_POST
+def remove_user(request):
+    try:
+        data = json.loads(request.body)
+        user_id = data.get('user_id')
+
+        if not user_id:
+            return JsonResponse({"error": "User ID is required"}, status=400)
+
+        user = User.objects.filter(id=user_id).first()
+
+        if not user:
+            return JsonResponse({"error": "User not found"}, status=404)
+
+        user.delete()
+        return JsonResponse({"message": "User successfully deleted"}, status=200)
+    
+    except Exception as e:
+        return JsonResponse({"error": f"An error occurred: {e}"}, status=500)
+
+@require_POST
+def logout_user(request):
+    try:
+        data = json.loads(request.body)
+        user_id = data.get('user_id')
+
+        user = User.objects.filter(id=user_id).first()
+
+        # Replace the timezone information without altering the actual time
+        now_in_tehran = timezone.now().astimezone(tehran_tz)
+    
+        if not user:
+            return JsonResponse({"error": "User not found"}, status=404)
+
+        # Invalidate session (if using Django sessions)
+        if request.session.get('user_id'):
+            user.login_expires_in = now_in_tehran - timedelta(days=10)
+            user.save()
+
+        return JsonResponse({"message": "User successfully logged out"}, status=200)
+    
+    except Exception as e:
+        return JsonResponse({"error": f"An error occurred: {e}"}, status=500)
