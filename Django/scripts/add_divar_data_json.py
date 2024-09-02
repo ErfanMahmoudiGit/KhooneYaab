@@ -48,7 +48,7 @@ for home in homes:
             category=home['category'],
             title=home['title'],
             time = formatted_random_date,
-            prioritized = 0,
+            prioritized = 0 if random.random() < 0.7 else 1,
             meterage=mtr,
             price=prc,
             price_per_meter=ppm,
