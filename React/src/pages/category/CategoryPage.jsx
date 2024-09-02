@@ -95,22 +95,6 @@ export default function CategoryPage() {
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
 
-    // Function to handle sort change
-    // const handleSortChange = (event) => {
-    //     const selectedSort = event.target.value;
-    //     setSortOrder(selectedSort);
-
-    //     let sortedHouses = [...houses];
-    //     if (selectedSort === 'price-asc') {
-    //         sortedHouses.sort((a, b) => a.price - b.price);
-    //     } else if (selectedSort === 'price-desc') {
-    //         sortedHouses.sort((a, b) => b.price - a.price);
-    //     }
-
-    //     setDisplayedHouses(sortedHouses.slice(0, currentIndex + 12));
-    // };
-
-
     const handleSortChange = (selectedSort) => {
         setSortOrder(selectedSort);
         sortHouses(selectedSort, dateOrder);
@@ -122,17 +106,7 @@ export default function CategoryPage() {
         sortHouses(sortOrder, selectedDateOrder);
     };
     
-    // const handleSortChange = (event) => {
-    //     const selectedSort = event.target.value;
-    //     setSortOrder(selectedSort);
-    //     sortHouses(selectedSort, dateOrder);
-    // };
-
-    // const handleDateChange = (event) => {
-    //     const selectedDateOrder = event.target.value;
-    //     setDateOrder(selectedDateOrder);
-    //     sortHouses(sortOrder, selectedDateOrder);
-    // };
+  
     const sortHouses = (priceOrder, dateOrder) => {
         let sortedHouses = [...houses];
 
@@ -203,9 +177,7 @@ export default function CategoryPage() {
                                         />
                                         
                                     </div>
-    
-                                    {/* <img style={{width:"170px" , height:"170px" , borderRadius: '8px'}} src={house.image ? house.image : '/1.png'}></img> */}
-                                    <h3 style={{ fontSize: '18px', marginTop: '12px' }}>{truncateText(house.title)}</h3>
+                                        <h3 style={{ fontSize: '18px', marginTop: '12px' }}>{truncateText(house.title)}</h3>
                                     <div style={{ fontSize: '14px', color: '#666' }}>آگهی در {house.city}</div>
                                     <div style={{ fontSize: '14px', color: '#666' }}>املاک <FaChevronLeft size={12} /> {house.category}</div>
                                     <div style={{ fontSize: '14px', color: '#666' }}>{formatNumber(house.price)} تومان</div>
