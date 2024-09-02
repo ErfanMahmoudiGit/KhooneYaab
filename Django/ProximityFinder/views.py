@@ -115,6 +115,26 @@ def create_house(request):
     except (KeyError, TypeError, ValueError, ValidationError) as e:
         return JsonResponse({'error': str(e)}, status=400)
 
+@require_POST
+def toggle_prioritized(request, building_id):
+    try:
+        # Retrieve the building object
+        building = get_object_or_404(Building, id=building_id)
+        
+        # Toggle the prioritized field
+        building.prioritized = 1 if building.prioritized == 0 else 0
+        
+        # Save the updated building object
+        building.save()
+        
+        # Return the new state of the prioritized field
+        return JsonResponse({'id': building.id, 'prioritized': building.prioritized}, status=200)
+    
+    except Building.DoesNotExist:
+        return JsonResponse({'error': 'Building not found'}, status=404)
+    
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
 
 @require_GET
 def get_buildings(request):
