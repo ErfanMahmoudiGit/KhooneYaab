@@ -10,15 +10,11 @@ from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_date
 from .models import Building
 from django.db.models import Q
-
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-
 from django.shortcuts import get_object_or_404
-
 from extentions import utils
-
 
 STATE_DATA = [
     {"name": "آذربايجان شرقی", "center": "تبریز", "latitude": "38.50", "longitude": "46.180", "id": 1},
@@ -63,6 +59,7 @@ def create_house(request):
         category = data.get('category')
         title = data.get('title')
         time = parse_date(data.get('time'))
+        prioritized = utils.convert_persian_text_to_english_digits(data.get('prioritized'))
         meterage = utils.convert_persian_text_to_english_digits(data.get('meterage'))
         price = utils.convert_persian_text_to_english_digits(data.get('price'))
         price_per_meter = utils.convert_persian_text_to_english_digits(data.get('price_per_meter'))
@@ -89,6 +86,7 @@ def create_house(request):
             owner_id = owner_id,
             title=title,
             time=time,
+            prioritized = prioritized,
             meterage=meterage,
             price=price,
             price_per_meter=price_per_meter,
@@ -130,6 +128,7 @@ def get_buildings(request):
             'meterage': building.meterage,
             'price': building.price,
             'build_date': building.build_date,
+            'prioritized': building.prioritized,
             'rooms': building.rooms,
             'warehouse': 1 if building.facilities[0] else 0,
             'parking': 1 if building.facilities[1] else 0,
@@ -169,6 +168,7 @@ def get_buildings_by_owner_id(request):
             'meterage': building.meterage,
             'price': building.price,
             'build_date': building.build_date,
+            'prioritized': building.prioritized,
             'rooms': building.rooms,
             'warehouse': 1 if building.facilities[0] else 0,
             'parking': 1 if building.facilities[1] else 0,
@@ -231,6 +231,7 @@ def search_buildings(request):
             'meterage': building.meterage,
             'price': building.price,
             'build_date': building.build_date,
+            'prioritized': building.prioritized,
             'rooms': building.rooms,
             'warehouse': 1 if building.facilities[0] else 0,
             'parking': 1 if building.facilities[1] else 0,
@@ -274,6 +275,7 @@ def get_building_by_id(request, id):
         'floor': building.floor,
         'all_floors': building.all_floors,
         'build_date': building.build_date,
+        'prioritized': building.prioritized,
         'rooms': building.rooms,
         'direction': building.direction,
         'document_type': building.document_type,
@@ -336,6 +338,7 @@ def get_buildings_by_category(request):
                     'city': building.city,
                     'category': building.category,
                     'title': building.title,
+                    'prioritized': building.prioritized,
                     'time': building.time,
                     'meterage': building.meterage,
                     'price': building.price,

@@ -16,6 +16,7 @@ class Building(models.Model):
     floor = models.IntegerField()
     all_floors = models.IntegerField()
     build_date = models.IntegerField()
+    prioritized = models.IntegerField()
     rooms = models.IntegerField()
     facilities = models.JSONField() #elevator, parking, warehouse
     direction = models.CharField(max_length=255)
