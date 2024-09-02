@@ -1,4 +1,4 @@
-import { Col, Container, Row } from 'react-bootstrap';
+import { Button,  Container } from 'react-bootstrap';
 import {API_GET_MY_BUILDINGS} from '../../services/apiServices'
 import { useEffect, useState } from 'react';
 import { BeatLoader } from 'react-spinners';
@@ -45,8 +45,12 @@ export default function MyRegistered(){
     }
     return(
         <>
-         <Container className='p-4'>
-            <h5>آگهی های ثبت شده شما</h5>
+         <Container className='p-4 pt-0'>
+         <div className="d-flex flex-row justify-content-between m-3 align-items-center">
+                <h5>آگهی های ثبت شده شما</h5>
+                    <Button className="backprimaryButton" onClick={()=> navigate('/')}>بازگشت به صفحه اصلی</Button>
+                </div>
+            {/* <h5>آگهی های ثبت شده شما</h5> */}
             {loading ? (
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
                     <BeatLoader />

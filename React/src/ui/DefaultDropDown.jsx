@@ -94,9 +94,9 @@ const DefaultDropDown = (props) => {
   const colourStyles = {
     control: (styles) => ({
       ...styles,
-      borderRadius: 11,
+      borderRadius: 15,
       fontSize: 12,
-      padding: "0 12px",
+      padding: "2px 12px",
       zIndex: 1000
     }),
     menu: (styles) => ({

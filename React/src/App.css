@@ -31,7 +31,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-color: #fff !important;
+  background-color: #ffffff !important;
   font-family: "IRANSans" !important;
 
 
@@ -40,7 +40,7 @@ body {
   font-family: "IRANSans" !important;
   /*background-image: url("../..//asset/img/background.png");*/
   /* background-color: #eaeaea; */
-  background-color: #fff !important;
+  background-color: #ffffff !important;
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -169,9 +169,79 @@ body {
 }
 
 .smsButton:hover{
-  background: #5e5d5d;
-  border: #5e5d5d;
+  /* background: #5e5d5d;
+  border: #5e5d5d; */
+  background: #d64444;
+
 }
+.primaryButton {
+  color: white;
+  text-decoration: none;
+  background: #ac2323;
+  border: #991414;
+  padding: 5px 15px;
+  display: flex;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 14px;
+  width: 140px;
+  margin-top: 10px;
+}
+.primaryButton:hover{
+  background: #d64444;
+
+}
+.backprimaryButton {
+  color: white;
+  text-decoration: none;
+  background: #ac2323;
+  border: #991414;
+  padding: 5px 15px;
+  display: flex;
+  justify-content: center;
+  /* border-radius: 4px; */
+  font-size: 14px;
+  width: 200px;
+  /* margin-top: 10px; */
+}
+.backprimaryButton:hover{
+  background: #d64444;
+
+}
+.ant-steps .ant-steps-item-process .ant-steps-item-icon{
+  background-color: #ac2323 !important;
+  border: #ac2323 !important;
+}
+.custom-slider .ant-slider-track{
+  background-color: #ac2323 !important;
+
+}
+.custom-slider .ant-slider-track::after{
+  background-color: #ac2323 !important;
+  border: #ac2323 !important;
+}
+.custom-slider .ant-slider-handle{
+  background-color: #ac2323 !important;
+  border: #ac2323 !important;
+}
+.ant-slider .ant-slider-handle::after{
+  background-color: #ac2323 !important;
+  border: #ac2323 !important;
+
+}
+
+
+.ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover{
+  background: #d64444 !important;
+  color: #ffffff !important;
+}
+
+.custom-checkbox {
+  position: relative;
+}
+
+
+
 /* Tooltip.css */
 .tooltip {
   position: absolute;
@@ -183,6 +253,24 @@ body {
   white-space: nowrap;
   transform: translateX(-50%);
   pointer-events: none;
+}
+.card-bookmark {
+  border: 1px solid #ddd;
+  /* padding: 16px; */
+  border-radius: 8px;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-bookmark:hover {
+  transform: scale(1.03); /* Slightly enlarge the card */
+  box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.5); /* Darker shadow */
+  cursor: pointer;
+}
+.home-card:hover{
+  transform: scale(1.03); /* Slightly enlarge the card */
+  box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.5); /* Darker shadow */
+  cursor: pointer;
 }
 .custom-slider .ant-slider-handle {
   border: 2px solid #1890ff; /* Customize the handle border color */
@@ -226,41 +314,55 @@ body {
   
 }
 
+.ant-menu-dark .ant-menu-item.ant-menu-item-selected {
+  color: rgb(205, 50, 50); 
+  border: 2px solid #bdbbbb; 
+  border-radius: 4px;
+  background-color: rgba(89, 20, 153, 0.1) !important; 
+}
+.sort-item{
+  cursor: pointer !important;
+  font-size: 16px !important;
+}
+.sort-item-active{
+  color: #9e3b3b;
+  border-bottom: 1px solid #9e3b3b;
+  font-weight: bold;
+}
+.sort-background{
+  /* background-color: #e0e0e2; */
+  /* e0e0e2
+      rgb(185, 183, 183) */
+  background-color: #ffffff;
+  /* background-color: #9e3b3b; */
+  color: #888484;
+  /* color: #ffffff; */
+  padding: 10px;
+  border-radius: 10px;
+}
+
+
+/* Optional: To ensure hover looks good too */
+.ant-menu-dark .ant-menu-item.ant-menu-item-selected:hover {
+  background-color: rgba(153, 20, 20, 0.2); /* Darker background on hover */
+}
+
+
 .ant-menu {
-  /* color:#001529; */
-  /* background-color: #E7E8D8 !important;; */
-  /* background-color: #e0e0e2 !important; */
-  background-color: #942525 !important;
-  color: #ffffff;
-
-
-  /* background-color: #f8f9fa !important;  */
+  background-color: #e0e0e2 !important;
+  color:#001529 !important;
 }
 .ant-menu-dark .ant-menu-item{
-  /* color:#001529; */
-  color: #ffffff;
-
-  background-color: #942525 !important;
-
-  /* background-color: #e0e0e2 !important; */
-
-  /* background-color: #E7E8D8; */
-  /* background-color: #f8f9fa !important;  */
+  color:#001529 !important;
+  background-color: #e0e0e2 !important;
 }
 .ant-menu-dark .ant-menu-item:hover{
   color:#001529;
   background-color: rgb(185, 183, 183) !important; 
-
 }
 .ant-menu-item, .ant-menu-submenu-title {
-  /* color:#001529 !important; */
-  color: #ffffff;
-
-  /* background-color: #e0e0e2 !important; */
-  background-color: #942525 !important;
-
-
-
+  color:#001529 !important;
+  background-color: #e0e0e2 !important;
 }
 
 input[type="search"]::placeholder {
@@ -269,57 +371,37 @@ input[type="search"]::placeholder {
 
 
 .ant-layout-header{
-
-  background-color: #942525 !important;
-  /* background-color: #e0e0e2 !important; */
+  background-color: #e0e0e2 !important;
 }
 .ant-layout .ant-layout-sider-trigger{
-  /* color:#001529 !important; */
-  color: #ffffff;
-
-  background-color: #942525 !important;
-
-  /* background-color: #e0e0e2 !important; */
-
+  color:#001529 !important;
+  background-color: #e0e0e2 !important;
 }
 .ant-menu-item:hover, .ant-menu-submenu-title:hover {
   background-color: #aaabac !important;
 }
 .ant-layout .ant-layout-sider-children{
-  /* background-color: #e0e0e2 !important; */
-  background-color: #942525 !important;
-  color: #ffffff;
-
-
+  background-color: #e0e0e2 !important;
+  color:#001529 !important;
 }
+
 .ant-menu-inline.ant-menu-root .ant-menu-item{
-  /* color:#001529 !important; */
-  color: #ffffff !important;
-
-  /* background-color: #e0e0e2 !important; */
-  background-color: #942525 !important;
-
+  color:#001529 !important;
+  background-color: #e0e0e2 !important;
 }
 .ant-menu-inline.ant-menu-root .ant-menu-submenu-title >.ant-menu-title-content {
-  color: #ffffff !important;
+  color:#001529 !important;
 
 }
 .ant-menu-inline.ant-menu-root .ant-menu-item:hover{
   color:#001529 !important;
   background-color: #b5b5b6 !important;
 }
-.ant-menu-item-selected {
-  /* background-color: #e0e0e2 !important; */
-  background-color: #942525 !important;
 
-}
 
 .ant-menu-dark.ant-menu-inline .ant-menu-sub.ant-menu-inline, .ant-menu-dark>.ant-menu.ant-menu-inline .ant-menu-sub.ant-menu-inline{
-  color:#ffffff;
-  /* color:#001529; */
-  /* background-color: #e0e0e2 !important; */
-  background-color: #942525 !important;
-
+  color:#001529 !important;
+  background-color: #e0e0e2 !important
 }
 
 .btn-search{

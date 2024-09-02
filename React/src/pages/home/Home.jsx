@@ -118,6 +118,10 @@ export default function Home() {
         return formatted.replace(/\d/g, (digit) => persianDigits[digit]);
     }
    
+    function truncateText(text) {
+        return text.length > 10 ? `${text.slice(0, 30)}...` : text;
+    }
+    
     return (
         <>
             {loading ? (
@@ -137,16 +141,16 @@ export default function Home() {
 
                                 return (
                                     <Col key={house.id} md={6} className="mb-4">
-                                        <div className="d-flex align-items-center gap-3 border border-light rounded-3 p-2 bg-light"
+                                        <div className="d-flex align-items-center gap-3 border border-light rounded-3 p-2 bg-light home-card"
                                         style={{
                                             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)" , 
                                             }}>
                                             <div style={{ width: "60%" }} className="d-flex flex-column justify-content-center align-items-right pe-2 gap-1">
                                                 <div style={{color:"#ac2323" , fontWeight:"bold"}}>نردبان شده در {house.city}</div>
-                                                <div className="fw-bold">{house.title}</div>
+                                                <div className="fw-bold">{truncateText(house.title)}</div>
                                                 {/* <div>آگهی در {house.city}</div> */}
                                                 <div >املاک <FaChevronLeft size={12} /> {house.category}</div>
-                                                <div style={{color:"rgba(0, 0, 0, 0.5)"}}>{formatNumber(house.price)} تومان</div>
+                                                <div style={{color:"#666"}}>{formatNumber(house.price)} تومان</div>
                                                 <button onClick={() => navigate(`/house/${house.id}`)} className="smsButton"> مشاهده ملک</button>
                                             </div>
                                             <div style={{ width: "40%" }} className="d-flex justify-content-center position-relative">
@@ -159,12 +163,14 @@ export default function Home() {
                                                 {isBookmarked ? (
                                                     <FaBookmark
                                                         onClick={() => toggleBookmark(house.id)}
-                                                        size={24}
+                                                        size={28}
                                                         style={{
                                                             position: 'absolute',
                                                             // top: '0',
-                                                            left: '3px',
-                                                            color: '#ac2323',
+                                                            left: '1px',
+                                                            color: '#d64444',
+                                                            fontSize: '42px',
+                                                            // color: '#ac2323',
                                                             backgroundColor: 'rgba(0, 0, 0, 0.5)',
                                                             borderRadius: '50%',
                                                             padding: '4px'
@@ -173,11 +179,11 @@ export default function Home() {
                                                 ) : (
                                                     <FaRegBookmark
                                                         onClick={() => toggleBookmark(house.id)}
-                                                        size={24}
+                                                        size={28}
                                                         style={{
                                                             position: 'absolute',
                                                             // top: '4px',
-                                                            left: '3px',
+                                                            left: '1px',
                                                             color: 'white',
                                                             backgroundColor: 'rgba(0, 0, 0, 0.5)',
                                                             borderRadius: '50%',

@@ -1,18 +1,14 @@
 import React, { useState } from 'react';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form } from 'formik';
 import { Button, Steps, Layout, ConfigProvider } from 'antd';
 import { RightOutlined, LeftOutlined } from '@ant-design/icons';
-import * as Yup from 'yup';
 import faIR from 'antd/lib/locale/fa_IR';
-import OrgInformation from './OrgInformation';
-import MapInformation from './MapInformation';
 import { API_createHouse } from "./services/apiServices";
 import { Container } from 'react-bootstrap';
 import HouseInformation from './pages/register_announcement/HouseInformation';
 import HouseDetailInformation from './pages/register_announcement/HouseDetailInformation';
 import HouseLocationInformation from './pages/register_announcement/HouseLocationInformation';
 import {  toast } from 'react-toastify';
-import { BeatLoader } from "react-spinners";
 import { useNavigate } from 'react-router-dom';
 const { Step } = Steps;
 const { Content } = Layout;
@@ -26,15 +22,12 @@ const steps = [
 
 const CreateHouse = () => {
   const [current, setCurrent] = useState(0);
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate()
 
   const next = () => {
     setCurrent(current + 1);
   };
-  console.log(current);
   
-
   const prev = () => {
     setCurrent(current - 1);
   };
@@ -111,7 +104,7 @@ console.log(getCurrentDate());
             
             if (res.status === 201) {
                 console.log("success"); 
-                toast.success('اطلاعات ملک شما با موفقیت ثبت گردید')
+                toast.success('اطلاعات آگهی شما با موفقیت ثبت گردید')
                 navigate('/my_registered')
                 // setLoading(false)
             } else {
@@ -154,6 +147,7 @@ console.log(getCurrentDate());
 
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Button
+                    className='smsButton'
                     onClick={prev}
                     disabled={current === 0}
                      icon={<RightOutlined />}
@@ -163,7 +157,7 @@ console.log(getCurrentDate());
                   </Button>
                   {current < steps.length - 1 && (
                     <Button
-                      type="primary"
+                      className='smsButton'
                       onClick={handleSubmit}
                       disabled={isSubmitting}
                       icon={<LeftOutlined />}
@@ -173,13 +167,10 @@ console.log(getCurrentDate());
                     </Button>
                   )}
                   {current === steps.length - 1 && (
-                  
-                    //   <Button type="primary" htmlType="submit" disabled={isSubmitting}>
-                    //     {loading ? <BeatLoader />  : ' ثبت'}
-                    // </Button>
-                    <Button type="primary" htmlType="submit" disabled={isSubmitting}>
-                     ثبت
-                </Button>
+                 
+                    <Button htmlType="submit" disabled={isSubmitting} className='smsButton'>
+                        ثبت
+                    </Button>
                 
                    
                   )}

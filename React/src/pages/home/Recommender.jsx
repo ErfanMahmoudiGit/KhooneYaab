@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { Row, Col, Form, Button , Container, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from "react-redux";
@@ -17,25 +18,30 @@ import { NavLink, useNavigate } from 'react-router-dom';
 
 
 let schema = Yup.object().shape({
-      meterage: Yup.string().required('متراژ نمیتواند خالی باشد')
-          .matches(/^[0-9]/, "لطفا متراژ را به عدد وارد کنید"),
-      price: Yup.string().required('قیمت نمیتواند خالی باشد')
-          .matches(/^[0-9]/, "لطفا قیمت را به عدد وارد کنید"),
-      build_date: Yup.string().required('سال ساخت نمیتواند خالی باشد'),
-        rooms: Yup.string().required('انتخاب کنید'),
-        elevator: Yup.string().required('انتخاب کنید'),
-        parking: Yup.string().required('انتخاب کنید'),
-        warehouse: Yup.string().required('انتخاب کنید'),
-        hospital:  Yup.string().required('انتخاب کنید'),
-        park:  Yup.string().required('انتخاب کنید'),
-        school:  Yup.string().required('انتخاب کنید'),
-         city: Yup.string().required('انتخاب کنید'),   // id of city
+      meterage: Yup.number().required('متراژ نمیتواند خالی باشد')
+      .min(0, 'متراژ نمی‌تواند منفی باشد') // Add this line
+      .typeError("لطفا متراژ را به عدد وارد کنید"), // H
+        //   .matches(/^[0-9]/, "لطفا متراژ را به عدد وارد کنید"),
+      price: Yup.number().required('قیمت نمیتواند خالی باشد')
+            .min(0, 'قیمت نمی‌تواند منفی باشد') // Add this line
+            .typeError("لطفا قیمت را به عدد وارد کنید"), // H
+
+        //   .matches(/^[0-9]/, "لطفا قیمت را به عدد وارد کنید"),
+      build_date: Yup.string().required('انتخاب سال ساخت الزامی است'),
+        rooms: Yup.string().required('انتخاب تعداد اتاق الزامی است'),
+        elevator: Yup.string().required('انتخاب امکانات الزامی است'),
+        parking: Yup.string().required('انتخاب امکانات الزامی است'),
+        warehouse: Yup.string().required('انتخاب امکانات الزامی است'),
+        hospital:  Yup.string().required('انتخاب امکانات الزامی است'),
+        park:  Yup.string().required('انتخاب امکانات الزامی است'),
+        school:  Yup.string().required('انتخاب امکانات الزامی است'),
+         city: Yup.string().required('انتخاب استان الزامی است'),   // id of city
         location_1: Yup.array()
         .of(Yup.number().required('Latitude and longitude are required'))
-        .length(2, 'انتخاب لوکیشن اول ضروری است'),
+        .length(2, 'انتخاب لوکیشن اول الزامی است'),
     location_2: Yup.array()
         .of(Yup.number().required('Latitude and longitude are required'))
-        .length(2, 'انتخاب لوکیشن دوم ضروری است'),
+        .length(2, 'انتخاب لوکیشن دوم الزامی است'),
 
   
   });
@@ -44,12 +50,12 @@ let initialValues = {
     price: '',
     build_date: '',
     rooms: '',
-    elevator: 0,  
-    parking: 0,  
+    elevator: 1,  
+    parking: 1,  
     warehouse: 0, 
     school : 0 , 
     hospital : 0,
-    park : 0,
+    park : 1,
     city : '',
     location_1: [],
     location_2: []
@@ -101,7 +107,6 @@ const build = [
     { label: "1383 - 1388", value: 1383 },
 ];
 export default function Recommender(){
-    const [buildDateValue, setBuildDateValue] = useState(1370);
     const [markers, setMarkers] = useState([]);
     const [recommended_homes, setRecommended_homes] = useState([]);
     const[mapCenter,setMapCenter] = useState([32.85971234321241, 53.97240877523566])   
@@ -112,6 +117,9 @@ export default function Recommender(){
     const [isButtonClicked, setIsButtonClicked] = useState(false); // New state to track button click
     const navigate = useNavigate()
 
+    useEffect(() => {
+        getPosition(); // Fetch the location
+    }, []);
     console.log('recommended_homes[0]',recommended_homes[0]);
     
     const getCityFromCoordinates = async (lat, lon) => {
@@ -132,7 +140,7 @@ export default function Recommender(){
         
         // Pan map to the new center
         if (mapRef.current) {
-          mapRef.current.setView([geoLocationPosition.lat, geoLocationPosition.lng], 13);
+          mapRef.current.setView([geoLocationPosition.lat, geoLocationPosition.lng], 16);
         }
       }
     }, [geoLocationPosition]);
@@ -162,24 +170,20 @@ export default function Recommender(){
         return null;
         
       }
-     
-      const handleUseMyLocationClick = () => {
-        setIsButtonClicked(true); // Set button clicked state to true
-        getPosition(); // Fetch the location
-        setTimeout(() => setIsButtonClicked(false), 2000); // Reset the button state after 1 second
-    };
-    console.log('isButtonClicked',isButtonClicked);
+
+    //   const handleUseMyLocationClick = () => {
+    //     setIsButtonClicked(true); // Set button clicked state to true
+    //     getPosition(); // Fetch the location
+    //     setTimeout(() => setIsButtonClicked(false), 2000); // Reset the button state after 1 second
+    // };     
     
-      
-     
+    //   const handleMouseEnter = () => {
+    //     setIsHoveringButton(true); // Step 3: Set hover state to true
+    //   };
     
-      const handleMouseEnter = () => {
-        setIsHoveringButton(true); // Step 3: Set hover state to true
-      };
-    
-      const handleMouseLeave = () => {
-        setIsHoveringButton(false); // Step 3: Set hover state to false
-      };
+    //   const handleMouseLeave = () => {
+    //     setIsHoveringButton(false); // Step 3: Set hover state to false
+    //   };
       const addMarker = (newMarker, setFieldValue) => {
         console.log(newMarker);
         console.log(isButtonClicked);
@@ -254,174 +258,170 @@ export default function Recommender(){
             }}
         >
         {(props) => (
-            <Container className='mt-5'>
+            <Container >
+                <div className="d-flex flex-row justify-content-between m-3 align-items-center">
+                    <h4>پیشنهاد ملک</h4>
+                    <Button className="backprimaryButton" onClick={()=> navigate('/')}>بازگشت به صفحه اصلی</Button>
+                </div>
                 <form onSubmit={props.handleSubmit}>
-                    <Row className='gx-4 d-flex justify-content-center mx-5 mb-4 align-right'>
-                        <Col sm={6}>
-                            <Form.Label>متراژ ملک</Form.Label>
-                            <input
-                                type="text"
-                                onChange={(e) => {
-                                    props.setFieldValue("meterage", parseInt(e.target.value));
-                                }}
-                                placeholder={"متراژ"}
-                                className="form-control login-input"
-                                name={"meterage"}
-                            />
-                            <ErrorMessage name="meterage" component="div" className="text-danger" />
-                        </Col>
-                        <Col sm={6}>
-                            <Form.Label>قیمت ملک</Form.Label>
-                            <input
-                                type="text"
-                                onChange={(e) => {
-                                    props.setFieldValue("price", parseInt(e.target.value));
-                                }}
-                                placeholder={"قیمت"}
-                                className="form-control login-input"
-                                name={"price"}
-                            />
-                            <ErrorMessage name="price" component="div" className="text-danger" />
-                        </Col>
-                    </Row>
-                    <Row className='gx-4 d-flex justify-content-center mx-5 mb-4 align-right'>
-                        {/* <Col sm={3}>
-                            <div className='d-flex flex-column'>
-                                <Form.Label>سال ساخت</Form.Label>
-                                <Form.Range
-                                    value={buildDateValue}
-                                    name='build_date'
-                                    max={1403}
-                                    min={1370}
-                                    onChange={(e)=>{
-                                        setBuildDateValue(e.target.value);
-                                        props.setFieldValue('build_date', parseInt(e.target.value));
+                    <Row>
+                        <Col sm={5}>
+                            <div className='mt-3'>
+                                <Form.Label>متراژ ملک</Form.Label>
+                                <input
+                                    type="text"
+                                    onChange={(e) => {
+                                        props.setFieldValue("meterage", parseInt(e.target.value));
                                     }}
-                                    // onChange={handleSliderChange}
-                                    className="custom-slider"
+                                    placeholder={"متراژ"}
+                                    className="form-control login-input"
+                                    name={"meterage"}
                                 />
-                                <p>سال ساخت انتخابی: {buildDateValue}</p>
+                                <ErrorMessage name="meterage" component="div" className="text-danger" />
                             </div>
-                        </Col> */}
-                        <Col sm="3">
-                            <Form.Label className='form-label margin-left-x'>سال ساخت</Form.Label>
-                            <Field as="select" name="build_date" className="form-control"
-                                onChange={(e) => {props.setFieldValue("build_date", parseInt(e.target.value))}}
-                            >
-                                <option value="" label="انتخاب کنید" />
-                                {build.map((item, index) => (
-                                    <option key={index} value={item.value}>
-                                        {item.label}
-                                    </option>
-                                ))}
-                            </Field>
-                            <ErrorMessage name="build_date" component="div" className="text-danger" />
-                        </Col>
-                        <Col sm={3}>
-                            <div className='d-flex flex-column'>
-                                <Form.Label>استان را انتخاب کنید</Form.Label>
-                                <DefaultDropDown
-                                    label={"استان"}
-                                    options={STATE_OPTIONS}
-                                    onChange={(event) => {
-                                        props.setFieldValue( "city", event.value );
+                            <div className='mt-3'>
+                                <Form.Label>قیمت ملک</Form.Label>
+                                <input
+                                    type="text"
+                                    onChange={(e) => {
+                                        props.setFieldValue("price", parseInt(e.target.value));
                                     }}
+                                    placeholder={"قیمت"}
+                                    className="form-control login-input"
+                                    name={"price"}
+                                />
+                                <ErrorMessage name="price" component="div" className="text-danger" />
+                            </div>
+                            <div className='mt-3'>
+                                <Form.Label className='form-label margin-left-x'>سال ساخت</Form.Label>
+                                <Field as="select" name="build_date" className="form-control p-2" 
+                                    style={{borderRadius:"13px" , borderColor:"#ced4da"}}
+                                    onChange={(e) => {props.setFieldValue("build_date", parseInt(e.target.value))}}
+                                >
+                                    <option value="" label="انتخاب کنید" />
+                                    {build.map((item, index) => (
+                                        <option key={index} value={item.value}>
+                                            {item.label}
+                                        </option>
+                                    ))}
+                                </Field>
+                                <ErrorMessage name="build_date" component="div" className="text-danger" />
+                            </div>
+                            <div className='mt-3'>
+                                <div className='d-flex flex-column'>
+                                    <Form.Label>استان</Form.Label>
+                                    <DefaultDropDown
+                                        label={"انتخاب کنید"}
+                                        options={STATE_OPTIONS}
+                                        onChange={(event) => {
+                                            props.setFieldValue( "city", event.value );
+                                        }}
+                                    />
+                                </div>
+                                <ErrorMessage name="city" component="div" className="text-danger" />   
+                            </div>
+                            <div className='mt-3'>
+                                <Form.Label className='form-label margin-left-x'>تعداد اتاق ها</Form.Label>
+                                <Field as="select" name="rooms" className="form-control p-2"
+                                    style={{borderRadius:"13px" , borderColor:"#ced4da"}}                  
+                                    onChange={(e) => {props.setFieldValue("rooms", parseInt(e.target.value))}}
+                                >
+                                    <option value="" label="انتخاب کنید" />
+                                    {rooms.map((item, index) => (
+                                        <option key={index} value={item.value}>
+                                            {item.label}
+                                        </option>
+                                    ))}
+                                </Field>
+                                <ErrorMessage name="rooms" component="div" className="text-danger" />
+                            </div>
+                            <div className='mt-3'>
+                                <Form.Label className='form-label'>دارای امکانات</Form.Label>
+                                <Form.Check
+                                    inline
+                                    label="آسانسور"
+                                    name="elevator"
+                                    defaultChecked={true}
+                                    checked={props.values.elevator === 1} 
+                                    onChange={(e) => 
+                                        props.setFieldValue('elevator', e.target.checked ? 1 : 0)                   
+                                    }
+                                />
+                                <Form.Check
+                                    inline
+                                    label="پارکینگ"
+                                    name="parking"
+                                    defaultChecked={true}
+                                    checked={props.values.parking === 1} 
+                                    onChange={(e) => 
+                                        props.setFieldValue('parking', e.target.checked ? 1 : 0)
+                                    }
+                                />
+                                <Form.Check
+                                    inline
+                                    name="warehouse"
+                                    label="انباری"
+                                    checked={props.values.warehouse === 1} 
+                                    onChange={(e) => 
+                                        props.setFieldValue('warehouse', e.target.checked ? 1 : 0)
+                                    }
                                 />
                             </div>
-                        <ErrorMessage name="city" component="div" className="text-danger" />   
+                            <div className='mt-3'>
+                                <Form.Label className='form-label'>به کدام یک از این مکان ها نزدیک است؟</Form.Label>
+                                <Row className="mt-2">
+                                    <Col sm={2}>
+                                        <Form.Check
+                                            inline
+                                            label="مدرسه"
+                                            name="school"
+                                            checked={props.values.school === 1} 
+                                            onChange={(e) => 
+                                                props.setFieldValue('school', e.target.checked ? 1 : 0)
+                                            }
+                                        />
+                                    </Col>
+                                    <Col sm={2}>
+                                        <Form.Check
+                                            inline
+                                            label="پارک"
+                                            name="park"
+                                            defaultChecked={true}
+                                            checked={props.values.park === 1} 
+                                            onChange={(e) => 
+                                                props.setFieldValue('park', e.target.checked ? 1 : 0)
+                                            }
+                                        />
+                                    </Col>
+                                    <Col sm={2}>
+                                        <Form.Check
+                                            inline
+                                            name="hospital"
+                                            label="بیمارستان"
+                                            checked={props.values.hospital === 1} 
+                                            onChange={(e) => 
+                                                props.setFieldValue('hospital', e.target.checked ? 1 : 0)
+                                            }
+                                        />
+                                    </Col>
+                                </Row>
+                            </div>
+
+                            <Button type="submit" className="backprimaryButton mt-4 mb-4">
+                                ثبت
+                            </Button>
                         </Col>
-                        <Col sm="6">
-                            <Form.Label className='form-label margin-left-x'>تعداد اتاق ها</Form.Label>
-                            <Field as="select" name="rooms" className="form-control"
-                                onChange={(e) => {props.setFieldValue("rooms", parseInt(e.target.value))}}
-                            >
-                                <option value="" label="انتخاب کنید" />
-                                {rooms.map((item, index) => (
-                                    <option key={index} value={item.value}>
-                                        {item.label}
-                                    </option>
-                                ))}
-                            </Field>
-                            <ErrorMessage name="rooms" component="div" className="text-danger" />
-                        </Col>
-                        
-                    </Row>
-                    <Row className='gx-4 d-flex justify-content-center mx-5 mt-4'>
-                
-                        <Col sm="6" className='mt-2'>
-                            <Form.Label className='form-label'>دارای امکانات</Form.Label>
-                            <Form.Check
-                                inline
-                                label="آسانسور"
-                                name="elevator"
-                                checked={props.values.elevator === 1} 
-                                onChange={(e) => 
-                                    props.setFieldValue('elevator', e.target.checked ? 1 : 0)
-                                }
-                            />
-                            <Form.Check
-                                inline
-                                label="پارکینگ"
-                                name="parking"
-                                checked={props.values.parking === 1} 
-                                onChange={(e) => 
-                                    props.setFieldValue('parking', e.target.checked ? 1 : 0)
-                                }
-                            />
-                            <Form.Check
-                                inline
-                                name="warehouse"
-                                label="انباری"
-                                checked={props.values.warehouse === 1} 
-                                onChange={(e) => 
-                                    props.setFieldValue('warehouse', e.target.checked ? 1 : 0)
-                                }
-                            />
-                        </Col>
-                        <Col sm="6" className='mt-2'>
-            <Form.Label className='form-label'>به کدام یک از این مکان ها نزدیک است؟</Form.Label>
-            <Form.Check
-                inline
-                label="مدرسه"
-                name="school"
-                checked={props.values.school === 1} 
-                onChange={(e) => 
-                    props.setFieldValue('school', e.target.checked ? 1 : 0)
-                }
-            />
-            <Form.Check
-                inline
-                label="پارک"
-                name="park"
-                checked={props.values.park === 1} 
-                onChange={(e) => 
-                    props.setFieldValue('park', e.target.checked ? 1 : 0)
-                }
-            />
-            <Form.Check
-                inline
-                name="hospital"
-                label="بیمارستان"
-                checked={props.values.hospital === 1} 
-                onChange={(e) => 
-                    props.setFieldValue('hospital', e.target.checked ? 1 : 0)
-                }
-            />
-        </Col>
-                    </Row>
-                    
-                    <Row className='gx-4 d-flex justify-content-center mx-5 mt-4'>
-                        <Col>
-                            <div className="appLayout">
+                        <Col sm={7}>
+                            <div className="appLayout" style={{height:"620px"}}>
                                 <div className="mapContainer" >
-                                    <button 
+                                    {/* <button 
                                         className="getLocation" 
                                         onClick={handleUseMyLocationClick} 
                                         onMouseOver={handleMouseEnter}
                                         onMouseLeave={handleMouseLeave}
                                     >
                                         {isLoadingPosition ? "در حال بروزرسانی..." : "استفاده از موقعیت من"}
-                                    </button>
+                                    </button> */}
                                     <MapContainer className="map"  zoom={zoomLevel}
                                     whenCreated={(mapInstance) => (mapRef.current = mapInstance)} // Capture the map instance
                                     scrollWheelZoom={true} center={mapCenter} >
@@ -435,7 +435,7 @@ export default function Recommender(){
                                         {geoLocationPosition?.lat && geoLocationPosition?.lng && (
                                             <CircleMarker
                                             center={[geoLocationPosition.lat, geoLocationPosition.lng]}
-                                            radius={10}  // Radius in meters
+                                            radius={6}  // Radius in meters
                                             
                                             pathOptions={{ color: 'red', fillColor: 'red',fillOpacity: 0.8}}
                                             />
@@ -456,15 +456,13 @@ export default function Recommender(){
                 <ErrorMessage name="location_2" component="div" className="text-danger" />
             </div>		   
             </div>
-        </Col>
-        </Row>
-        <Row className="d-flex justify-content-center mt-3">
-            <Col xs={6} md={4}>
-                <Button type="submit" className="btn btn-primary login-btn">
-                 ثبت
-                </Button>
-            </Col>
-        </Row>
+                        </Col>
+                    </Row>
+                    
+                    
+                   
+                   
+        
                 </form>
             
             {recommended_homes?.length > 0 && (

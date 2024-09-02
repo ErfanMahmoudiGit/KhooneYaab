@@ -6,6 +6,7 @@ import { FaChevronLeft } from 'react-icons/fa';
 import { authState } from "../login/Redux/authSlice";
 import { useSelector } from "react-redux";
 import { Button } from "react-bootstrap";
+import { TbArrowsSort } from "react-icons/tb";
 
 export default function CategoryPage() {
     const [houses, setHouses] = useState([]);
@@ -14,6 +15,8 @@ export default function CategoryPage() {
     const [isLoadingMore, setIsLoadingMore] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [sortOrder, setSortOrder] = useState(''); // New state for sorting
+    const [dateOrder, setDateOrder] = useState(''); // State for date sorting
+
     const loadMoreRef = useRef(null);
     const navigate = useNavigate();
     const { category } = useParams();
@@ -93,20 +96,64 @@ export default function CategoryPage() {
     }
 
     // Function to handle sort change
-    const handleSortChange = (event) => {
-        const selectedSort = event.target.value;
-        setSortOrder(selectedSort);
+    // const handleSortChange = (event) => {
+    //     const selectedSort = event.target.value;
+    //     setSortOrder(selectedSort);
 
+    //     let sortedHouses = [...houses];
+    //     if (selectedSort === 'price-asc') {
+    //         sortedHouses.sort((a, b) => a.price - b.price);
+    //     } else if (selectedSort === 'price-desc') {
+    //         sortedHouses.sort((a, b) => b.price - a.price);
+    //     }
+
+    //     setDisplayedHouses(sortedHouses.slice(0, currentIndex + 12));
+    // };
+
+
+    const handleSortChange = (selectedSort) => {
+        setSortOrder(selectedSort);
+        sortHouses(selectedSort, dateOrder);
+    };
+    
+    // Adjusted function to handle date change with direct parameters
+    const handleDateChange = (selectedDateOrder) => {
+        setDateOrder(selectedDateOrder);
+        sortHouses(sortOrder, selectedDateOrder);
+    };
+    
+    // const handleSortChange = (event) => {
+    //     const selectedSort = event.target.value;
+    //     setSortOrder(selectedSort);
+    //     sortHouses(selectedSort, dateOrder);
+    // };
+
+    // const handleDateChange = (event) => {
+    //     const selectedDateOrder = event.target.value;
+    //     setDateOrder(selectedDateOrder);
+    //     sortHouses(sortOrder, selectedDateOrder);
+    // };
+    const sortHouses = (priceOrder, dateOrder) => {
         let sortedHouses = [...houses];
-        if (selectedSort === 'price-asc') {
+
+        if (priceOrder === 'price-asc') {
             sortedHouses.sort((a, b) => a.price - b.price);
-        } else if (selectedSort === 'price-desc') {
+        } else if (priceOrder === 'price-desc') {
             sortedHouses.sort((a, b) => b.price - a.price);
+        }
+
+        if (dateOrder === 'date-asc') {
+            sortedHouses.sort((a, b) => new Date(a.time) - new Date(b.time)); // Ensure 'date' exists
+        } else if (dateOrder === 'date-desc') {
+            sortedHouses.sort((a, b) => new Date(b.time) - new Date(a.time));
         }
 
         setDisplayedHouses(sortedHouses.slice(0, currentIndex + 12));
     };
 
+    function truncateText(text) {
+        return text.length > 10 ? `${text.slice(0, 23)}...` : text;
+    }
     return (
         <>
             {loading ? (
@@ -116,18 +163,25 @@ export default function CategoryPage() {
             ) : (
                 <>
                     <div className="d-flex justify-content-between align-items-center m-3">
+                            <h5 >آگهی های {cat}</h5>
                         <div className="d-flex align-items-center gap-4">
-                            <h5>آگهی های {cat}</h5>
-                            <select onChange={handleSortChange} value={sortOrder} style={{ border: '1px solid #ddd', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }} className="form-select w-auto">
-                            <option value="">مرتب سازی بر اساس</option>
-                            <option value="price-asc">قیمت: کم به زیاد</option>
-                            <option value="price-desc">قیمت: زیاد به کم</option>
-                        </select>
+                            <div className="d-flex align-items-center gap-3 sort-background">
+                                <div>مرتب سازی بر اساس{" "}<TbArrowsSort /></div>
+                                {/* sort-item-active */}
+                                <div className={`sort-item ${sortOrder === 'price-asc' ? 'sort-item-active' : ''}`} 
+                                    onClick={() => handleSortChange('price-asc')}>کم ترین قیمت</div>
+                                <div className={`sort-item ${sortOrder === 'price-desc' ? 'sort-item-active' : ''}`} 
+                                    onClick={() => handleSortChange('price-desc')}>بیشترین قیمت</div>
+                                <div className={`sort-item ${dateOrder === 'date-asc' ? 'sort-item-active' : ''}`} 
+                                     onClick={() => handleDateChange('date-asc')}>قدیمی ترین</div>
+                                <div className={`sort-item ${dateOrder === 'date-desc' ? 'sort-item-active' : ''}`} 
+                                    onClick={() => handleDateChange('date-desc')}>جدید ترین</div>
+                            </div>
+                           
                         </div>
-                        
-                       
-                    <Button className="back-btn" onClick={()=> navigate('/')}>رفتن به صفحه اصلی</Button>
+                        <Button className="backprimaryButton" onClick={()=> navigate('/')}>بازگشت به صفحه اصلی</Button>
                     </div>
+                    
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '16px' }}>
                         {displayedHouses.length === 0 ? (
@@ -136,21 +190,26 @@ export default function CategoryPage() {
                             </div>
                         ) : (
                             displayedHouses.map((house, index) => (
-                                <div key={index} className="d-flex flex-column justify-content-center align-items-center" style={{ border: '1px solid #ddd', padding: '16px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>
-                                    <h3 style={{ fontSize: '18px', marginBottom: '8px' }}>{house.title}</h3>
-                                    <img style={{ width: "150px", height: "150px", borderRadius: '8px' }} src={house.image ? house.image : '/1.png'} alt={house.title} />
+                                <div key={index} className="d-flex flex-column justify-contemt-center align-items-center card-bookmark"
+                                style={{ border: '1px solid #ddd', padding: '16px', borderRadius: '8px',
+                                boxShadow: "0 4px 4px rgba(0, 0, 0, 0.2)",backgroundColor:"#ffffff"
+                                 }}>
+                                      <div className="d-flex justify-content-center position-relative">
+                                        <img
+                                            src={house.image ? house.image : '/1.png'}
+                                            style={{ width: "190px", height: "190px", maxHeight: "190px" }}
+                                            className="border border-light rounded"
+                                            alt={house.title}
+                                        />
+                                        
+                                    </div>
+    
+                                    {/* <img style={{width:"170px" , height:"170px" , borderRadius: '8px'}} src={house.image ? house.image : '/1.png'}></img> */}
+                                    <h3 style={{ fontSize: '18px', marginTop: '12px' }}>{truncateText(house.title)}</h3>
                                     <div style={{ fontSize: '14px', color: '#666' }}>آگهی در {house.city}</div>
                                     <div style={{ fontSize: '14px', color: '#666' }}>املاک <FaChevronLeft size={12} /> {house.category}</div>
-                                    {cat == "فروش آپارتمان" || cat == "فروش خانه و ویلا" ? (
-                                        <p style={{ fontSize: '14px', color: '#666' }}>قیمت : {formatNumber(house.price)} تومان</p>
-
-                                    ) : (
-                                        <>
-                                        <div style={{ fontSize: '14px', color: '#666' }}>ودیعه : {formatNumber(house.price)} تومان</div>
-                                        <div style={{ fontSize: '14px', color: '#666' }}>کرایه : {formatNumber(house.price_per_meter)} تومان</div>
-                                        </>
-                                    )}
-                                    <button onClick={() => navigate(`/house/${house.id}`)} className="smsButton"> مشاهده ملک</button>
+                                    <div style={{ fontSize: '14px', color: '#666' }}>{formatNumber(house.price)} تومان</div>
+                                    <button onClick={() => navigate(`/house/${house.id}`)} className="primaryButton"> مشاهده ملک</button>
                                 </div>
                             ))
                         )}

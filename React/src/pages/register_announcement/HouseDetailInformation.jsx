@@ -25,38 +25,51 @@ export default function HouseDetailInformation(){
         {label:4 , value:4},
         {label:5 , value:5},
     ]
+    console.log(values.category);
+    // icon={
+    //     item.category === "فروش آپارتمان"
+    //       ? blueIcon
+    //       : item.category === "فروش خانه و ویلا"
+    //       ? goldIcon
+    //       : item.category === "اجارهٔ آپارتمان"
+    //       ? redIcon
+    //       : blackIcon
+    //   }
     return(
         <>	
-            <Row className='gx-4 d-flex justify-content-center mx-5 mb-4'>
-                <Col sm="6">
-                    <Form.Label className='form-label margin-left-x'>طبقه</Form.Label>
-                    <Field as="select" name="floor" className="form-control"  
-                        onChange={(e) => {setFieldValue("floor", parseInt(e.target.value))}}
-                    >
-                        <option value="" label="انتخاب کنید" />
-                        {floor.map((item, index) => (
-                            <option key={index} value={item.value}>
-                                {item.label}
-                            </option>
-                        ))}
-                    </Field>
-                    <ErrorMessage name="floor" component="div" className="text-danger" />
-                </Col>
-                <Col sm="6">
-                    <Form.Label className='form-label margin-left-x'>کل طبقات</Form.Label>
-                    <Field as="select" name="all_floors" className="form-control"
-                        onChange={(e) => {setFieldValue("all_floors", parseInt(e.target.value))}}
-                    >
-                        <option value="" label="انتخاب کنید" />
-                        {all_floors.map((item, index) => (
-                            <option key={index} value={item.value}>
-                                {item.label}
-                            </option>
-                        ))}
-                    </Field>
-					<ErrorMessage name="all_floors" component="div" className="text-danger" />
-                </Col>
-            </Row>
+            {values.category == "فروش آپارتمان" || values.category == "فروش خانه و ویلا" ? (
+                <Row className='gx-4 d-flex justify-content-center mx-5 mb-4'>
+                    <Col sm="6">
+                        <Form.Label className='form-label margin-left-x'>طبقه</Form.Label>
+                        <Field as="select" name="floor" className="form-control"  
+                            onChange={(e) => {setFieldValue("floor", parseInt(e.target.value))}}
+                        >
+                            <option value="" label="انتخاب کنید" />
+                            {floor.map((item, index) => (
+                                <option key={index} value={item.value}>
+                                    {item.label}
+                                </option>
+                            ))}
+                        </Field>
+                        <ErrorMessage name="floor" component="div" className="text-danger" />
+                    </Col>
+                    <Col sm="6">
+                        <Form.Label className='form-label margin-left-x'>کل طبقات</Form.Label>
+                        <Field as="select" name="all_floors" className="form-control"
+                            onChange={(e) => {setFieldValue("all_floors", parseInt(e.target.value))}}
+                        >
+                            <option value="" label="انتخاب کنید" />
+                            {all_floors.map((item, index) => (
+                                <option key={index} value={item.value}>
+                                    {item.label}
+                                </option>
+                            ))}
+                        </Field>
+                        <ErrorMessage name="all_floors" component="div" className="text-danger" />
+                    </Col>
+                </Row>
+            ) : null}
+           
 
             <Row className='gx-4 d-flex justify-content-center mx-5 mb-4'>
                 <Col sm="6">
@@ -93,7 +106,7 @@ export default function HouseDetailInformation(){
                     <Form.Label className='form-label margin-left-x'>جهت ساختمان</Form.Label>
                     <div role="group" aria-labelledby="my-radio-group">
                         <label>
-                            <Field type="radio" name="direction" value="شمالی" className="mx-2"/>
+                            <Field type="radio" name="direction" value="شمالی" className="mx-2" checked={true}/>
                             شمالی
                         </label>
                         <label style={{ marginRight: '20px' }}>
@@ -108,7 +121,7 @@ export default function HouseDetailInformation(){
                     <Form.Label className='form-label margin-left-x'>وضعیت ساختمان</Form.Label>
                     <div role="group" aria-labelledby="my-radio-group">
                         <label>
-                            <Field type="radio" name="status" value="بازسازی شده" className="mx-2"/>
+                            <Field type="radio" name="status" value="بازسازی شده" className="mx-2" checked={true}/>
                             بازسازی شده
                         </label>
                         <label style={{ marginRight: '20px' }}>
@@ -126,6 +139,7 @@ export default function HouseDetailInformation(){
                         inline
                         label="آسانسور"
                         name="elevator"
+                        defaultChecked={true}
                         checked={values.elevator === 1} 
                         onChange={(e) => 
                             setFieldValue('elevator', e.target.checked ? 1 : 0)
@@ -135,6 +149,7 @@ export default function HouseDetailInformation(){
                         inline
                         label="پارکینگ"
                         name="parking"
+                        defaultChecked={true}
                         checked={values.parking === 1} 
                         onChange={(e) => 
                             setFieldValue('parking', e.target.checked ? 1 : 0)
@@ -164,18 +179,40 @@ HouseDetailInformation.initialValues = {
     rooms: '',
     floor : '',
     all_floors : '',
-    elevator: 0,  
-    parking: 0,  
+    elevator: 1,  
+    parking: 1,  
     warehouse: 0, 
-    direction: '',  
+    direction: 'شمالی',  
     document_type: '', 
-    status: '',
+    status: 'بازسازی شده',
 };
 
 HouseDetailInformation.validationSchema = Yup.object().shape({
-    rooms: Yup.string().required('انتخاب کنید'),
-    floor: Yup.string().required('انتخاب کنید'),
-    all_floors: Yup.string().required('انتخاب کنید'),
+    rooms: Yup.string().required('انتخاب تعداد اتاق الزامی است'),
+    // floor: Yup.string().required('انتخاب تعداد طبقه الزامی است'),
+    // all_floors: Yup.string().required('انتخاب تعداد کل طبقات الزامی است'),
+    // floor: Yup.string().when('category', {
+    //     is: (category) => category === 'فروش آپارتمان' || category === 'فروش خانه و ویلا',
+    //     then: Yup.string().required('انتخاب تعداد طبقه الزامی است'),
+    //     otherwise: Yup.string(),
+    // }),
+    // all_floors: Yup.string().when('category', {
+    //     is: (category) => category === 'فروش آپارتمان' || category === 'فروش خانه و ویلا',
+    //     then: Yup.string().required('انتخاب تعداد کل طبقات الزامی است'),
+    //     otherwise: Yup.string(),
+    // }),
+    floor : Yup.string().when('category', {
+        is: (value) => value === 'فروش آپارتمان' || value === 'فروش خانه و ویلا',
+        then: (validationSchema) => validationSchema
+            .required("این فیلد نمیتواند خالی باشد"),
+        otherwise: (validationSchema) => validationSchema,
+    }),
+    all_floors : Yup.string().when('category', {
+        is: (value) => value === 'فروش آپارتمان' || value === 'فروش خانه و ویلا',
+        then: (validationSchema) => validationSchema
+            .required("این فیلد نمیتواند خالی باشد"),
+        otherwise: (validationSchema) => validationSchema,
+    }),
     elevator: Yup.string(),
     parking: Yup.string(),
     warehouse: Yup.string(),

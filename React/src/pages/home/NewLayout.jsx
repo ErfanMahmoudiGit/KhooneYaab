@@ -35,10 +35,12 @@ function getItem(label, key, icon, children, link) {
 
 const items = [
     getItem('دسته بندی ها', 'categories', <BiSolidCategoryAlt />, [
-      getItem('فروش', 'BuyApartment', <GoHomeFill  className='me-4'/>, null, '/category/BuyApartment'),
+      getItem('فروش', 'BuyApartment', <GoHomeFill  className='me-4'/>, null, '/selectSellCategory'),
+    //   getItem('فروش', 'BuyApartment', <GoHomeFill  className='me-4'/>, null, '/category/BuyApartment'),
     //   getItem('اجاره آپارتمان', 'RentApartment', <GoHomeFill />, null, '/category/RentApartment'),
     //   getItem('فروش خانه و ویلا', 'BuyHome', <GiVillage />, null, '/category/BuyHome'),
-      getItem('اجاره ', 'RentHome', <GiVillage className='me-4'/>, null, '/category/RentHome'),
+      getItem('اجاره ', 'RentHome', <GiVillage className='me-4'/>, null, '/selectRentCategory'),
+    //   getItem('اجاره ', 'RentHome', <GiVillage className='me-4'/>, null, '/category/RentHome'),
     ]),
     getItem('ثبت آگهی', 'register_announcement', <FaPen />, null, '/register_announcement'),
     getItem('آگهی های من', 'my_registered', <TeamOutlined />, null, '/my_registered'),
@@ -211,10 +213,10 @@ const NewLayout = () => {
                         alignContent:"center",
                         alignItems:"center",
                         gap:"4px",
-                        color:"#ffffff",
-                        // color:"#001529",
-                        backgroundColor:"#942525",
-                        // backgroundColor:"#e0e0e2",
+                        // color:"#ffffff",
+                        color:"#001529",
+                        // backgroundColor:"#942525",
+                        backgroundColor:"#e0e0e2",
                         }}
                     >
                     <span>ورود</span>

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { useFormikContext, ErrorMessage, Field } from 'formik';
@@ -8,7 +9,8 @@ import { Slider } from 'antd';
 
 export default function HouseInformation(){
     const { setFieldValue, values } = useFormikContext();
-    const [buildDateValue, setBuildDateValue] = useState();
+    const [buildDateValue, setBuildDateValue] = useState(1385);
+    
 
     const handleSliderChange = (e) => {
         setBuildDateValue(e);        
@@ -35,6 +37,7 @@ export default function HouseInformation(){
         return `سال ساخت: ${value}`;
     };
 
+    console.log(values.build_date)
     return (
         <section>
             <Row className='gx-4 d-flex justify-content-center mx-5 mb-4 align-right'>
@@ -101,6 +104,7 @@ export default function HouseInformation(){
                         <Slider
                             value={buildDateValue}
                             min={1370}
+                            defaultValue={1385}
                             max={1403}
                             name='build_date'
                             onChange={handleSliderChange}
@@ -111,11 +115,40 @@ export default function HouseInformation(){
                         {buildDateValue ? <p>{1403 - buildDateValue} سال ساخت</p> : ''}
                        
 
-                    </div>   
+                    </div>  
+                    <div>
+                    <Form.Label>آپلود تصویر ملک</Form.Label>
+                    <div
+                        className="upload-license-image"
+                        style={{ width: "100% !important" }}
+                    >
+                        <Upload
+                            accept="image/png, image/jpeg"
+                            maxCount={1}
+                            beforeUpload={uploadImageHandler}
+                            // showUploadList={false}
+                        >
+                            <Button
+                                style={{ width: "100% !important" }}
+                                className='backprimaryButton'
+                                icon={<UploadOutlined />}
+                            >
+                                آپلود تصویر
+                            </Button>
+                        </Upload>
+                    </div>
+                    <ErrorMessage name="image" component="div" className="text-danger" />
+</div> 
                 </Col>
                 <Col sm={6}>
                     <Form.Label>توضیحات</Form.Label>
-                    <input
+                        <textarea rows={4}  placeholder={"توضیحات"} className="form-control login-input" 
+                                 name={"description"}  onChange={(e) => {
+                            setFieldValue("description", e.target.value);
+                        }}>
+
+                        </textarea>
+                    {/* <input
                         type="text"
                         onChange={(e) => {
                             setFieldValue("description", e.target.value);
@@ -124,12 +157,12 @@ export default function HouseInformation(){
                         // placeholder={"توضیحات آگهی خود را در این قسمت بنویسید"}
                         className="form-control login-input"
                         name={"description"}
-                    />
+                    /> */}
                     <ErrorMessage name="description" component="div" className="text-danger" />
                 </Col>
                
             </Row>
-            <Row className='gx-4 d-flex justify-content-center mx-5 mb-4 align-right'>
+            {/* <Row className='gx-4 d-flex justify-content-center mx-5 mb-4 align-right'>
 
                 <Col sm={6}>
                     <Form.Label>آپلود تصویر ملک</Form.Label>
@@ -157,7 +190,7 @@ export default function HouseInformation(){
                 </Col>
                 <Col sm={6}>
                 </Col>
-            </Row>
+            </Row> */}
         </section>
     );
     
@@ -172,7 +205,7 @@ HouseInformation.initialValues = {
     price: '',
     image: '',
     description: '',
-    build_date: ''
+    build_date: 1385
 };
 
 HouseInformation.validationSchema = Yup.object().shape({
@@ -185,13 +218,25 @@ HouseInformation.validationSchema = Yup.object().shape({
     // image: Yup.string(),
     // description: Yup.string(),
     // build_date: Yup.string(),
+    meterage: Yup.number().required('متراژ نمیتواند خالی باشد')
+      .min(0, 'متراژ نمی‌تواند منفی باشد') // Add this line
+      .typeError("لطفا متراژ را به عدد وارد کنید"), // H
+        //   .matches(/^[0-9]/, "لطفا متراژ را به عدد وارد کنید"),
+    price: Yup.number().required('قیمت نمیتواند خالی باشد')
+            .min(0, 'قیمت نمی‌تواند منفی باشد') // Add this line
+            .typeError("لطفا قیمت را به عدد وارد کنید"), // H
+
+
     title: Yup.string().required('عنوان نمیتواند خالی باشد'),
     category: Yup.string().required('عنوان دسته بندی نمیتواند خالی باشد'),
-    meterage: Yup.string().required('متراژ نمیتواند خالی باشد')
-        .matches(/^[0-9]/, "لطفا متراژ را به عدد وارد کنید"),
-    price: Yup.string().required('قیمت نمیتواند خالی باشد')
-        .matches(/^[0-9]/, "لطفا قیمت را به عدد وارد کنید"),
+    // meterage: Yup.string().required('متراژ نمیتواند خالی باشد')
+    //     .matches(/^[0-9]/, "لطفا متراژ را به عدد وارد کنید"),
+    // price: Yup.string().required('قیمت نمیتواند خالی باشد')
+    //     .matches(/^[0-9]/, "لطفا قیمت را به عدد وارد کنید"),
     image: Yup.string().required('تصویر نمیتواند خالی باشد'),
     description: Yup.string().required('توضیحات نمیتواند خالی باشد'),
-    build_date: Yup.string().required('سال ساخت نمیتواند خالی باشد'),
+    build_date: Yup.string()
+    // .required('سال ساخت نمیتواند خالی باشد'),
 });
+
+

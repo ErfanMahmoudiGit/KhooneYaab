@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import * as Yup from 'yup';
 import { useEffect, useState } from "react"
 import { MapContainer ,TileLayer, Marker,Popup, useMapEvent, useMap} from 'react-leaflet'
@@ -127,6 +128,7 @@ export default function HouseLocationInformation(){
                         inline
                         label="مدرسه"
                         name="school"
+                        defaultChecked={true}
                         checked={values.school === 1} 
                         onChange={(e) => 
                             setFieldValue('school', e.target.checked ? 1 : 0)
@@ -199,13 +201,13 @@ HouseLocationInformation.initialValues = {
     latitude : 0,
     longitude : 0,
     hospital: 0,  
-    school: 0,  
+    school: 1,  
     park: 0, 
 };
 HouseLocationInformation.validationSchema = Yup.object().shape({
     city: Yup.string().required('استان را انتخاب کنید'),
     latitude :  Yup.string().required('موقعیت جغرافیایی را انتخاب کنید'),
-    longitude :  Yup.string().required('استان را انتخاب کنید'),
+    longitude :  Yup.string().required('موقعیت جغرافیایی را انتخاب کنید'),
     hospital: Yup.string(),
     school :  Yup.string(),
     park :  Yup.string(),
