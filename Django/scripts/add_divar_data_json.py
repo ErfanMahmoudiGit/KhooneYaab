@@ -4,6 +4,9 @@ import os
 import django
 import sys
 
+import random
+from datetime import datetime, timedelta
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Set up Django environment
@@ -27,14 +30,25 @@ for home in homes:
     warehouse = utils.convert_persian_text_to_english_digits(home['warehouse'])
     bdt = utils.convert_persian_text_to_english_digits(home['build_date'])
     
+    # Calculate the date three months ago from today
+    three_months_ago = datetime.now() - timedelta(days=90)
+
+    # Generate a random date between three months ago and today
+    random_date = three_months_ago + timedelta(
+        days=random.randint(0, (datetime.now() - three_months_ago).days)
+    )
+
+    # Format the random date in the same "YYYY-MM-DD" structure
+    formatted_random_date = random_date.strftime("%Y-%m-%d")
+    
     if home['latitude']:
         Building.objects.create(
             owner_id=0,
             city=home['city'],
             category=home['category'],
             title=home['title'],
-            #time=home['time'],
-            time = "2001-01-01", ### TODO
+            time = formatted_random_date,
+            prioritized = 0,
             meterage=mtr,
             price=prc,
             price_per_meter=ppm,
