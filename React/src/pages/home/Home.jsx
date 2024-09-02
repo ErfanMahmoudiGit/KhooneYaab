@@ -22,7 +22,7 @@ export default function Home() {
                 const res = await API_GETHOUSE();
                 if (res.status === 200) {
                     setHouses(res.data);
-                    setDisplayedHouses(res.data.slice(0, 14)); // Start with the first 14 houses
+                    setDisplayedHouses(res.data.slice(-14)); // Start with the first 14 houses
                 } else {
                     console.error("Error fetching houses");
                 }
@@ -61,11 +61,28 @@ export default function Home() {
         setIsLoadingMore(true);
 
         setTimeout(() => { // Simulate loading delay
+            // setCurrentIndex(prevIndex => {
+            //     console.log(prevIndex);
+                
+            //     const nextIndex = prevIndex + 14;
+            //     console.log(nextIndex);
+                
+            //     const newHouses = houses.slice(parseInt(prevIndex + prevIndex), nextIndex);
+               
+                
+            //     setDisplayedHouses(prevHouses => [...prevHouses, ...newHouses]);
+            //     return nextIndex;
+            // });
             setCurrentIndex(prevIndex => {
-                const nextIndex = prevIndex + 14;
-                const newHouses = houses.slice(prevIndex, nextIndex);
+                const nextIndex = prevIndex + 14; // Increment current index by 14
+                console.log("Current Index:", prevIndex, "Next Index:", nextIndex);
+    
+                // Get houses from the current index to the next index
+                const newHouses = houses.slice(-nextIndex, -prevIndex);
+                console.log("New Houses Loaded:", newHouses);
+    
                 setDisplayedHouses(prevHouses => [...prevHouses, ...newHouses]);
-                return nextIndex;
+                return nextIndex; // Update the current index to the new position
             });
             setIsLoadingMore(false);
         }, 1000); // Simulated delay for demonstration
@@ -92,11 +109,15 @@ export default function Home() {
             )
         );
     };
-
     function formatNumber(number) {
-        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        // Convert to string and format with commas
+        let formatted = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    
+        // Convert to Persian numerals
+        const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+        return formatted.replace(/\d/g, (digit) => persianDigits[digit]);
     }
-
+   
     return (
         <>
             {loading ? (
@@ -116,12 +137,16 @@ export default function Home() {
 
                                 return (
                                     <Col key={house.id} md={6} className="mb-4">
-                                        <div className="d-flex align-items-center gap-3 border border-light rounded-3 p-2 bg-light">
-                                            <div style={{ width: "60%" }} className="d-flex flex-column justify-content-center align-items-right pe-2">
-                                                <div className="font-weight-bold">{house.title}</div>
-                                                <div>آگهی در {house.city}</div>
-                                                <div>{formatNumber(house.price)} تومان</div>
-                                                <div>املاک <FaChevronLeft size={12} /> {house.category}</div>
+                                        <div className="d-flex align-items-center gap-3 border border-light rounded-3 p-2 bg-light"
+                                        style={{
+                                            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)" , 
+                                            }}>
+                                            <div style={{ width: "60%" }} className="d-flex flex-column justify-content-center align-items-right pe-2 gap-1">
+                                                <div style={{color:"#ac2323" , fontWeight:"bold"}}>نردبان شده در {house.city}</div>
+                                                <div className="fw-bold">{house.title}</div>
+                                                {/* <div>آگهی در {house.city}</div> */}
+                                                <div >املاک <FaChevronLeft size={12} /> {house.category}</div>
+                                                <div style={{color:"rgba(0, 0, 0, 0.5)"}}>{formatNumber(house.price)} تومان</div>
                                                 <button onClick={() => navigate(`/house/${house.id}`)} className="smsButton"> مشاهده ملک</button>
                                             </div>
                                             <div style={{ width: "40%" }} className="d-flex justify-content-center position-relative">
@@ -137,9 +162,9 @@ export default function Home() {
                                                         size={24}
                                                         style={{
                                                             position: 'absolute',
-                                                            top: '8px',
-                                                            left: '8px',
-                                                            color: 'gold',
+                                                            // top: '0',
+                                                            left: '3px',
+                                                            color: '#ac2323',
                                                             backgroundColor: 'rgba(0, 0, 0, 0.5)',
                                                             borderRadius: '50%',
                                                             padding: '4px'
@@ -151,8 +176,8 @@ export default function Home() {
                                                         size={24}
                                                         style={{
                                                             position: 'absolute',
-                                                            top: '8px',
-                                                            left: '8px',
+                                                            // top: '4px',
+                                                            left: '3px',
                                                             color: 'white',
                                                             backgroundColor: 'rgba(0, 0, 0, 0.5)',
                                                             borderRadius: '50%',

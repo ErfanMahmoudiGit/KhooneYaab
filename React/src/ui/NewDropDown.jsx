@@ -72,10 +72,16 @@ function NewDropdown() {
     };
 
     return (
-        <div style={{ position: 'relative', height: "100%" }}>
+        <div style={{ position: 'relative', height: "100%" }}>   
+
             <Select
                 placeholder="استان را انتخاب کنید"
-                style={{ width: '180px' }}
+                className="custom-select-city" // Apply custom class here
+
+                style={{ width: '180px' ,
+                     backgroundColor :"#ffffff" , 
+                    //  backgroundColor :"#ebebee" , 
+                     height:"40px" , borderRadius: '8px'}}
                 value={selectedValue}
                 onChange={handleSelectionChange}
                 allowClear

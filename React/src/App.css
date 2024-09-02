@@ -4,20 +4,26 @@
 
 
 @font-face {
-	font-family: YEKAN;
+	font-family: BNAZANIN;
 	font-style: normal;
 	font-weight: bold;
-	src: url('/Yekan.ttf');
-	src: url('/Yekan.ttf') format('embedded-opentype'),  /* IE6-8 */ 
+	src: url('/BNazanin/BNazanin.ttf');
+	src: url('/BNazanin/BNazanin.ttf') format('embedded-opentype'),  /* IE6-8 */ 
 }
 @font-face {
-	font-family: YAGUT;
+	font-family: IRANSans;
 	font-style: normal;
 	font-weight: bold;
-	src: url('/Yagut.ttf');
-	src: url('/Yagut.ttf') format('embedded-opentype'),  /* IE6-8 */ 
+	src: url('/iransans/eot/IRANSansWeb(FaNum)_Bold.eot');
+	src: url('/iransans/eot/IRANSansWeb(FaNum)_Bold.eot?#iefix') format('embedded-opentype'),  /* IE6-8 */ url('/iransans/woff2/IRANSansWeb(FaNum)_Bold.woff2') format('woff2'),  /* FF39+,Chrome36+, Opera24+*/ url('/iransans/woff/IRANSansWeb(FaNum)_Bold.woff') format('woff'),  /* FF3.6+, IE9, Chrome6+, Saf5.1+*/ url('/iransans/ttf/IRANSansWeb(FaNum)_Bold.ttf') format('truetype');
 }
-
+@font-face {
+	font-family: IRANSans;
+	font-style: normal;
+	font-weight: 500;
+	src: url('/iransans/eot/IRANSansWeb(FaNum)_Medium.eot');
+	src: url('/iransans/eot/IRANSansWeb(FaNum)_Medium.eot?#iefix') format('embedded-opentype'),  /* IE6-8 */ url('/iransans/woff2/IRANSansWeb(FaNum)_Medium.woff2') format('woff2'),  /* FF39+,Chrome36+, Opera24+*/ url('/iransans/woff/IRANSansWeb(FaNum)_Medium.woff') format('woff'),  /* FF3.6+, IE9, Chrome6+, Saf5.1+*/ url('/iransans/ttf/IRANSansWeb(FaNum)_Medium.ttf') format('truetype');
+}
 
 #root {
   /* height: 100vh; */
@@ -25,11 +31,16 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  background-color: #fff !important;
+  font-family: "IRANSans" !important;
+
+
 }
 body {
-  font-family: "YAGUT" !important;
-  /*background-image: url("../../../public/asset/img/background.png");*/
-  background-color: #eaeaea;
+  font-family: "IRANSans" !important;
+  /*background-image: url("../..//asset/img/background.png");*/
+  /* background-color: #eaeaea; */
+  background-color: #fff !important;
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -130,6 +141,14 @@ body {
   margin-top: 20px;
 }
 
+.custom-select-city .ant-select-selector {
+  background-color: #ffffff !important; 
+  /* background-color: #ebebee !important;  */
+    border-radius: 8px; /* Adjust as needed */
+    color: #aeaeaf !important;
+    font-family: "IRANSans" !important;
+
+}
 
 .login-button:hover{
   background-color: #888888;
@@ -138,12 +157,12 @@ body {
 .smsButton {
   color: white;
   text-decoration: none;
-  background: #979696;
-  border: #979696;
+  background: #ac2323;
+  border: #991414;
   padding: 5px 15px;
   display: flex;
   justify-content: center;
-  border-radius: 30px;
+  border-radius: 10px;
   font-size: 14px;
   width: 110px;
   margin-top: 10px;
@@ -208,64 +227,101 @@ body {
 }
 
 .ant-menu {
-  color:#001529;
-  background-color: #E7E8D8 !important;;
+  /* color:#001529; */
+  /* background-color: #E7E8D8 !important;; */
+  /* background-color: #e0e0e2 !important; */
+  background-color: #942525 !important;
+  color: #ffffff;
+
+
   /* background-color: #f8f9fa !important;  */
 }
 .ant-menu-dark .ant-menu-item{
-  color:#001529;
-  background-color: #E7E8D8;
+  /* color:#001529; */
+  color: #ffffff;
+
+  background-color: #942525 !important;
+
+  /* background-color: #e0e0e2 !important; */
+
+  /* background-color: #E7E8D8; */
   /* background-color: #f8f9fa !important;  */
 }
 .ant-menu-dark .ant-menu-item:hover{
   color:#001529;
-  /* background-color: rgb(190, 186, 186) !important;  */
-  background-color: #E7E8D8;
+  background-color: rgb(185, 183, 183) !important; 
 
 }
 .ant-menu-item, .ant-menu-submenu-title {
-  color:#001529 !important;
-  /* background-color: #f8f9fa !important;  */
-  background-color: #E7E8D8;
+  /* color:#001529 !important; */
+  color: #ffffff;
+
+  /* background-color: #e0e0e2 !important; */
+  background-color: #942525 !important;
+
+
 
 }
+
+input[type="search"]::placeholder {
+  color: #aeaeaf !important;
+}
+
+
 .ant-layout-header{
-  /* background-color: #AAB396; */
-  background-color: #E7E8D8;
+
+  background-color: #942525 !important;
+  /* background-color: #e0e0e2 !important; */
 }
 .ant-layout .ant-layout-sider-trigger{
-  color:#001529 !important;
-  background-color: #E7E8D8;
+  /* color:#001529 !important; */
+  color: #ffffff;
+
+  background-color: #942525 !important;
+
+  /* background-color: #e0e0e2 !important; */
+
 }
 .ant-menu-item:hover, .ant-menu-submenu-title:hover {
-  background-color: rgb(190, 186, 186) !important; 
-  /* background-color: #E7E8D8; */
-
-
+  background-color: #aaabac !important;
 }
 .ant-layout .ant-layout-sider-children{
-  background-color: #E7E8D8;
+  /* background-color: #e0e0e2 !important; */
+  background-color: #942525 !important;
+  color: #ffffff;
+
+
 }
 .ant-menu-inline.ant-menu-root .ant-menu-item{
-  color:#001529 !important;
-  background-color: #E7E8D8;
+  /* color:#001529 !important; */
+  color: #ffffff !important;
 
-  /* background-color: #f8f9fa !important; */
+  /* background-color: #e0e0e2 !important; */
+  background-color: #942525 !important;
+
+}
+.ant-menu-inline.ant-menu-root .ant-menu-submenu-title >.ant-menu-title-content {
+  color: #ffffff !important;
+
 }
 .ant-menu-inline.ant-menu-root .ant-menu-item:hover{
   color:#001529 !important;
-  background-color: #E7E8D8;
+  background-color: #b5b5b6 !important;
 }
 .ant-menu-item-selected {
-  background-color: #E7E8D8;
+  /* background-color: #e0e0e2 !important; */
+  background-color: #942525 !important;
+
 }
 
 .ant-menu-dark.ant-menu-inline .ant-menu-sub.ant-menu-inline, .ant-menu-dark>.ant-menu.ant-menu-inline .ant-menu-sub.ant-menu-inline{
-  color:#001529;
-  /* background-color: #f8f9fa !important; */
-  background-color: #E7E8D8;
+  color:#ffffff;
+  /* color:#001529; */
+  /* background-color: #e0e0e2 !important; */
+  background-color: #942525 !important;
 
 }
+
 .btn-search{
   /* border-radius: 1px; */
   padding: 8px 25px !important;
