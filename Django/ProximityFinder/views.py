@@ -292,9 +292,19 @@ def search_buildings(request):
     min_meterage = request.GET.get('min_meterage')
     max_meterage = request.GET.get('max_meterage')
     room_count = request.GET.get('room_count')
+    state_id = request.GET.get('state_id')
 
     # Initialize queryset
     buildings = Building.objects.all()
+    
+    if state_id:
+        # Find the city center corresponding to the state_id
+        state = next((item for item in STATE_DATA if item["id"] == state_id), None)
+        if not state:
+            return JsonResponse({'error': 'Invalid state ID'}, status=400)
+        
+        city_center = state["center"]
+        buildings = buildings.filter(city=city_center)
 
     # Apply search filter if query is present
     if query:
