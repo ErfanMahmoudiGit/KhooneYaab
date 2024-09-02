@@ -10,7 +10,8 @@ import {  toast } from 'react-toastify';
 import { BeatLoader } from "react-spinners";
 import {CaptchaComponent} from './CaptchaComponent'
 import LoginStep2 from "./LoginStep2";
-import loadCaptchaImage from './Redux/authSlice'
+import {loadCaptchaImage} from './Redux/authSlice';
+import LoginStep3 from "./LoginStep3";
 
 let schema = yup.object().shape({
     phone: yup
@@ -20,14 +21,12 @@ let schema = yup.object().shape({
   
   });
 export default function LoginStep1(props){
-    const { loginModalStep1 ,isSendCode , phoneNumber , captcha_string , user_string} = useSelector(authState);
+    const { loginModalStep1 ,loginModalStep2 , loginModalStep3 ,isSendCode , phoneNumber , captcha_string , user_string} = useSelector(authState);
     const dispatch = useDispatch();
     const [isLoadinging, setIsLoadinging] = useState(false);
 
-    console.log("phoneNumber",phoneNumber);
-    console.log("captcha_string: ",captcha_string);
-    console.log("isSendCode: ",isSendCode);
-    console.log("user_string: ",user_string);
+    console.log("loginModalStep2: ",loginModalStep2);
+    console.log("loginModalStep1: ",loginModalStep1);
     
     
     return(
@@ -46,6 +45,8 @@ export default function LoginStep1(props){
                     initialValues={{ phone: phoneNumber }}
                     validationSchema={ schema }
                     onSubmit={(values) => {   
+                        console.log(values);
+                        
                         setIsLoadinging(true);
                         const data = {
                             phoneNumber: values.phone,
@@ -61,16 +62,21 @@ export default function LoginStep1(props){
                             console.log("res login 1: ",res);
                             
                             if (res.status == 200) {
-                                dispatch(handle_variables({
-                                    isSendCode: true,
-                                    loginModalStep2 : true,
-                                    loginModalStep1 : false,
-                                    phoneNumber: data.phoneNumber,
-                                }));
+                                dispatch(
+                                    handle_variables({
+                                      loginModalStep2: true,
+                                    //   loginModalStep1: false,
+                                      isSendCode: true,
+                                      phoneNumber: data.phoneNumber,
+                                    })
+                                );                                
+                                
                                 setIsLoadinging(false);
                             } else {
                                 toast.error(res.error);                                
                                 setIsLoadinging(false);
+                                dispatch(loadCaptchaImage());
+                            
                             }
                         })
                         .catch((error) => {
@@ -79,6 +85,7 @@ export default function LoginStep1(props){
                             dispatch(loadCaptchaImage());
                             // toast.error(err.response.data.message);
                             setIsLoadinging(false);
+
                         });
 
                     }}
@@ -87,7 +94,7 @@ export default function LoginStep1(props){
                     <form onSubmit={props.handleSubmit}>
                         <Row className={"text-center"}>
                             <Col xs={12}>
-                                <h3>ورود به خونه یاب</h3>
+                                <h3 className="filter-color">ورود به خونه یاب</h3>
                             </Col>
                         </Row>
                         <Row className="d-flex justify-content-center mt-3">
@@ -128,34 +135,19 @@ export default function LoginStep1(props){
                             <Col xs={6} md={4}>
                             <Button
                                         type="submit"
-                                        className="btn-login"
+                                        className="sendcodeBtn"
                                     >
                             {isLoadinging ? <BeatLoader size={9} color={"black"} /> : " ارسال کد فعالسازی"}
                             </Button>
-                                {/* {!isLoadinging ? (
-                                    <Button
-                                        type="submit"
-                                        className="btn-login"
-                                    >
-                                        ارسال کد فعالسازی
-                                        {isLoadinging ? <BeatLoader size={9} color={"black"} /> : " ارسال کد فعالسازی"}
-                                    </Button>
-                                    ) : (
-                                    <div
-                                        // style={{ borderRadius: "15px", padding: "2px" }}
-                                        className="btn-login"
-                                    >
-                                        <BeatLoader size={9} color={"black"} />
-                                    </div>
-                                )} */}
+                               
                             </Col>
                         </Row>
                     </form>
                     )}
                 </Formik>
             </Modal.Body>
+            { loginModalStep2 ? <LoginStep2 /> : null }
         </Modal>
-        <LoginStep2 />
         </>
     )
 }

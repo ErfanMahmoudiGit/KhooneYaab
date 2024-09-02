@@ -1,9 +1,10 @@
+/* eslint-disable react/prop-types */
 import { Button, Col, Modal, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { handle_variables, authState } from './Redux/authSlice';
 import { Formik } from "formik";
 import * as yup from "yup"; // Ensure you import Yup
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { BeatLoader } from "react-spinners";
 import OTPInput from 'react-otp-input';
 import {API_CHECKOTP} from '../../services/apiServices'
@@ -19,7 +20,7 @@ const validationSchema = yup.object().shape({
 });
 
 export default function LoginStep2() {
-    const { loginModalStep2, isSendCode, phoneNumber ,loginModalStep3 , is_verified_user , welcome_message} = useSelector(authState);
+    const { loginModalStep2,owner_id, phoneNumber ,loginModalStep3 } = useSelector(authState);
     const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false);
     const [otp, setOtp] = useState("");
@@ -48,20 +49,48 @@ export default function LoginStep2() {
 
                         let resp = API_CHECKOTP(data)
                         resp.then((res) => {
-                            console.log(res);
-                            
+                            console.log("res login 2: ",res);
+                            // is_verified_user
+                            // phoneNumber
+                            // name
+                            // email
+                            // login_expires_in
+                            // user_id
                             if (res.status === 200) {
                                 console.log(res.data.data.message);
                                 console.log(res.data.data.user.is_verified_user);
+
+                                if(res.data.data.user.is_verified_user == true){
+                                    console.log("verified");
+                                    
+                                    dispatch(handle_variables({
+                                        is_verified_user : res.data.data.user.is_verified_user,
+                                        loginModalStep2 : false,
+                                        loginModalStep1 : false,
+                                        name :  res.data.data.user.name,
+                                        email :  res.data.data.user.email,
+                                        owner_id : res.data.data.user.user_id,
+                                        login_expires_in : res.data.data.user.login_expires_in,
+                                        phoneNumber: data.phoneNumber,
+                                    }));
+                                    localStorage.setItem('owner_id', JSON.stringify(owner_id));
+                                    toast.success("ورود شما با موفقیت انجام شد")
+                                }else{
+                                    dispatch(handle_variables({
+                                        // loginModalStep2 : false,
+                                        loginModalStep3 : true,
+                                        welcome_message :res.data.data.message,
+                                        owner_id : res.data.data.user.user_id,
+                                        login_expires_in : res.data.data.user.login_expires_in,                                        phoneNumber: data.phoneNumber,
+                                    }));
+                                }
                                 
-                                dispatch(handle_variables({
-                                    // isSendCode: true,
-                                    welcome_message  : res.data.data.message,
-                                    is_verified_user : res.data.data.user.is_verified_user,
-                                    loginModalStep2 : false,
-                                    loginModalStep3 : true,
-                                    phoneNumber: data.phoneNumber,
-                                }));
+                                // dispatch(handle_variables({
+                                //     is_verified_user : res.data.data.user.is_verified_user,
+                                //     loginModalStep2 : false,
+                                //     loginModalStep3 : true,
+                                //     phoneNumber: data.phoneNumber,
+                                // }));
                                 setIsLoading(false);
                             } else {
                                 toast.error(res.error);
@@ -134,14 +163,14 @@ export default function LoginStep2() {
                                         <BeatLoader size={9} color={"black"} />
                                     </div>
                                 )} */}
-                                 <Button type="submit" className="btn-login">
+                                 <Button type="submit" className="sendcodeBtn">
                                         {isLoading ? <BeatLoader size={9} color={"black"} /> : "تایید"} 
                                     </Button>
                             </Col>
                             <Col xs={6} md={4}>
                                 <Button
                                     type="button"
-                                    className="btn-login-back"
+                                    className="btn-login"
                                     onClick={() => {
                                         dispatch(handle_variables({
                                             isSendCode: false,

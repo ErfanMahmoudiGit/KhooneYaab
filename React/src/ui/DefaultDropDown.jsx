@@ -85,7 +85,7 @@
 import React, { useState } from 'react';
 import AsyncSelect from 'react-select';
 import { useDispatch } from 'react-redux';
-import { handle_variables } from "../pages/login/Redux/authSlice"; // Import the correct action
+import { handle_variables } from '../pages/login/Redux/authSlice'; // Import the correct action
 
 const DefaultDropDown = (props) => {
   const [searchValue, setSearchValue] = useState("");

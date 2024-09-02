@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { useTimer } from "react-timer-hook";
-import { handle_variables } from "./Redux/authSlice";
+import { handle_variables } from './Redux/authSlice';
 
 function MyTimer({ expiryTimestamp }) {
   const dispatch = useDispatch();

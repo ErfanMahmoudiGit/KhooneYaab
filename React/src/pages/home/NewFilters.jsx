@@ -146,7 +146,7 @@ import { Form, Button } from 'react-bootstrap';
 import { RiFilterOffFill } from "react-icons/ri";
 import { ImArrowUp2 } from "react-icons/im";
 import { useSelector } from 'react-redux';
-import { authState, handle_variables } from "../login/Redux/authSlice"; // Update with the correct path
+import { authState, handle_variables } from '../login/Redux/authSlice'; // Update with the correct path
 
 const NewFilters = ({ onSearch }) => {
   const [filters, setFilters] = useState({

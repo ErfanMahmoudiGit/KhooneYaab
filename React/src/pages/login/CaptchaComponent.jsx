@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { FormControl } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { authState, handle_variables, loadCaptchaImage } from "./Redux/authSlice";
+import { authState, handle_variables, loadCaptchaImage } from './Redux/authSlice';
 
 const CaptchaComponent = (props) => {
     const canvasRef = useRef(null);

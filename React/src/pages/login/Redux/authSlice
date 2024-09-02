@@ -24,24 +24,8 @@ const initialState = {
   cityResults :[],
   selectedCity : "",
   selectedCityId : "",
-  
-
-  signInModalopen: false,
-  isCompanySelectModalOpen: false,
-  userSignInModal:false,
-  isUserSignIn:false,
-  accessToken: undefined,
-  loginBtnValue: undefined,
-  invalid_captcha: false,
-  genuineAddNewCompany: 0,
-  isLoading: false,
-  access_key: undefined,
-  showGenuineBtn:false,
-  showLegalBtn:false,
-  showForeignersBtn:false,
-  errorModal:false,
-  errorToast:false,
-  errorMessage:null
+  owner_id : "",
+  login_expires_in:"",
 
 };
 

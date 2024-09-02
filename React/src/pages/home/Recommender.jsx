@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import { Row, Col, Form, Button , Container, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from "react-redux";
-import {handle_variables, authState } from '../login/Redux/authSlice';
+// import {handle_variables, authState } from '../login/Redux/authSlice';
 import { Formik,useFormikContext, ErrorMessage, Field } from 'formik';
 import { DefaultDropDown } from '../../ui/DefaultDropDown';
 import { MapContainer ,TileLayer, Marker,Popup, CircleMarker , useMap ,useMapEvents} from 'react-leaflet'

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { API_GETHOUSE } from "../../services/apiServices";
 import { useEffect, useState, useRef } from "react";
 import { Col, Row, Container } from "react-bootstrap";
@@ -132,15 +133,15 @@ export default function Home() {
                 <>
                     <HomeMap houses={houses} />
                     <Container fluid>
-                        <div className="p-3">
+                        <div className="p-3 mt-2">
                             <h3>آگهی های اخیر</h3>
                         </div>
-                        <Row>
+                        <Row  className="d-flex justify-content-center align-items-center gap-4">
                             {displayedHouses.map((house) => {
                                 const isBookmarked = getBookmarks().includes(house.id);
 
                                 return (
-                                    <Col key={house.id} md={6} className="mb-4">
+                                    <Col key={house.id} md={5} className="mb-4">
                                         <div className="d-flex align-items-center gap-3 border border-light rounded-3 p-2 bg-light home-card"
                                         style={{
                                             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)" , 

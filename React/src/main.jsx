@@ -6,7 +6,7 @@ import './index.css'
 import {BrowserRouter} from 'react-router-dom'
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
-import authReducer from './pages/login/Redux/authSlice.jsx'; // Update with your actual path
+import authReducer from './pages/login/Redux/authSlice'; // Update with your actual path
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const store = configureStore({

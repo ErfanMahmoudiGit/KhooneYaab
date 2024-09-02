@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Select } from 'antd'; // Import Ant Design Select
 import { useNavigate } from 'react-router-dom';
-import { authState, handle_variables } from "../pages/login/Redux/authSlice";
+import { authState, handle_variables } from '../pages/login/Redux/authSlice';
 import { useDispatch, useSelector } from "react-redux";
 import { FaTimes } from 'react-icons/fa'; // Import close icon
 

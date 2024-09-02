@@ -111,6 +111,19 @@ body {
   width: 100%;
   font-weight: 600;
 }
+.sendcodeBtn{
+  background-color: #ac2323;
+  color: #ffffff;
+  border: none;
+  padding: 40px 0px;
+  /* display: inline-block; */
+  font-size: 16px!important;
+  width: 100%;
+  font-weight: 600;
+}
+.sendcodeBtn:hover{
+  background-color: #cf3131;
+}
 .btn-login-back{
   background-color: #e6316d;
   color: #d6d6d6;
@@ -200,7 +213,6 @@ body {
 }
 .filterBtn:hover{
   background-color: #cc4d4d;
-  
   border: #ac2323;
 }
 .backprimaryButton {

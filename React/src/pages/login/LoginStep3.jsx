@@ -1,9 +1,10 @@
+/* eslint-disable react/prop-types */
 import { Button, Col, Modal, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { handle_variables, authState } from './Redux/authSlice';
 import { Formik } from "formik";
-import * as yup from "yup"; // Ensure you import Yup
-import { useEffect, useState } from "react";
+import * as yup from "yup";
+import { useState } from "react";
 import { BeatLoader } from "react-spinners";
 import { API_LOGIN_USER } from "../../services/apiServices";
 import {  toast } from 'react-toastify';
@@ -18,7 +19,7 @@ const validationSchema = yup.object().shape({
 });
 
 export default function LoginStep3(){
-    const { loginModalStep2 , loginModalStep3 , isSendCode, phoneNumber , name , email ,welcome_message} = useSelector(authState);
+    const { loginModalStep3 , phoneNumber , name , email ,welcome_message} = useSelector(authState);
     const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false);
     console.log("loginModalStep3",loginModalStep3);
@@ -47,7 +48,7 @@ export default function LoginStep3(){
                         
                         let resp = API_LOGIN_USER(data)
                         resp.then((res) => {
-                            console.log(res);
+                            console.log("res login3:",res);
                             
                             if (res.status === 200) {
                                
@@ -55,7 +56,14 @@ export default function LoginStep3(){
                                     loginModalStep3 : false,
                                     loginModalStep1 : false,
                                     loginModalStep2 : false,
+                                    name : data.name , 
+                                    email : data.email,
+                                    is_verified_user: true,
+                                    // owner_id : res.data.data.user.user_id,
+                                    // login_expires_in : res.data.data.user.login_expires_in,
                                 }));
+                                toast.success("ورود شما با موفقیت انجام شد")
+
                                 setIsLoading(false);
                             } else {
                                 toast.error(res.error);
@@ -64,7 +72,6 @@ export default function LoginStep3(){
                         })
                         .catch((err) => {
                             console.log(err);
-                            // dispatch(loadCaptchaImage());
                             // toast.error(err.response.data.message);
                             setIsLoading(false);
                         });
@@ -75,23 +82,20 @@ export default function LoginStep3(){
                 {(props) => (
                     <form onSubmit={props.handleSubmit}>
                         <Row className="d-flex justify-content-center mt-3">
-                            <h2>{welcome_message}</h2>
+                            <h3 className="filter-color">{welcome_message}</h3>
+                            {/* <Row className={"text-center"}>
+                            <Col xs={12}>
+                                <h3 className="filter-color">لطفا اطلاعات خود را وارد نمایید</h3>
+                            </Col>
+                        </Row> */}
                             <Col className="ci-div" xs={12} md={9}>
                                 <label htmlFor="">نام</label>
                                 <input
-                                    type="text"
-                                    onKeyUp={(e) => {
-                                        const value = e.target.value;
-                                        if (isNaN(+value)) {
-                                            e.target.value = e.target.value.slice(
-                                                0, e.target.value.length - 1
-                                            );
-                                        }
-                                    }}
+                                    type="text"           
                                     onChange={(e) => {
                                         props.setFieldValue("name",e.target.value );
                                     }}
-                                    placeholder={"نام"}
+                                    placeholder={"نام خود را به طور کامل وارد نمایید"}
                                     className="form-control login-input"
                                     name="name"
                                 />
@@ -101,22 +105,14 @@ export default function LoginStep3(){
                                 </div>
                                 ) : null}{" "}          
                             </Col>
-                            <Col className="ci-div" xs={12} md={9}>
+                            <Col className="ci-div mt-3" xs={12} md={9}>
                                 <label htmlFor="">ایمیل</label>
                                 <input
-                                    type="text"
-                                    onKeyUp={(e) => {
-                                        const value = e.target.value;
-                                        if (isNaN(+value)) {
-                                            e.target.value = e.target.value.slice(
-                                                0, e.target.value.length - 1
-                                            );
-                                        }
-                                    }}
+                                    type="text"            
                                     onChange={(e) => {
                                         props.setFieldValue("email",e.target.value );
                                     }}
-                                    placeholder={"email"}
+                                    placeholder={"ایمیل خود را به طور کامل وارد نمایید"}
                                     className="form-control login-input"
                                     name="email"
                                 />
@@ -130,31 +126,25 @@ export default function LoginStep3(){
 
                         <Row className="d-flex justify-content-center mt-3">
                             <Col xs={6} md={4}>
-                                {!isLoading ? (
-                                    <Button type="submit" className="btn btn-primary login-btn">
-                                        ورود 
-                                    </Button>
-                                ) : (
-                                    <div style={{ borderRadius: "15px", padding: "2px" }} className="btn btn-primary login-btn">
-                                        <BeatLoader size={9} color={"black"} />
-                                    </div>
-                                )}
+                                <Button type="submit" className="sendcodeBtn">
+                                    {isLoading ? <BeatLoader size={9} color={"black"} /> : "تایید"} 
+                                </Button> 
                             </Col>
-                            <Col xs={6} md={4}>
-                                <Button
+                            {/* <Col xs={6} md={4}>
+                            <Button
                                     type="button"
-                                    className="btn login-btn btn-danger btn-red"
+                                    className="btn-login"
                                     onClick={() => {
-                                        // dispatch(handle_variables({
-                                        //     isSendCode: false,
-                                        //     loginModalStep2: false,
-                                        //     loginModalStep1: true,
-                                        // }));
+                                        dispatch(handle_variables({
+                                            isSendCode: false,
+                                            loginModalStep3: false,
+                                            loginModalStep2: true,
+                                        }));
                                     }}
                                 >
                                     بازگشت 
                                 </Button>  
-                            </Col>
+                            </Col> */}
                         </Row>
                     </form>
                 )}
@@ -163,146 +153,3 @@ export default function LoginStep3(){
         </Modal>
     );
 }
-
-// import { Button, Col, Modal, Row } from "react-bootstrap";
-// import { useDispatch, useSelector } from "react-redux";
-// import {handle_variables, authState } from './Redux/authSlice';
-// import { Formik } from "formik";
-// import * as yup from "yup";
-// import { useState } from "react";
-
-// let schema = yup.object().shape({
-//     user_name: yup
-//       .string()
-//     //   .matches(/^[0-9]{11}$/, "لطفا به صورت کامل وارد کنید")
-//       .required("این فیلد نمیتواند خالی باشد"),
-  
-//   });
-// export default function LoginStep3(props){
-//     const { loginModalStep3 ,isSendCode , phone , captcha_string , captcha_image , user_string , name} = useSelector(authState);
-//     const dispatch = useDispatch();
-//     const [isLoadinging, setIsLoadinging] = useState(false);
-//     console.log(loginModalStep3);
-    
-    
-//     return(
-//         <>
-//         <Modal
-//             className={"Auth-modal"}
-//             show={loginModalStep3}
-//             onHide={() =>
-//               dispatch(handle_variables({ loginModalStep3: false }))
-//             }
-//             size={"lg"}
-//             centered
-//         >
-//             <Modal.Body >
-//                 <Formik
-//                     initialValues={{ user_name : name }}
-//                     validationSchema={ schema }
-//                     onSubmit={(values) => {   
-//                         setIsLoadinging(true);
-//                         // toast.success(" cv ", {
-//                         //     position: toast.POSITION.TOP_RIGHT,
-//                         // });
-//                         const data = {
-//                             user_name : values.user_name,
-                           
-//                         };
-//                         console.log("data login step 3: " ,data);
-//                         // 
-//                                     setIsLoadinging(false);
-
-//                         // let resp = API_GETOTP(data)
-//                         // resp.then((res) => {
-//                         //     if (res.data.status === 200) {
-//                         //         dispatch(handle_variables({
-//                         //             isSendCode: true,
-//                         //             loginModalStep2 : true,
-//                         //             phone: data.phone,
-//                         //         }));
-//                         //         setIsLoadinging(false);
-//                         //     } else {
-//                         //         toast.error(res.data.message, {
-//                         //             position: toast.POSITION.TOP_RIGHT,
-//                         //         });
-//                         //         setIsLoadinging(false);
-//                         //     }
-//                         // })
-//                         // .catch((err) => {
-//                         //     console.log(err);
-//                         //     dispatch(loadCaptchaImage());
-//                         //     toast.error(err.response.data.message);
-//                         //     setIsLoadinging(false);
-//                         // });
-
-//                     }}
-//                 >
-//                 {(props) => (
-//                     <form onSubmit={props.handleSubmit}>
-//                         <Row className={"text-center"}>
-//                             <Col xs={12}>
-//                                 <h5>user_name</h5>
-//                             </Col>
-//                         </Row>
-//                         <Row className="d-flex justify-content-center mt-3">
-//                             <Col className="ci-div" xs={12} md={9}>
-//                                 <label htmlFor="">user_name </label>
-//                                 <input
-//                                     type="text"
-//                                     onKeyUp={(e) => {
-//                                         const value = e.target.value;
-//                                         if (isNaN(+value)) {
-//                                             e.target.value = e.target.value.slice(
-//                                                 0, e.target.value.length - 1
-//                                             );
-//                                         }
-//                                     }}
-//                                     onChange={(e) => {
-//                                         props.setFieldValue("user_name",e.target.value );
-//                                     }}
-//                                     placeholder={"شماره همراه وارد شده باید به نام شخص باشد"}
-//                                     className="form-control login-input"
-//                                     name="user_name"
-//                                 />
-//                                 {props.errors.user_name ? (
-//                                 <div className="text-danger mt-1" id="feedback">
-//                                     {props.errors.user_name}
-//                                 </div>
-//                                 ) : null}{" "}          
-//                             </Col>
-//                         </Row>
-//                         {/* <Row className="d-flex justify-content-center mt-3">
-//                         <Col xs={12} md={9}>
-//                             <CaptchaComponent /> 
-//                         </Col>
-//                         </Row>
-
-//                         <Row className="d-flex justify-content-center mt-3">
-//                             <Col xs={6} md={4}>
-//                                 {!isLoadinging ? (
-//                                     <Button
-//                                         type="submit"
-//                                         className="btn btn-primary login-btn"
-//                                     >
-//                                         ارسال کد فعالسازی
-//                                     </Button>
-//                                     ) : (
-//                                     <div
-//                                         style={{ borderRadius: "15px", padding: "2px" }}
-//                                         className="btn btn-primary login-btn"
-//                                     >
-//                                         <BeatLoader size={9} color={"black"} />
-//                                     </div>
-//                                 )}
-//                             </Col>
-//                         </Row> */}
-//                     </form>
-//                     )}
-//                 </Formik>
-//             </Modal.Body>
-//         </Modal>
-        
-//         </>
-//     )
-// }
