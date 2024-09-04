@@ -403,9 +403,9 @@ def get_buildings_by_category(request):
             room_count = data.get('room_count')
             
             if not category:
-                return JsonResponse({'error': 'Category is required'}, status=400)
-            
-            buildings = Building.objects.filter(category=category)
+                buildings = Building.objects.all()
+            else:
+                buildings = Building.objects.filter(category=category)
             
             if state_id:
                 # Find the city center corresponding to the state_id
