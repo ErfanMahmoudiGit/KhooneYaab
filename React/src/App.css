@@ -205,7 +205,11 @@ body {
 
 }
 .filter-color{
-  color: #ac2323;
+  color: #ac2323 !important;
+}
+.css-1aquho2-MuiTabs-indicator{
+  background-color: #ac2323 !important;
+
 }
 .filterBtn{
   background-color: #ac2323;
@@ -237,6 +241,10 @@ body {
   border: #ac2323 !important;
 }
 .custom-slider .ant-slider-track{
+  background-color: #ac2323 !important;
+
+}
+.ant-slider .ant-slider-track{
   background-color: #ac2323 !important;
 
 }
@@ -471,7 +479,7 @@ input[type="search"]::-webkit-search-cancel-button {
 .login-input{
   border-radius: 15px;
   padding: 8px 20px;
-  font-size: 18px;
+  font-size: 14px;
   border-color: #ced4da !important;
   box-shadow: unset !important;
 }
@@ -486,15 +494,22 @@ input[type="search"]::-webkit-search-cancel-button {
 .default-select-box > div:first-child {
   border-radius: 8px !important;
 }
-.detail-info-text {
-  color: #17a2b8 !important;
-  margin-left: 10px;
-  font-size: 14px;
-  font-weight: 700;
-}
+
 .auth-modal .modal-dialog .modal-content {
   border-radius: 30px;
   padding: 10px 15px !important;
+}
+.custom-modal-body1 {
+  height: 48vh; /* Adjust the height as needed */
+  overflow-y: auto; /* Adds scrolling if content overflows */
+}
+.custom-modal-body2 {
+  height: 52vh; /* Adjust the height as needed */
+  overflow-y: auto; /* Adds scrolling if content overflows */
+}
+.custom-modal-body3 {
+  height: 54vh; /* Adjust the height as needed */
+  overflow-y: auto; /* Adds scrolling if content overflows */
 }
 .login-pill{
   /* border-radius: 30px; */
@@ -518,8 +533,8 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 .default-input-box {
   padding: 10px 15px;
-  border-radius: 19px;
-  font-size: 18px;
+  border-radius: 16px;
+  font-size: 14px;
 }
 input.default-input-box.invalid,
 .invalid-input div[class*="-control"],
@@ -1177,8 +1192,8 @@ a.active {
 /* Media query for screen sizes larger than the Bootstrap 'md' breakpoint */
 @media (min-width: 768px) {
   .custom-size {
-    width: 500px;
-    height: 400px;
+    width: 450px;
+    height: 350px;
     margin-top: 0;
   }
 }

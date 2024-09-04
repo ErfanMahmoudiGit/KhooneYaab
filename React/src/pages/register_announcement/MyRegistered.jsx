@@ -8,19 +8,24 @@ import { useNavigate } from 'react-router-dom';
 import { AiTwotoneEdit } from "react-icons/ai";
 import { MdDelete } from "react-icons/md";
 import { PiToggleRight } from "react-icons/pi";
+import { useDispatch, useSelector } from "react-redux";
+import { authState } from '../login/Redux/authSlice';
 
 export default function MyRegistered(){
     const [myRegisteredHouse,setMyRegisteredHouse] = useState([])
     const [loading, setIsLoading] = useState(false);
     const navigate = useNavigate()
+    const { owner_id} = useSelector(authState);
 
+    console.log(owner_id);
+    
     const generateRandomData = (length) => {
         return Array.from({ length }, () => Math.floor(Math.random() * 41));
       };
     useEffect(()=>{
         setIsLoading(true)
 
-        let resp = API_GET_MY_BUILDINGS({owner_id : 1})
+        let resp = API_GET_MY_BUILDINGS({owner_id : parseInt(owner_id)})
         // setLoading(true)
 
           resp.then((res) => {
@@ -91,7 +96,7 @@ export default function MyRegistered(){
                 // </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(500px, 1fr))', gap: '16px' }}>
                 {myRegisteredHouse.length == 0 ? (
-                    <div style={{ display: 'flex', justifyContent: 'center', height: '100vh' , marginTop:"20px"}}>
+                    <div style={{  height: '100vh' , marginTop:"20px"}}>
                           هیچ آگهی ثبت شده ای وجود ندارد
                     </div>
                 ):(

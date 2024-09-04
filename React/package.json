@@ -11,6 +11,11 @@
     "proxy": "http://api_website_where_the_request_is_comming/"
   },
   "dependencies": {
+    "@coreui/icons": "^3.0.1",
+    "@coreui/icons-react": "^2.3.0",
+    "@coreui/react": "^5.3.0",
+    "@coreui/react-chartjs": "^3.0.0",
+    "@coreui/utils": "^2.0.2",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@material-ui/core": "^4.12.4",
@@ -25,6 +30,7 @@
     "formik-material-ui": "^4.0.0-alpha.2",
     "formik-stepper": "^2.2.1",
     "leaflet": "^1.9.4",
+    "rc-slider": "^11.1.5",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.2",
     "react-chartjs-2": "^5.2.0",

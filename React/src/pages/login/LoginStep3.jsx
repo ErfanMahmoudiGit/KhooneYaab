@@ -33,7 +33,7 @@ export default function LoginStep3(){
             size={"lg"}
             centered
         >
-            <Modal.Body>
+            <Modal.Body className="custom-modal-body3">
                 <Formik
                     initialValues={{ name: name , email : email }} 
                     validationSchema={validationSchema}
@@ -62,6 +62,28 @@ export default function LoginStep3(){
                                     // owner_id : res.data.data.user.user_id,
                                     // login_expires_in : res.data.data.user.login_expires_in,
                                 }));
+                                // let storedArray = localStorage.getItem('userData');
+                                // let arrayData;
+
+                                // if (storedArray) {
+                                // // Parse the JSON string to an array
+                                // arrayData = JSON.parse(storedArray);
+                                // } else {
+                                // // Initialize as an empty array if not present
+                                // arrayData = [];
+                                // }
+
+                                // // Add new user data
+                                // const newUser = { 
+                                //      name : data.name , 
+                                //     email : data.email,
+                                //     is_verified_user: true, 
+                                // };
+                                // arrayData.push(newUser);
+
+                                // // Save the updated array back to localStorage
+                                // localStorage.setItem('userData', JSON.stringify(arrayData));
+
                                 toast.success("ورود شما با موفقیت انجام شد")
 
                                 setIsLoading(false);
@@ -82,7 +104,7 @@ export default function LoginStep3(){
                 {(props) => (
                     <form onSubmit={props.handleSubmit}>
                         <Row className="d-flex justify-content-center mt-3">
-                            <h3 className="filter-color">{welcome_message}</h3>
+                            <h3 className="filter-colo text-center">{welcome_message}</h3>
                             {/* <Row className={"text-center"}>
                             <Col xs={12}>
                                 <h3 className="filter-color">لطفا اطلاعات خود را وارد نمایید</h3>

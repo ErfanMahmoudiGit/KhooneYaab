@@ -13,6 +13,9 @@ import FilterLayout from './pages/home/FilterLayout';
 import MyRegistered from './pages/register_announcement/MyRegistered';
 import SelectSellCategory from './pages/category/SelectSellCategory';
 import SelectRentCategory from './pages/category/SelectRentCategory';
+import AdminLayout from './pages/admin/AdminLayout';
+import AdminReport from './pages/admin/AdminReport';
+import Dashboard from './chart/Dashboard';
 
 function App() {
 
@@ -37,6 +40,11 @@ function App() {
         </Route>
         <Route element={<FilterLayout />}>
         <Route path="/search" element={<SearchResults />} />
+
+        </Route>
+        <Route element={<AdminLayout />}>
+        <Route path="/admin" element={<Dashboard />} />
+        {/* <Route path="/admin" element={<AdminReport />} /> */}
 
         </Route>
 {/* <Route element={<HomeLayout />}>

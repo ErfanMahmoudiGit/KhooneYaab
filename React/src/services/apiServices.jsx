@@ -194,3 +194,20 @@ export const API_GET_MY_BUILDINGS= async (data) => {
     }  
   }
 };
+
+
+// path('remove/', remove_user, name='remove_user'),
+// path('logout/', logout_user, name='logout_user')
+
+export const API_REMOVE_USER = async (data) => {
+  try {
+    const response = await API_BASE_USER.post('/remove/',data);
+    return response;
+  } catch (error) {
+    try{
+      return({...error?.response?.data,status: error.response.status}) ;  // check
+    }catch(err){
+      return({error:{message:'--سرویس در دسترس نیست'}}) ;
+    }  
+  }
+};

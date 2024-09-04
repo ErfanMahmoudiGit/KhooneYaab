@@ -1,4 +1,4 @@
-import{ useState } from 'react';
+import{ useEffect, useState } from 'react';
 import { TeamOutlined } from '@ant-design/icons';
 import { Outlet } from 'react-router-dom';
 import { FaPen } from "react-icons/fa";
@@ -17,12 +17,20 @@ import { FaRegUser } from "react-icons/fa6";
 import { useSelector, useDispatch } from "react-redux";
 import { authState, handle_variables } from '../login/Redux/authSlice'; 
 import { useNavigate } from 'react-router-dom';
-import { API_SEARCH } from "../../services/apiServices";
+import { API_SEARCH , API_REMOVE_USER} from "../../services/apiServices";
 import LoginStep1 from '../login/LoginStep1';
 import { FiUserCheck } from 'react-icons/fi';
 import { FaBookmark } from 'react-icons/fa';
 import NewFilters from './NewFilters';
+import {
+
+    NavDropdown,
+  
+  } from "react-bootstrap";
 import { FcHome } from "react-icons/fc";
+import { Tooltip , Radio} from "antd";
+import { CiLogout } from "react-icons/ci";
+import { toast } from 'react-toastify';
 
 function getItem(label, key, icon, children, link) {
     return {
@@ -52,12 +60,73 @@ const NewLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const[searchValue,setSearchValue] = useState("")
   let navigate = useNavigate()
-  const { loginModalStep1  , is_verified_user,name , seachedValue} = useSelector(authState);
+  const { loginModalStep1  , 
+    is_verified_user,name ,
+    seachedValue , owner_id} = useSelector(authState);
   console.log("name",name);
-  console.log("is_verified_user: ",is_verified_user);
   const dispatch = useDispatch();
+  // const [is_verified_user,setis_verified_user] = useState(false)
+
+  // let is_verified_user = false;
 
   console.log("seachedValue:",seachedValue);
+
+  // useEffect(()=>{
+  //   const userDataString = localStorage.getItem('userData');
+
+  //   let userData;
+  //   if (userDataString) {
+  //     userData = JSON.parse(userDataString);
+  //   } else {
+  //     console.log('No user data found in localStorage');
+  //   }
+
+  //   // Step 3: Access the `is_verified_user` field
+  //   if (userData) {
+  //     let is_verified_user = userData.is_verified_user;
+  //     setis_verified_user(is_verified_user)
+  //     console.log('is_verified_user:', is_verified_user);
+  //   } else {
+  //     console.log('userData is undefined or null');
+  //   }
+  // },[])
+  
+
+
+  // useEffect(()=>{
+  //   let resp = API_REMOVE_USER({user_id : 3})
+  //   resp.then((res) => {
+  //       if (res.status === 200) {
+  //         toast.success("removed")
+  //         is_verified_user
+  //         dispatch(handle_variables({
+  //           is_verified_user : false
+  //       }));
+
+
+  //       } else {
+  //           console.log("false");        
+
+  //       }
+  //       })
+  // },[])
+
+  // useEffect(()=>{
+  //   const userData = {
+  //     is_verified_user: true,    
+  //     name: "hi",
+  //     email: "hi",
+  //     owner_id: 1,
+  //     login_expires_in: 1333,
+  //     phoneNumber: "888",
+  // };
+  
+  // // Convert the object to a JSON string
+  // const userDataString = JSON.stringify(userData);
+  
+  // // Save the JSON string to localStorage
+  // localStorage.setItem('userData', userDataString);
+  // },[])
   
 
   function handleSearch(filters){
@@ -102,6 +171,9 @@ const NewLayout = () => {
     // setSearchValue(e.target.value)
   }
  
+
+
+
   return (
     <>
         <Layout
@@ -189,7 +261,27 @@ const NewLayout = () => {
                 <NewDropdown  />
             </div>
             {is_verified_user == true ? (
-            <span className='d-flex align-items-center gap-2'>{name}<FiUserCheck /></span>
+            <span className='d-flex align-items-center gap-2'>
+                {name}
+                <CiLogout size={24} onClick={()=>{
+                    let data = {
+                        user_id :  owner_id
+                    }
+                    let resp = API_REMOVE_USER(data)
+                    resp.then((res) => {
+                        if (res.status === 200) {
+                        //   dispatch(handle_variables({ searchResults: res.data }))
+                        //   navigate('/search')
+                
+                        } else {
+                            console.log("false");        
+              
+                        }
+                        })
+                }}/>
+                {/* <FiUserCheck /> */}
+                
+            </span>
             ) : (
                 <NavLink
                     onClick={ ()=>{
@@ -216,6 +308,18 @@ const NewLayout = () => {
                     >
                     <span>ورود</span>
                     <FaRegUser />
+                    
+                    
+                    {/* <NavDropdown
+                    title={<span style={{ fontSize: "16px" }}><FaRegUser /></span>}
+                  >
+                    <NavDropdown.Item
+                      onClick={()=> {
+                      }}
+                    >
+                      خروج
+                    </NavDropdown.Item>
+                  </NavDropdown> */}
                     </Button>
                 </NavLink>
             )}            

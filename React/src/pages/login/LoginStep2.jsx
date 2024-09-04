@@ -36,7 +36,7 @@ export default function LoginStep2() {
             size={"lg"}
             centered
         >
-            <Modal.Body>
+            <Modal.Body className="custom-modal-body2">
                 <Formik
                     initialValues={{ phoneNumber: phoneNumber, code: '' }} // Add `code` here
                     validationSchema={validationSchema}
@@ -69,28 +69,49 @@ export default function LoginStep2() {
                                         loginModalStep1 : false,
                                         name :  res.data.data.user.name,
                                         email :  res.data.data.user.email,
-                                        owner_id : res.data.data.user.user_id,
-                                        login_expires_in : res.data.data.user.login_expires_in,
-                                        phoneNumber: data.phoneNumber,
+                                        owner_id : parseInt(res.data.data.user.user_id),
+                                        login_expires_in : parseInt(res.data.data.user.login_expires_in),
+                                        phoneNumber: parseInt(data.phoneNumber),
                                     }));
                                     localStorage.setItem('owner_id', JSON.stringify(owner_id));
+                                    // Assuming 'res' is your response object and 'data' contains the necessary values
+                                    const userData = {
+                                        is_verified_user: res.data.data.user.is_verified_user,    
+                                        name: res.data.data.user.name,
+                                        email: res.data.data.user.email,
+                                        owner_id : parseInt(res.data.data.user.user_id),
+                                        login_expires_in : parseInt(res.data.data.user.login_expires_in),
+                                        phoneNumber: parseInt(data.phoneNumber),
+                                    };
+                                    
+                                    // Convert the object to a JSON string
+                                    const userDataString = JSON.stringify(userData);
+                                    
+                                    // Save the JSON string to localStorage
+                                    localStorage.setItem('userData', userDataString);
+                                    
                                     toast.success("ورود شما با موفقیت انجام شد")
                                 }else{
                                     dispatch(handle_variables({
                                         // loginModalStep2 : false,
                                         loginModalStep3 : true,
                                         welcome_message :res.data.data.message,
-                                        owner_id : res.data.data.user.user_id,
-                                        login_expires_in : res.data.data.user.login_expires_in,                                        phoneNumber: data.phoneNumber,
+                                        owner_id : parseInt(res.data.data.user.user_id),
+                                        login_expires_in : parseInt(res.data.data.user.login_expires_in),                                       phoneNumber: data.phoneNumber,
                                     }));
+                                    const userData = {
+                                        owner_id : parseInt(res.data.data.user.user_id),
+                                        login_expires_in : parseInt(res.data.data.user.login_expires_in),
+                                    };
+                                    
+                                    // Convert the object to a JSON string
+                                    const userDataString = JSON.stringify(userData);
+                                    
+                                    // Save the JSON string to localStorage
+                                    localStorage.setItem('userData', userDataString);
                                 }
                                 
-                                // dispatch(handle_variables({
-                                //     is_verified_user : res.data.data.user.is_verified_user,
-                                //     loginModalStep2 : false,
-                                //     loginModalStep3 : true,
-                                //     phoneNumber: data.phoneNumber,
-                                // }));
+                                
                                 setIsLoading(false);
                             } else {
                                 toast.error(res.error);

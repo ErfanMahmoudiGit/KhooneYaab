@@ -50,7 +50,7 @@ const CaptchaComponent = (props) => {
                         placeholder={'کد امنیتی'}
                         type='text' // Changing type to text for better input matching (instead of number)
                         disabled={props.disabled}
-                        className={'default-input-box' + (invalid_captcha ? " invalid" : "")}
+                        className={' default-input-box' + (invalid_captcha ? " invalid" : "")}
                         onChange={(e) => {
                             dispatch(handle_variables({
                                 invalid_captcha: false,

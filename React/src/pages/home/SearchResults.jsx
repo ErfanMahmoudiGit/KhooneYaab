@@ -1,9 +1,8 @@
-import React, { useRef } from 'react';
-import { Card } from 'antd';
-import { Col, Row, Container, Button } from "react-bootstrap";
+import { useRef } from 'react';
+import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { authState, handle_variables } from "../login/Redux/authSlice"; // Update with the correct path
-import { useSelector, useDispatch } from "react-redux";
+import { authState } from "../login/Redux/authSlice"; 
+import { useSelector } from "react-redux";
 import { FaChevronLeft, FaRegBookmark, FaBookmark } from 'react-icons/fa';
 import { BeatLoader } from "react-spinners";
 import { useEffect, useState } from "react";
@@ -12,14 +11,13 @@ import { TbArrowsSort } from "react-icons/tb";
 const SearchResults = () => {
     const navigate = useNavigate();
     const [loading, setIsLoading] = useState(false);
-    // const [loading, setIsLoading] = useState(true);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [displayedHouses, setDisplayedHouses] = useState([]);
-
+    const [sortOrder, setSortOrder] = useState(''); // New state for sorting
+    const [dateOrder, setDateOrder] = useState(''); // State for date sorting
 
     const { loginModalStep1  , searchResults , seachedValue} = useSelector(authState);
-    // console.log(searchResults);
     const loadMoreRef = useRef(null);
     useEffect(()=>{
         setDisplayedHouses(searchResults.slice(0, 12)); // Display the first 12 houses
@@ -67,15 +65,57 @@ const SearchResults = () => {
         return text.length > 10 ? `${text.slice(0, 23)}...` : text;
     }
 
+    const handleSortChange = (selectedSort) => {
+        setSortOrder(selectedSort);
+        sortHouses(selectedSort, dateOrder);
+    };
+    const handleDateChange = (selectedDateOrder) => {
+        setDateOrder(selectedDateOrder);
+        sortHouses(sortOrder, selectedDateOrder);
+    };
+    const sortHouses = (priceOrder, dateOrder) => {
+        let sortedHouses = [...displayedHouses];
+
+        if (priceOrder === 'price-asc') {
+            sortedHouses.sort((a, b) => a.price - b.price);
+        } else if (priceOrder === 'price-desc') {
+            sortedHouses.sort((a, b) => b.price - a.price);
+        }
+
+        if (dateOrder === 'date-asc') {
+            sortedHouses.sort((a, b) => new Date(a.time) - new Date(b.time)); // Ensure 'date' exists
+        } else if (dateOrder === 'date-desc') {
+            sortedHouses.sort((a, b) => new Date(b.time) - new Date(a.time));
+        }
+
+        setDisplayedHouses(sortedHouses.slice(0, currentIndex + 12));
+    };
+    const getBookmarks = () => {
+        const bookmarks = localStorage.getItem('BOOKMARKS');
+        return bookmarks ? JSON.parse(bookmarks) : [];
+    };
+    const toggleBookmark = (houseId) => {
+        const bookmarks = getBookmarks();
+        const updatedBookmarks = bookmarks.includes(houseId)
+            ? bookmarks.filter((id) => id !== houseId)
+            : [...bookmarks, houseId];
+
+        localStorage.setItem('BOOKMARKS', JSON.stringify(updatedBookmarks));
+
+        setDisplayedHouses(
+            displayedHouses.map((house) =>
+                house.id === houseId
+                    ? { ...house, isBookmarked: !bookmarks.includes(houseId) }
+                    : house
+            )
+        );
+    };
+
     return (
         <>
-            {/* <div className="d-flex flex-row justify-content-between m-3">
-                <h4>نتایج جستجو برای {seachedValue}</h4>
-                <Button className="back-btn" onClick={()=> navigate('/')}>رفتن به صفحه اصلی</Button>
-            </div> */}
             <div className="d-flex justify-content-between align-items-center m-3">
                 <h4>نتایج جستجو برای <span style={{ color: '#ac2323' , fontWeight:"bold" }}>{seachedValue}</span></h4>
-                    {/* <div className="d-flex align-items-center gap-4">
+                    <div className="d-flex align-items-center gap-4">
                         <div className="d-flex align-items-center gap-3 sort-background">
                             <div>مرتب سازی بر اساس{" "}<TbArrowsSort /></div>
                             <div className={`sort-item ${sortOrder === 'price-asc' ? 'sort-item-active' : ''}`} 
@@ -87,7 +127,7 @@ const SearchResults = () => {
                             <div className={`sort-item ${dateOrder === 'date-desc' ? 'sort-item-active' : ''}`} 
                                 onClick={() => handleDateChange('date-desc')}>جدید ترین</div>
                         </div>
-                    </div> */}
+                    </div>
                 <Button className="backprimaryButton" onClick={()=> navigate('/')}>بازگشت به صفحه اصلی</Button>
             </div>
             
@@ -105,37 +145,91 @@ const SearchResults = () => {
                               هیچ آگهی با عنوان خواسته شده یافت نشد
                         </div>
                     ):(
-                        displayedHouses.map((house, index) => (
-                            <div key={index} className="d-flex flex-column justify-contemt-center align-items-center card-bookmark"
-                            style={{ border: '1px solid #ddd', padding: '16px', borderRadius: '8px',
-                            boxShadow: "0 4px 4px rgba(0, 0, 0, 0.2)",backgroundColor:"#ffffff"
-                             }}>
-                                  <div className="d-flex justify-content-center position-relative">
+                        displayedHouses.map((house, index) => {
+                            const isBookmarked = getBookmarks().includes(house.id);
+
+                            return(
+
+                                <div key={index} className="d-flex flex-column justify-contemt-center align-items-center card-bookmark"
+                                style={{ border: '1px solid #ddd', padding: '16px', borderRadius: '8px',
+                                boxShadow: "0 4px 4px rgba(0, 0, 0, 0.2)",backgroundColor:"#ffffff"
+                                 }}>
+                                     
+                                    <div className="d-flex justify-content-center position-relative">
                                     <img
-                                        src={house.image ? house.image : '/1.png'}
-                                        style={{ width: "190px", height: "190px", maxHeight: "190px" }}
-                                        className="border border-light rounded"
-                                        alt={house.title}
-                                    />
-                                    
-                                </div>
-                                    <h3 style={{ fontSize: '18px', marginTop: '12px' }}>{truncateText(house.title)}</h3>
-                                <div style={{ fontSize: '14px', color: '#666' }}>آگهی در {house.city}</div>
-                                <div style={{ fontSize: '14px', color: '#666' }}>املاک <FaChevronLeft size={12} /> {house.category}</div>
-                                <div style={{ fontSize: '14px', color: '#666' }}>{formatNumber(house.price)} تومان</div>
-                                <button onClick={() => navigate(`/house/${house.id}`)} className="primaryButton"> مشاهده ملک</button>
-                            </div>
-                            // <div key={index} className="d-flex flex-column justify-contemt-center align-items-center" style={{ border: '1px solid #ddd', padding: '16px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>
-                            //     <h3 style={{ fontSize: '18px', marginBottom: '8px' }}>{house.title}</h3>
-                            //     <img style={{width:"150px" , height:"150px" , borderRadius: '8px'}} src={house.image ? house.image : '/1.png'}></img>
-                            //     <div style={{ fontSize: '14px', color: '#666' }}>آگهی در {house.city}</div>
-                            //     <div style={{ fontSize: '14px', color: '#666' }}>املاک <FaChevronLeft size={12} /> {house.category}</div>
+                                            src={house.image ? house.image : '/1.png'}
+                                            style={{ width: "190px", height: "190px", maxHeight: "190px" }}
+                                            className="border border-light rounded"
+                                            alt={house.title}
+                                        />
+                                                    {isBookmarked ? (
+                                                        <FaBookmark
+                                                            onClick={() => toggleBookmark(house.id)}
+                                                            size={28}
+                                                            style={{
+                                                                position: 'absolute',
+                                                                top: '-4px',
+                                                                left: '-8px',
+                                                                color: '#d64444',
+                                                                fontSize: '42px',
+                                                                // color: '#ac2323',
+                                                                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                                                                borderRadius: '50%',
+                                                                padding: '4px'
+                                                            }}
+                                                        />
+                                                    ) : (
+                                                        <FaRegBookmark
+                                                            onClick={() => toggleBookmark(house.id)}
+                                                            size={28}
+                                                            style={{
+                                                                position: 'absolute',
+                                                                top: '-4px',
+                                                                left: '-8px',
+                                                                color: 'white',
+                                                                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                                                                borderRadius: '50%',
+                                                                padding: '4px'
+                                                            }}
+                                                        />
+                                                    )}
+                                                </div>
+                                    {/* <div className="d-flex justify-content-center position-relative">
+                                                    <img
+                                                        src={house.image ? house.image : '/1.png'}
+                                                        style={{ width: "190px", height: "190px", maxHeight: "190px" }}
+                                                        className="border border-light rounded"
+                                                        alt={house.title}
+                                                    />
+                                                    
+                                                        <FaBookmark
+                                                            onClick={() => toggleBookmark(house.id)}
+                                                            size={28}
+                                                            style={{
+                                                                position: 'absolute',
+                                                                top: '-4px',
+                                                                left: '-8px',
+                                                                color: '#d64444',
+                                                                fontSize: '42px',
+                                                                // color: '#ac2323',
+                                                                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                                                                borderRadius: '50%',
+                                                                padding: '4px'
+                                                            }}
+                                                        />
+                                                    
+                                                </div> */}
+                                        <h3 style={{ fontSize: '18px', marginTop: '12px' }}>{truncateText(house.title)}</h3>
+                                    <div style={{ fontSize: '14px', color: '#666' }}>آگهی در {house.city}</div>
+                                    <div style={{ fontSize: '14px', color: '#666' }}>املاک <FaChevronLeft size={12} /> {house.category}</div>
+                                    <div style={{ fontSize: '14px', color: '#666' }}>{formatNumber(house.price)} تومان</div>
+                                    <button onClick={() => navigate(`/house/${house.id}`)} className="primaryButton"> مشاهده ملک</button>
+                                </div>  
 
-
-                            //     <p style={{ fontSize: '14px', color: '#666' }}>{formatNumber(house.price)} تومان</p>
-                            //     <button onClick={() => navigate(`/house/${house.id}`)} className="smsButton"> مشاهده ملک</button>
-                            // </div>
-                        ))
+                            )
+                        }
+                             
+                        )
                     )}
                    
                 </div>

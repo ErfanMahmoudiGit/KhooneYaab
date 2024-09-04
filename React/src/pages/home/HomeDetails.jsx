@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { API_GETHOUSE_DETAILS ,API_GET_CONTACT_INFO} from "../../services/apiServices";
-import { Button, Col, Container, Row ,Modal } from "react-bootstrap";
+import { Button, Col, Container, Row ,Modal, Form } from "react-bootstrap";
 import { MapContainer ,TileLayer, Marker,Popup} from 'react-leaflet'
 import { GrElevator } from "react-icons/gr";
 import { FaCarAlt } from "react-icons/fa";
@@ -21,6 +21,7 @@ export default function HomeDetails() {
     const[showContactModal,setShowContactModal] = useState(false)
     const [loading, setIsLoading] = useState(false);
     const[contactInfo,setContactInfo] = useState([])
+    const navigate = useNavigate()
 
     useEffect(()=>{
         setIsLoading(true)
@@ -47,6 +48,8 @@ export default function HomeDetails() {
         fetchHouseDetails();
     },[])
 
+    console.log(detail);
+    // prioritized
     useEffect(() => {
         const fetchContactInfo = async () => {
             if (showContactModal) {
@@ -74,6 +77,20 @@ export default function HomeDetails() {
   
     console.log(detail?.owner_id);
     
+    function formatNumber(number) {
+        // Check if number is valid (not undefined, null, or NaN)
+        if (number == null || isNaN(number)) {
+            return ''; // Return an empty string or handle it as you like
+        }
+    
+        // Convert to string and format with commas
+        let formatted = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    
+        // Convert to Persian numerals
+        const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+        return formatted.replace(/\d/g, (digit) => persianDigits[digit]);
+    }
+    
     return(
         <>
          {loading ? (
@@ -82,25 +99,33 @@ export default function HomeDetails() {
                 </div>
             ) : (
                 <Container className="bg-light">
-                <Row className="d-flex p-5">
-                    <Row className="mb-4">  
+                <Row className="d-flex p-5 pb-0">
+
+                    <div className="d-flex flex-row justify-content-between mb-4 align-items-center">
                         <span>{detail.city} <FaChevronLeft /> {detail.category} <FaChevronLeft /> {detail.title}</span>
-                    </Row>
+                        <Button className="backprimaryButton" onClick={()=> navigate('/')}>بازگشت به صفحه اصلی</Button>
+                    </div>
+                    {/* <Row className="mb-4">  
+                        <span>{detail.city} <FaChevronLeft /> {detail.category} <FaChevronLeft /> {detail.title}</span>
+                    </Row> */}
                     <Row className=" d-flex justiy-content-between">
                         <Col xs={12} md={6} className="d-flex flex-column  mb-2">
                             <h2>{detail.title}</h2>
                         </Col>
-                        <Col xs={12} md={6} className="d-flex flex-column align-items-center mb-2">
-                            <h3>ویژگی ها و امکانات</h3>
-                            <div className="d-flex gap-5">
+                        <Col xs={12} md={6} className="d-flex flex-column align-items-center mb-2" >
+                            <h3 className="mb-2">ویژگی ها و امکانات</h3>
+                            <div className="d-flex gap-4">
                                 <div className="d-flex flex-column justify-content-center align-items-center">
                                     <div><GrElevator className={detail?.elevator == 1 ? "" : "text-secondary"}/></div>
                                     <div className={detail?.elevator == 1 ? "" : "text-secondary"}>آسانسور</div>
                                 </div>
+                                <div style={{borderLeft:"1px solid #ac2323"}} ></div>
                                 <div className="d-flex flex-column justify-content-center align-items-center">
                                     <div><FaCarAlt className={detail?.parking == 1 ? "" : "text-secondary"}/></div>
                                     <div className={detail?.parking == 1 ? "" : "text-secondary"}>پارکینگ</div>
                                 </div>
+                                <div style={{borderLeft:"1px solid #ac2323"}} ></div>
+
                                 <div className="d-flex flex-column justify-content-center align-items-center">
                                     <div><LuWarehouse className={detail?.warehouse == 1 ? "" : "text-secondary"}/></div>
                                     <div className={detail?.warehouse == 1 ? "" : "text-secondary"}>انباری</div>
@@ -109,44 +134,44 @@ export default function HomeDetails() {
                         </Col>
                     </Row>
                     <Row >
-                        <p className="caption ">اطلاعات ملک</p>
+                        <p className="caption filter-color fw-bold">اطلاعات ملک</p>
                     </Row>
                     <Row>
                     <Col lg={6}>
-                        <Col className=" border p-4 rounded" style={{border:"#94a3b8"}}>
+                        <Col className="p-4 rounded" >
                         <div className="d-flex justify-content-between align-items-center pt-1">
                             {detail.category == "فروش آپارتمان" || detail.category == "فروش خانه و ویلا" ? (
                                 <p>قیمت کل</p>
                             ):(
                                 <p>ودیعه</p>
                             )}
-                            <p>{detail.price} تومان</p>
+                            <p>{formatNumber(detail?.price)} تومان</p>
                         </div>
-                        <hr />
+                        <hr className="filter-color"/>
                         <div className="d-flex justify-content-between align-items-center pt-1">
                             {detail.category == "فروش آپارتمان" || detail.category == "فروش خانه و ویلا" ? (
                                 <p>قیمت هر متر</p>
                             ):(
                                 <p>کرایه</p>
                             )}
-                            <p>{detail.price_per_meter} تومان</p>
+                            <p>{formatNumber(detail?.price_per_meter)} تومان</p>
                         </div>
-                        <hr />
+                        <hr className="filter-color"/>
                         <div className="d-flex justify-content-between align-items-center pt-1">
                             <p>متراژ</p>
                             <p>{detail.meterage}</p>
                         </div>
-                        <hr />
+                        <hr className="filter-color"/>
                         <div className="d-flex justify-content-between align-items-center pt-1">
                             <p>طبقه</p>
                             <p>{detail.all_floors} از {detail.floor}</p>
                         </div>
-                        <hr />
+                        <hr className="filter-color"/>
                         <div className="d-flex justify-content-between align-items-center pt-1">
                             <p>تعداد اتاق</p>
                             <p>{detail.rooms}</p>
                         </div>
-                        <hr />
+                        <hr className="filter-color"/>
                         <div className="d-flex justify-content-between align-items-center pt-1">
                             <p>سال ساخت</p>
                             <p>{detail.build_date}</p>
@@ -167,8 +192,8 @@ export default function HomeDetails() {
                         <Row className="d-flex justify-content-around gap-2">
     
                        
-                        <Button onClick={()=>setShow(true)} className="mt-3 login-button">نمایش جزییات</Button>
-                        <Button onClick={()=>setShowContactModal(true)} className="mt-3 login-button">اطلاعات تماس</Button>
+                        <Button onClick={()=>setShow(true)} className="mt-3 backprimaryButton">نمایش جزییات</Button>
+                        <Button onClick={()=>setShowContactModal(true)} className="mt-3 backprimaryButton">اطلاعات تماس</Button>
                         </Row>
                         <Col>
                         </Col>
@@ -261,13 +286,14 @@ export default function HomeDetails() {
                 <Row className="d-flex pe-5 ps-5">
                 <Box sx={{ width: '100%' }}>
           <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-            <Tab  label="توضیحات"/>
-            <Tab label="موقعیت مکانی" />
-            <Tab label="زنگ خطرهای قبل از معامله"/>
+            <Tab  label="توضیحات" className="filter-color"/>
+            <Tab label="موقعیت مکانی" className="filter-color" />
+            <Tab label="زنگ خطرهای قبل از معامله"  className="filter-color" />
+            <Tab label="نظرات"  className="filter-color" />
           </Tabs>
-          <TabPanel value={value} index={0}>
+          <TabPanel value={value} index={0} >
           {detail?.description?.split('\n').map((line, index) => (
-          <div key={index}>{line}</div>
+          <div key={index} >{line}</div>
         ))}
           </TabPanel>
           <TabPanel value={value} index={1} >
@@ -311,8 +337,35 @@ export default function HomeDetails() {
                 <p>وضعیت سند مشخص نیست</p>
         
             </TabPanel>
+            <TabPanel value={value} index={3}>
+                <Col sm={8}>
+                <Form.Label>نظرات تنها برای شما قابل دیدن است و پس از حذف آگهی،حذف خواهد شد</Form.Label>
+                    <textarea rows={6}  placeholder={"نظرات شما..."} className="form-control login-input" 
+                                 name={"comment"}  onChange={(e) => {
+                            // setFieldValue("description", e.target.value);
+                        }}>
+
+                        </textarea>
+                        </Col>
+           
+            </TabPanel>
         </Box>
-    
+        {/* <hr className="filter-color mt-3"/> */}
+
+            {/* <Col sm={6}>
+                <Form.Label>یادداشت تنها برای شما قابل دیدن است و پس از حذف آگهی،حذف خواهد شد</Form.Label>
+                    <textarea rows={4}  placeholder={"یادداشت شما..."} className="form-control login-input" 
+                                 name={"comment"}  onChange={(e) => {
+                            // setFieldValue("description", e.target.value);
+                        }}>
+
+                        </textarea>
+            </Col>
+            <Col sm={6}>
+                <Form.Label>بازخورد شما درباره این آگهی چیست؟</Form.Label>
+                    
+            </Col> */}
+        
                 </Row>
             </Container>
 

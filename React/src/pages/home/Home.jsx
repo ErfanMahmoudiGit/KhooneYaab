@@ -62,18 +62,6 @@ export default function Home() {
         setIsLoadingMore(true);
 
         setTimeout(() => { // Simulate loading delay
-            // setCurrentIndex(prevIndex => {
-            //     console.log(prevIndex);
-                
-            //     const nextIndex = prevIndex + 14;
-            //     console.log(nextIndex);
-                
-            //     const newHouses = houses.slice(parseInt(prevIndex + prevIndex), nextIndex);
-               
-                
-            //     setDisplayedHouses(prevHouses => [...prevHouses, ...newHouses]);
-            //     return nextIndex;
-            // });
             setCurrentIndex(prevIndex => {
                 const nextIndex = prevIndex + 14; // Increment current index by 14
                 console.log("Current Index:", prevIndex, "Next Index:", nextIndex);
@@ -147,7 +135,13 @@ export default function Home() {
                                             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)" , 
                                             }}>
                                             <div style={{ width: "60%" }} className="d-flex flex-column justify-content-center align-items-right pe-2 gap-1">
-                                                <div style={{color:"#ac2323" , fontWeight:"bold"}}>نردبان شده در {house.city}</div>
+                                                {house.prioritized ? (
+                                                   <div style={{color:"#ac2323" , fontWeight:"bold"}}>نردبان شده در {house.city}</div>
+
+                                                ):(
+                                                    <div style={{ fontWeight:"bold"}}>آگهی شده در {house.city}</div> 
+
+                                                )}
                                                 <div className="fw-bold">{truncateText(house.title)}</div>
                                                 {/* <div>آگهی در {house.city}</div> */}
                                                 <div >املاک <FaChevronLeft size={12} /> {house.category}</div>

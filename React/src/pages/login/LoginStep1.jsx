@@ -40,7 +40,7 @@ export default function LoginStep1(props){
             size={"lg"}
             centered
         >
-            <Modal.Body >
+            <Modal.Body className="custom-modal-body1">
                 <Formik
                     initialValues={{ phone: phoneNumber }}
                     validationSchema={ schema }
