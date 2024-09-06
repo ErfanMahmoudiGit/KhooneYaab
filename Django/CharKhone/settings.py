@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
+    'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',  # To manage refresh token blacklist
+    
     'corsheaders',
     'rest_framework',
     
@@ -146,3 +149,23 @@ CORS_ALLOWED_METHODS =  [
     "GET",
     "POST",
 ]
+
+# REST Framework configuration
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',  # Only authenticated users can access views unless specified otherwise
+    ],
+}
+
+# JWT Configuration (Optional: Can configure token lifetimes here)
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),  # Access token expires after 15 minutes
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),     # Refresh token expires after 1 day
+    'ROTATE_REFRESH_TOKENS': True,                  # Rotate refresh tokens after use
+    'BLACKLIST_AFTER_ROTATION': True,               # Blacklist refresh tokens after rotation
+}

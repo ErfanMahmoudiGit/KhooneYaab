@@ -244,7 +244,8 @@ def get_buildings(request):
 
     return JsonResponse(building_list, safe=False)
 
-@require_POST
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def get_buildings_by_owner_id(request):
     data = json.loads(request.body)
     owner_id = data.get('owner_id')

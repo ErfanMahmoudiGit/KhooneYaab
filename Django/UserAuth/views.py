@@ -13,6 +13,9 @@ import json
 from kavenegar import KavenegarAPI, HTTPException, APIException
 from pytz import timezone as pytz_timezone
 from datetime import datetime, timedelta, timezone as tm
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 # Define the Tehran timezone
 tehran_tz = pytz_timezone('Asia/Tehran')
@@ -48,6 +51,13 @@ def get_otp(request):
     else:
         return JsonResponse({"error": "کد امنیتی صحیح نمی‌باشد."}, status=403)
 
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
+    return {
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    }
+
 @require_POST
 def check_otp(request):
     data = json.loads(request.body)
@@ -57,45 +67,29 @@ def check_otp(request):
     user = User.objects.filter(phone_number=phone_number).first()
     if not user:
         return JsonResponse({"error": "کاربری با این مشخصات یافت نشد"}, status=404)
+    
     if user.otp_code != otp_code:
         return JsonResponse({"error": "کد ارسال شده صحیح نمیباشد"}, status=400)
-    
-    # Define the UTC time
-    utc_datetime_str = str(user.otp_expires_in)
 
-    # Parse the datetime string into a datetime object with UTC timezone
-    utc_datetime = datetime.fromisoformat(utc_datetime_str)
-
-    # Manually set the new timezone offset (Tehran time +03:30)
-    # Create a new timezone object for +03:30
-    new_offset = tm(timedelta(hours=3, minutes=30))
-
-    # Replace the timezone information without altering the actual time
-    new_datetime = utc_datetime.replace(tzinfo=new_offset)
-    now_in_tehran = timezone.now().astimezone(tehran_tz)
-
-    if new_datetime < now_in_tehran:
-        return JsonResponse({"error": "کد اعتبار سنجی منقضی شده است"}, status=400)
+    # If OTP is valid, generate JWT tokens for the user
+    tokens = get_tokens_for_user(user)
 
     user.is_verified_phone_number = True
-    user.login_expires_in = now_in_tehran + timedelta(days=2)
     user.save()
 
     welcome_message = "کد تایید شد، به خونه‌یاب خوش آمدید"
     
-    user_from_db = User.objects.filter(phone_number=phone_number).first()
-
     return JsonResponse({
         "statusCode": 200,
         "data": {
             "message": welcome_message,
+            "tokens": tokens,  # Return JWT tokens (access and refresh)
             "user": {
-                "is_verified_user": user_from_db.is_verified_user,
-                "phoneNumber": user_from_db.phone_number,
-                "name": user_from_db.name,
-                "email": user_from_db.email,
-                "login_expires_in": user_from_db.login_expires_in,
-                "user_id": user_from_db.id,
+                "is_verified_user": user.is_verified_user,
+                "phoneNumber": user.phone_number,
+                "name": user.name,
+                "email": user.email,
+                "user_id": user.id,
             }
         }
     }, status=200)
@@ -262,26 +256,15 @@ def remove_user(request):
     except Exception as e:
         return JsonResponse({"error": f"An error occurred: {e}"}, status=500)
 
-@require_POST
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def logout_user(request):
     try:
-        data = json.loads(request.body)
-        user_id = data.get('user_id')
+        refresh_token = request.data.get("refresh")
+        token = RefreshToken(refresh_token)
+        token.blacklist()
 
-        user = User.objects.filter(id=user_id).first()
-
-        # Replace the timezone information without altering the actual time
-        now_in_tehran = timezone.now().astimezone(tehran_tz)
-    
-        if not user:
-            return JsonResponse({"error": "User not found"}, status=404)
-
-        # Invalidate session (if using Django sessions)
-        if request.session.get('user_id'):
-            user.login_expires_in = now_in_tehran - timedelta(days=10)
-            user.save()
-
-        return JsonResponse({"message": "User successfully logged out"}, status=200)
-    
+        return JsonResponse({"message": "Successfully logged out"}, status=200)
     except Exception as e:
-        return JsonResponse({"error": f"An error occurred: {e}"}, status=500)
+        return JsonResponse({"error": str(e)}, status=400)
