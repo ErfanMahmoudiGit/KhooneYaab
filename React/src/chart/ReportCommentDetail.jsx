@@ -53,8 +53,9 @@ import avatar6 from '/avatars/6.jpg'
 import WidgetsBrand from './WidgetsBrand'
 import WidgetsDropdown from './WidgetsDropdown'
 import MainChart from './MainChart'
+import TableComponent from './TableComponent'
 
-const Dashboard = () => {
+const ReportCommentDetail = () => {
   const progressExample = [
     { title: 'نظرات مثبت', percent: 40, color: 'success' },
     { title: 'نظرات منفی', percent: 80, color: 'danger' },
@@ -201,7 +202,7 @@ const Dashboard = () => {
             sm={{ cols: 2 }}
             lg={{ cols: 4 }}
             xl={{ cols: 5 }}
-            className="mb-2 text-center"
+            className="mb-2 text-center d-flex justify-content-center"
           >
             {progressExample.map((item, index, items) => (
               <CCol
@@ -220,13 +221,12 @@ const Dashboard = () => {
           </CRow>
         </CCardFooter>
       </CCard>
-      {/* <WidgetsBrand className="mb-4" withCharts /> */}
-      {/* <CRow>
+      <CRow>
         <CCol xs>
           <CCard className="mb-4">
-            <CCardHeader>Traffic {' & '} Sales</CCardHeader>
+            <CCardHeader>جزییات نظرات</CCardHeader>
             <CCardBody>
-              <CRow>
+              {/* <CRow>
                 <CCol xs={12} md={6} xl={6}>
                   <CRow>
                     <CCol xs={6}>
@@ -308,7 +308,7 @@ const Dashboard = () => {
                 </CCol>
               </CRow>
 
-              <br />
+              <br /> */}
 
               <CTable align="middle" className="mb-0 border" hover responsive>
                 <CTableHead className="text-nowrap">
@@ -316,11 +316,11 @@ const Dashboard = () => {
                     <CTableHeaderCell className="bg-body-tertiary text-center">
                       <CIcon icon={cilPeople} />
                     </CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary">User</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">نام کاربری</CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary text-center">
-                      Country
+                      نظر
                     </CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary">Usage</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">تاریخ ثبت نظر</CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary text-center">
                       Payment Method
                     </CTableHeaderCell>
@@ -366,9 +366,9 @@ const Dashboard = () => {
             </CCardBody>
           </CCard>
         </CCol>
-      </CRow> */}
+      </CRow>
     </>
   )
 }
 
-export default Dashboard
+export default ReportCommentDetail;

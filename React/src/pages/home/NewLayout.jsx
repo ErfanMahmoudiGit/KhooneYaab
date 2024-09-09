@@ -1,4 +1,4 @@
-import{ useEffect, useState } from 'react';
+import{ useState } from 'react';
 import { TeamOutlined } from '@ant-design/icons';
 import { Outlet } from 'react-router-dom';
 import { FaPen } from "react-icons/fa";
@@ -19,18 +19,8 @@ import { authState, handle_variables } from '../login/Redux/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { API_SEARCH , API_REMOVE_USER} from "../../services/apiServices";
 import LoginStep1 from '../login/LoginStep1';
-import { FiUserCheck } from 'react-icons/fi';
 import { FaBookmark } from 'react-icons/fa';
-import NewFilters from './NewFilters';
-import {
-
-    NavDropdown,
-  
-  } from "react-bootstrap";
-import { FcHome } from "react-icons/fc";
-import { Tooltip , Radio} from "antd";
 import { CiLogout } from "react-icons/ci";
-import { toast } from 'react-toastify';
 
 function getItem(label, key, icon, children, link) {
     return {
@@ -44,11 +34,7 @@ function getItem(label, key, icon, children, link) {
 const items = [
     getItem('دسته بندی ها', 'categories', <BiSolidCategoryAlt />, [
       getItem('فروش', 'BuyApartment', <GoHomeFill  className='me-4'/>, null, '/selectSellCategory'),
-    //   getItem('فروش', 'BuyApartment', <GoHomeFill  className='me-4'/>, null, '/category/BuyApartment'),
-    //   getItem('اجاره آپارتمان', 'RentApartment', <GoHomeFill />, null, '/category/RentApartment'),
-    //   getItem('فروش خانه و ویلا', 'BuyHome', <GiVillage />, null, '/category/BuyHome'),
       getItem('اجاره ', 'RentHome', <GiVillage className='me-4'/>, null, '/selectRentCategory'),
-    //   getItem('اجاره ', 'RentHome', <GiVillage className='me-4'/>, null, '/category/RentHome'),
     ]),
     getItem('ثبت آگهی', 'register_announcement', <FaPen />, null, '/register_announcement'),
     getItem('آگهی های من', 'my_registered', <TeamOutlined />, null, '/my_registered'),

@@ -204,6 +204,18 @@ body {
   background: #d64444;
 
 }
+.leaflet-container .leaflet-control-attribution{
+  display: none !important;
+}
+.muirtl-999rio-MuiDrawer-docked .MuiDrawer-paper{
+  width: 250px !important;
+}
+/* .muirtl-999rio-MuiDrawer-docked{
+  display: none !important;
+} */
+/* .muirtl-181ggw6{
+  display: none !important;
+} */
 .filter-color{
   color: #ac2323 !important;
 }
@@ -400,8 +412,13 @@ body {
 input[type="search"]::placeholder {
   color: #aeaeaf !important;
 }
+.muirtl-pdct74-MuiTablePagination-selectLabel{
+  margin-top: 10px !important;
+}
+.muirtl-levciy-MuiTablePagination-displayedRows{
+  margin-top: 10px !important;
 
-
+}
 .ant-layout-header{
   background-color: #e0e0e2 !important;
 }
@@ -442,14 +459,7 @@ input[type="search"]::placeholder {
   background-color: var(--text-400);
   border: var(--text-400);
 }
-input[type="search"]::-webkit-search-cancel-button {
-  -webkit-appearance: none;
-  display: none;
-  /* height: 20px;
-  width: 20px;
-  border-radius: 50%; */
-  /* background: url(https://pro.fontawesome.com/releases/v5.10.0/svgs/solid/times-circle.svg) no-repeat 50% 50%; */
-}
+
 .fixed-sidebar {
   position: fixed;
   top: 0;
@@ -498,6 +508,10 @@ input[type="search"]::-webkit-search-cancel-button {
 .auth-modal .modal-dialog .modal-content {
   border-radius: 30px;
   padding: 10px 15px !important;
+}
+.delete-modal{
+  height: 22vh; /* Adjust the height as needed */
+  overflow-y: auto; /* Adds scrolling if content overflows */
 }
 .custom-modal-body1 {
   height: 48vh; /* Adjust the height as needed */
@@ -1195,5 +1209,8 @@ a.active {
     width: 450px;
     height: 350px;
     margin-top: 0;
+  }
+  .muirtl-999rio-MuiDrawer-docked{
+    width: 250px !important;
   }
 }

@@ -179,6 +179,20 @@ export const API_GET_CONTACT_INFO = async (data) => {
   }
 };
 
+// path('api/building/delete-building/<int:building_id>/', delete_building, name='delete_building'),
+
+export const API_DELETE_HOUSE = async (id) => {
+  try {
+    const response = await API_BASE.post(`building/delete-building/${id}/`);
+    return response;
+  } catch (error) {
+    try{
+      return({...error?.response?.data,status: error.response.status}) ;  // check
+    }catch(err){
+      return({error:{message:'--سرویس در دسترس نیست'}}) ;
+    }  
+  }
+};
 
 
 

@@ -187,7 +187,7 @@ const NewFilters = ({ onSearch }) => {
   return (
     <div className="d-none d-lg-flex flex-column p-3 rounded w-full">
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h5>فیلتر ها</h5>
+        {/* <h5>فیلتر ها</h5> */}
         <Button className="filterBtn d-flex align-items-center gap-2" 
         onClick={() => {
           let filters ={ min_price: '', max_price: '', min_meterage: '', max_meterage: '', room_count: '' }
