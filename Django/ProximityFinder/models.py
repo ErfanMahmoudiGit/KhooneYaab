@@ -24,7 +24,8 @@ class Building(models.Model):
     status = models.CharField(max_length=255)
     latitude = models.FloatField()
     longitude = models.FloatField()
-    priorities = models.JSONField()# TODO, shows if the building is close to: hospital, school, park
+    priorities = models.JSONField()
+    times_viewed = models.IntegerField()
 
     def __str__(self):
         return self.title

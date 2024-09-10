@@ -41,9 +41,12 @@ for home in homes:
     # Format the random date in the same "YYYY-MM-DD" structure
     formatted_random_date = random_date.strftime("%Y-%m-%d")
     
+    times_viewed = random_number = random.randint(100, 10000)
+    
     if home['latitude']:
         Building.objects.create(
             owner_id=0,
+            times_viewed = times_viewed,
             city=home['city'],
             category=home['category'],
             title=home['title'],

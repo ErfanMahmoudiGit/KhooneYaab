@@ -239,7 +239,8 @@ def get_buildings(request):
             'status':building.status,
             'direction' :building.direction,
             'city' :building.city,
-            'category' :building.category
+            'category' :building.category,
+            'times_viewed': building.times_viewed
         }
         building_list.append(building_data)
 
@@ -280,7 +281,8 @@ def get_buildings_by_owner_id(request):
             'status':building.status,
             'direction' :building.direction,
             'city' :building.city,
-            'category' :building.category
+            'category' :building.category,
+            'times_viewed': building.times_viewed
         }
         building_list.append(building_data)
 
@@ -353,17 +355,25 @@ def search_buildings(request):
             'status': building.status,
             'direction': building.direction,
             'city': building.city,
-            'category': building.category
+            'category': building.category,
+            'times_viewed' : building.times_viewed,
         } for building in buildings
     ]
 
     return JsonResponse(buildings_data, safe=False)
 
 def get_building_by_id(request, id):
+    # Retrieve the building object by ID
     building = get_object_or_404(Building, id=id)
+
+    # Increment the 'times_viewed' field by 1
+    building.times_viewed = building.times_viewed + 1 if building.times_viewed else 1
+    building.save()  # Save the updated building
+
+    # Prepare the building data to return as JSON response
     building_data = {
         'id': building.id,
-        'owner_id':building.owner_id,
+        'owner_id': building.owner_id,
         'city': building.city,
         'category': building.category,
         'title': building.title,
@@ -389,7 +399,10 @@ def get_building_by_id(request, id):
         'hospital': 1 if building.priorities[0] else 0,
         'park': 1 if building.priorities[1] else 0,
         'school': 1 if building.priorities[2] else 0,
+        'times_viewed': building.times_viewed + 1,  # Include times_viewed in the response. +1 is because this data is for before updating.
     }
+
+    # Return the building data as JSON response
     return JsonResponse(building_data)
 
 def get_buildings_by_category(request):
@@ -698,6 +711,7 @@ def cosine_similarity_algorithm(buildings, meterage, price, build_date, rooms, f
 def get_state_by_categories(request):
     # Prepare a list to hold the result rows
     result = []
+    counter = 1
     
     # Iterate over each state in STATE_DATA
     for state in STATE_DATA:
@@ -709,11 +723,12 @@ def get_state_by_categories(request):
         # Add each category with its count to the result list
         for category_data in categories:
             result.append({
-                'id': state['id'],  # State ID
+                'id': counter,
                 'city': city,  # City name
                 'category': category_data['category'],  # Category of the building
                 'count': category_data['count']  # Number of buildings in that category
             })
+            counter += 1  # Increment the counter
 
     # Return the result as a JSON response
     return JsonResponse(result, safe=False)
