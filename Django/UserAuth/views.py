@@ -52,11 +52,16 @@ def get_otp(request):
         return JsonResponse({"error": "کد امنیتی صحیح نمی‌باشد."}, status=403)
 
 def get_tokens_for_user(user):
-    refresh = RefreshToken.for_user(user)
-    return {
-        'refresh': str(refresh),
-        'access': str(refresh.access_token),
-    }
+    # Ensure 'user' is a User instance
+    if isinstance(user, User):
+        refresh = RefreshToken.for_user(user)
+        
+        return {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        }
+    else:
+        raise ValueError("Invalid user instance")
 
 @require_POST
 def check_otp(request):
@@ -64,7 +69,7 @@ def check_otp(request):
     otp_code = data.get('otp')
     phone_number = data.get('phoneNumber')
     
-    user = User.objects.filter(phone_number=phone_number).first()
+    user = User.objects.get(phone_number=phone_number)
     if not user:
         return JsonResponse({"error": "کاربری با این مشخصات یافت نشد"}, status=404)
     
@@ -72,7 +77,8 @@ def check_otp(request):
         return JsonResponse({"error": "کد ارسال شده صحیح نمیباشد"}, status=400)
 
     # If OTP is valid, generate JWT tokens for the user
-    tokens = get_tokens_for_user(user)
+    if user:
+        tokens = get_tokens_for_user(user)
 
     user.is_verified_phone_number = True
     user.save()

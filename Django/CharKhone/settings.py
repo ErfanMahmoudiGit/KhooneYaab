@@ -168,3 +168,5 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True,                  # Rotate refresh tokens after use
     'BLACKLIST_AFTER_ROTATION': True,               # Blacklist refresh tokens after rotation
 }
+
+AUTH_USER_MODEL = 'UserAuth.User'
