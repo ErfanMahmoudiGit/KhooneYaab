@@ -101,6 +101,14 @@ const MainChart = () => {
               ticks: {
                 color: getStyle('--cui-body-color'),
               },
+              title: {
+                display: true,
+                text: 'تاریخ',
+                color: getStyle('--cui-body-color'),
+                font: {
+                  size: 18,
+                },
+              },
             },
             y: {
               beginAtZero: true,
@@ -112,6 +120,14 @@ const MainChart = () => {
                 color: getStyle('--cui-body-color'),
                 maxTicksLimit: 5,
                 stepSize: Math.ceil(50 / 4),
+              },
+              title: {
+                display: true,
+                text: 'تعداد نظرات',
+                color: getStyle('--cui-body-color'),
+                font: {
+                  size: 18,
+                },
               },
             },
           },
@@ -134,19 +150,17 @@ const MainChart = () => {
 
 export default MainChart;
 
-// comments = [
-//     {date : 1 , positive : 7 , negetive : 4 , noDiff : 5},
-//     {date : 12 , positive : 8 , negetive : 14 , noDiff : 25},
-//     {date : 8 , positive : 3 , negetive : 14 , noDiff : 5},
-//     {date : 9 , positive : 10 , negetive : 4 , noDiff : 15}
-// ]
 
-// import React, { useEffect, useRef } from 'react';
+
+// import React, { useEffect, useRef, useState } from 'react';
 // import { CChartLine } from '@coreui/react-chartjs';
 // import { getStyle } from '@coreui/utils';
+// import DatePicker from 'react-datepicker';
+// import 'react-datepicker/dist/react-datepicker.css';
 
+// // Sample data for comments
 // const comments = Array.from({ length: 30 }, (_, i) => ({
-//   date: i + 1,
+//   date: new Date(2024, 8, i + 1), // Adjust the date format
 //   positive: Math.floor(Math.random() * 40) + 1,
 //   negative: Math.floor(Math.random() * 40) + 1,
 //   noDiff: Math.floor(Math.random() * 40) + 1,
@@ -154,26 +168,51 @@ export default MainChart;
 
 // const MainChart = () => {
 //   const chartRef = useRef(null);
+  
+//   // State for date range selection
+//   const [startDate, setStartDate] = useState(new Date(2024, 8, 1)); // Default start date
+//   const [endDate, setEndDate] = useState(new Date(2024, 8, 30)); // Default end date
+
+//   // Filter comments based on the selected date range
+//   const filteredComments = comments.filter(comment => 
+//     comment.date >= startDate && comment.date <= endDate
+//   );
+
+//   // Extract data for the datasets
+//   const labels = filteredComments.map(comment => comment.date.getDate().toString());
+//   const positiveData = filteredComments.map(comment => comment.positive);
+//   const negativeData = filteredComments.map(comment => comment.negative);
+//   const noDiffData = filteredComments.map(comment => comment.noDiff);
 
 //   useEffect(() => {
-//     document.documentElement.addEventListener('ColorSchemeChange', () => {
-//       if (chartRef.current) {
-//         setTimeout(() => {
-//           chartRef.current.options.scales.x.grid.color = 'rgba(0, 0, 0, 0)'; 
-//           chartRef.current.options.scales.y.grid.color = 'rgba(0, 0, 0, 0)'; 
-//           chartRef.current.update();
-//         });
-//       }
-//     });
+//     if (chartRef.current) {
+//       chartRef.current.options.scales.x.grid.color = 'rgba(0, 0, 0, 0)';
+//       chartRef.current.options.scales.y.grid.color = 'rgba(0, 0, 0, 0)';
+//       chartRef.current.update();
+//     }
 //   }, [chartRef]);
-
-//   const labels = comments.map(comment => comment.date.toString());
-//   const positiveData = comments.map(comment => comment.positive);
-//   const negativeData = comments.map(comment => comment.negative);
-//   const noDiffData = comments.map(comment => comment.noDiff);
 
 //   return (
 //     <>
+//       <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+//         <div>
+//           <label>Start Date:</label>
+//           <DatePicker
+//             selected={startDate}
+//             onChange={(date) => setStartDate(date)}
+//             dateFormat="yyyy/MM/dd"
+//           />
+//         </div>
+//         <div>
+//           <label>End Date:</label>
+//           <DatePicker
+//             selected={endDate}
+//             onChange={(date) => setEndDate(date)}
+//             dateFormat="yyyy/MM/dd"
+//           />
+//         </div>
+//       </div>
+      
 //       <CChartLine
 //         ref={chartRef}
 //         style={{ height: '300px', marginTop: '40px' }}
@@ -211,82 +250,36 @@ export default MainChart;
 //         }}
 //         options={{
 //           maintainAspectRatio: false,
-//           plugins: {
-//             legend: {
-//               display: false,
-//             },
-//             tooltip: {
-//               enabled: true,
-//               mode: 'index',
-//               intersect: false,
-//               position: 'nearest', // You can also use a custom handler if needed
-//               // Custom tooltip positioning
-//               callbacks: {
-//                 label: (tooltipItem) => {
-//                   return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
-//                 },
-//                 afterLabel: () => {
-//                   return ""; // Empty to avoid extra labels
-//                 },
-//               },
-//               // Custom positioning function
-//               custom: function(tooltipModel) {
-//                 // Tooltip element
-//                 const tooltipEl = document.getElementById('chartjs-tooltip');
-                
-//                 // Create element if not exist
-//                 if (!tooltipEl) {
-//                   const newTooltipEl = document.createElement('div');
-//                   newTooltipEl.id = 'chartjs-tooltip';
-//                   newTooltipEl.innerHTML = '<table></table>';
-//                   document.body.appendChild(newTooltipEl);
-//                 }
-
-//                 // Positioning logic
-//                 const position = this._chart.canvas.getBoundingClientRect();
-//                 const top = position.top + window.scrollY;
-
-//                 // Set tooltip content
-//                 const tooltipData = tooltipModel.body.map(item => item.lines).join('');
-//                 const tooltip = document.getElementById('chartjs-tooltip');
-//                 tooltip.style.opacity = '1';
-//                 tooltip.style.left = position.left + window.scrollX + tooltipModel.caretX + 'px';
-//                 tooltip.style.top = top + tooltipModel.caretY - 30 + 'px'; // Move above the point
-//                 tooltip.querySelector('table').innerHTML = tooltipData;
-//               },
-//             },
-//           },
 //           scales: {
 //             x: {
 //               grid: {
 //                 color: 'rgba(0, 0, 0, 0)',
 //               },
-//               ticks: {
+//               title: {
+//                 display: true,
+//                 text: 'تاریخ',
 //                 color: getStyle('--cui-body-color'),
+//                 font: {
+//                   size: 18,
+//                 },
 //               },
 //             },
 //             y: {
 //               beginAtZero: true,
-//               grid: {
-//                 color: 'rgba(0, 0, 0, 0)',
-//               },
 //               max: 50,
 //               ticks: {
-//                 color: getStyle('--cui-body-color'),
 //                 maxTicksLimit: 5,
-//                 stepSize: Math.ceil(50 / 4),
+//                 stepSize: 10,
+//                 color: getStyle('--cui-body-color'),
 //               },
-//             },
-//           },
-//           elements: {
-//             line: {
-//               tension: 0.4,
-//             },
-//             point: {
-//               radius: 0,
-//               hitRadius: 10,
-//               hoverRadius: 4,
-//               hoverBorderWidth: 3,
+//               title: {
+//                 display: true,
+//                 text: 'تعداد نظرات',
+//                 color: getStyle('--cui-body-color'),
+//                 font: {
+//                   size: 18,
+//                 },
+//               },
 //             },
 //           },
 //         }}
@@ -296,17 +289,3 @@ export default MainChart;
 // };
 
 // export default MainChart;
-// #chartjs-tooltip {
-//     opacity: 0;
-//     position: absolute;
-//     background: rgba(255, 255, 255, 0.9);
-//     border: 1px solid rgba(0, 0, 0, 0.2);
-//     border-radius: 4px;
-//     pointer-events: none;  /* Prevent mouse events on the tooltip */
-//     transition: opacity 0.2s ease;  /* Smooth transitions */
-//   }
-  
-//   #chartjs-tooltip table {
-//     border-collapse: collapse;
-//   }
-  

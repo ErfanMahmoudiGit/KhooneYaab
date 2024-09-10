@@ -59,9 +59,14 @@ export default function LoginStep2() {
                             if (res.status === 200) {
                                 console.log(res.data.data.message);
                                 console.log(res.data.data.user.is_verified_user);
+                              
+
 
                                 if(res.data.data.user.is_verified_user == true){
                                     console.log("verified");
+                                    console.log(res.data.data.tokens);
+                                    console.log(res.data.data.tokens.access);
+                                    localStorage.setItem('TOKEN', res.data.data.tokens.access);
                                     
                                     dispatch(handle_variables({
                                         is_verified_user : res.data.data.user.is_verified_user,

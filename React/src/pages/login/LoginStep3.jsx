@@ -62,28 +62,11 @@ export default function LoginStep3(){
                                     // owner_id : res.data.data.user.user_id,
                                     // login_expires_in : res.data.data.user.login_expires_in,
                                 }));
-                                // let storedArray = localStorage.getItem('userData');
-                                // let arrayData;
-
-                                // if (storedArray) {
-                                // // Parse the JSON string to an array
-                                // arrayData = JSON.parse(storedArray);
-                                // } else {
-                                // // Initialize as an empty array if not present
-                                // arrayData = [];
-                                // }
-
-                                // // Add new user data
-                                // const newUser = { 
-                                //      name : data.name , 
-                                //     email : data.email,
-                                //     is_verified_user: true, 
-                                // };
-                                // arrayData.push(newUser);
-
-                                // // Save the updated array back to localStorage
-                                // localStorage.setItem('userData', JSON.stringify(arrayData));
-
+                                // console.log(res.data.data.tokens);
+                                // console.log(res.data.data.tokens.access);
+                                // localStorage.setItem('TOKEN', res.data.data.tokens.access);
+                                
+                              
                                 toast.success("ورود شما با موفقیت انجام شد")
 
                                 setIsLoading(false);

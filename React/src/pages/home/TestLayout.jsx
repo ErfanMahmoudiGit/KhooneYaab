@@ -11,7 +11,7 @@ import { MdRecommend } from "react-icons/md";
 import { GoHomeFill } from "react-icons/go";
 import { GiVillage } from "react-icons/gi";
 import { BiSolidCategoryAlt } from "react-icons/bi";
-import { Button} from "react-bootstrap";
+import { Button, Modal} from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import Form from 'react-bootstrap/Form';
 import NewDropdown from '../../ui/NewDropDown';
@@ -25,6 +25,7 @@ import LoginStep1 from '../login/LoginStep1';
 import { FaBookmark } from 'react-icons/fa';
 import { CiLogout } from "react-icons/ci";
 import { FaLocationDot } from "react-icons/fa6";
+import CityModal from '../../ui/CityModal';
 
 function getItem(label, key, icon, children, link) {
     return {
@@ -72,11 +73,13 @@ const TestLayout = () => {
   } = theme.useToken();
 
   const [collapsed, setCollapsed] = useState(false);
+  const [cityModal, setCityModal] = useState(false);
   const[searchValue,setSearchValue] = useState("")
   let navigate = useNavigate()
   const { loginModalStep1  , 
-    is_verified_user,name ,
+    is_verified_user,name ,selectedCityId  , selectedCity,
     seachedValue , owner_id} = useSelector(authState);
+
   console.log("name",name);
   const dispatch = useDispatch();
   function handleSearch(filters){
@@ -128,7 +131,7 @@ const TestLayout = () => {
               justifyContent:'space-between',
               // position: 'relative',
               top: 0,
-              zIndex:10001,
+              // zIndex:10001,
               color:'#001529',
               backgroundColor: '#f8f9fa', 
               }}
@@ -140,7 +143,7 @@ const TestLayout = () => {
 
           <div className='d-flex gap-2 align-items-center '>
                                   
-                  <span><FaLocationDot className='ps-1' />31 شهر </span>
+                  <span onClick={()=>setCityModal(true)} style={{cursor:"pointer"}} ><FaLocationDot className='ps-1' />{selectedCity ? selectedCity: '31 شهر'}</span>
               {/* <NewDropdown  /> */}
               {is_verified_user == true ? (
               <span className='d-flex align-items-center gap-2'>
@@ -259,6 +262,24 @@ const TestLayout = () => {
         </Layout>
       </Layout>
       {loginModalStep1 && <LoginStep1 />}
+      {cityModal ? (
+        <Modal
+        className={"Auth-modal"}
+        show={cityModal}
+        // onHide={() =>
+        //   dispatch(handle_variables({ loginModalStep1: false }))
+        // }
+        // size={"lg"}
+        centered
+    >
+        <Modal.Body className="custom-modal-body1" style={{height:"80vh"}}>
+          <h3 className='text-center'>انتخاب شهر</h3>
+          <CityModal setCityModal={setCityModal} />
+        </Modal.Body>
+        </Modal>
+      ) : (
+        null
+      )}
 
     </>
     

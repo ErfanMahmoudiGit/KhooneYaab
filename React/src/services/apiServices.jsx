@@ -209,6 +209,22 @@ export const API_GET_MY_BUILDINGS= async (data) => {
   }
 };
 
+// path('api/building/get_state_by_categories/', get_state_by_categories, name='get_state_by_categories')
+
+
+
+export const API_GET_CATEGORIES_COUNT_STATE= async () => {
+  try {
+    const response = await API_BASE.get(`building/get_state_by_categories/`);
+    return response;
+  } catch (error) {
+    try{
+      return({...error?.response?.data,status: error.response.status}) ;  // check
+    }catch(err){
+      return({error:{message:'--سرویس در دسترس نیست'}}) ;
+    }  
+  }
+};
 
 // path('remove/', remove_user, name='remove_user'),
 // path('logout/', logout_user, name='logout_user')
