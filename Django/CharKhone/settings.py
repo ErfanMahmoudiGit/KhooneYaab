@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',  # To manage refresh token blacklist
     
     'corsheaders',
-    'rest_framework',
     
     # local apps
     'ProximityFinder.apps.ProximityFinderConfig',

@@ -15,6 +15,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from extentions import utils
+from django.db.models import Count  # Import Count for aggregation
 
 STATE_DATA = [
     {"name": "آذربايجان شرقی", "center": "تبریز", "latitude": "38.50", "longitude": "46.180", "id": 1},
@@ -692,3 +693,27 @@ def cosine_similarity_algorithm(buildings, meterage, price, build_date, rooms, f
     top_buildings = [item[2] for item in sorted_buildings[:top_n]]
 
     return top_buildings
+
+@require_GET
+def get_state_by_categories(request):
+    # Prepare a list to hold the result rows
+    result = []
+    
+    # Iterate over each state in STATE_DATA
+    for state in STATE_DATA:
+        city = state['center']
+        
+        # Group buildings by category for each city and count them
+        categories = Building.objects.filter(city=city).values('category').annotate(count=Count('id'))
+        
+        # Add each category with its count to the result list
+        for category_data in categories:
+            result.append({
+                'id': state['id'],  # State ID
+                'city': city,  # City name
+                'category': category_data['category'],  # Category of the building
+                'count': category_data['count']  # Number of buildings in that category
+            })
+
+    # Return the result as a JSON response
+    return JsonResponse(result, safe=False)
