@@ -4,7 +4,7 @@ import numpy as np
 from geopy.distance import geodesic
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET, require_POST
-from .models import Building
+from .models import Building, Comment
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_date
@@ -16,6 +16,8 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from extentions import utils
 from django.db.models import Count  # Import Count for aggregation
+from django.utils import timezone
+import requests
 
 STATE_DATA = [
     {"name": "آذربايجان شرقی", "center": "تبریز", "latitude": "38.50", "longitude": "46.180", "id": 1},
@@ -51,7 +53,8 @@ STATE_DATA = [
     {"name": "يزد", "center": "يزد", "latitude": "31.530", "longitude": "54.210", "id": 31},
 ]
 
-@require_POST
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_house(request):
     try:
         data = json.loads(request.body)
@@ -246,8 +249,8 @@ def get_buildings(request):
 
     return JsonResponse(building_list, safe=False)
 
-#@api_view(['POST'])
-#@permission_classes([IsAuthenticated])
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def get_buildings_by_owner_id(request):
     data = json.loads(request.body)
     owner_id = data.get('owner_id')
@@ -732,3 +735,93 @@ def get_state_by_categories(request):
 
     # Return the result as a JSON response
     return JsonResponse(result, safe=False)
+
+@require_POST
+def add_comment(request):
+    try:
+        # Load the request body and parse the data
+        data = json.loads(request.body)
+
+        # Get the building instance by building_id
+        building_id = data.get('building_id')
+        building = Building.objects.get(id=building_id)
+
+        # Get the description for sentiment analysis
+        description = data.get('description')
+
+        # Make a POST request to the sentiment analysis service
+        sentiment_response = requests.post(
+            'http://localhost:9000/analyze-sentiment', 
+            json={'comment': description}
+        )
+        
+        # Ensure the sentiment service responded successfully
+        if sentiment_response.status_code == 200:
+            sentiment = sentiment_response.json().get('sentiment')
+        else:
+            return JsonResponse({'error': 'Failed to analyze sentiment'}, status=500)
+
+        # Create the comment with the sentiment
+        comment = Comment.objects.create(
+            writer_id=data.get('writer_id'),
+            writer_name=data.get('writer_name'),
+            description=description,
+            building=building,
+            sentiment=sentiment,  # Add the sentiment to the comment
+            created_at=timezone.now()
+        )
+
+        # Return success response
+        return JsonResponse({
+            'message': 'Comment added successfully',
+            'comment_id': comment.id,
+            'building_id': building.id,
+            'writer_name': comment.writer_name,
+            'description': comment.description,
+            'sentiment': comment.sentiment,  # Return sentiment in response
+            'created_at': comment.created_at.strftime("%Y-%m-%d %H:%M")
+        }, status=201)
+
+    except Building.DoesNotExist:
+        return JsonResponse({'error': 'Building not found'}, status=404)
+
+    except KeyError:
+        return JsonResponse({'error': 'Missing required fields'}, status=400)
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+    
+@require_GET
+def get_comment_count(request, building_id):
+    try:
+        # Get the building by id
+        building = Building.objects.get(id=building_id)
+
+        # Count the comments related to this building
+        comment_count = Comment.objects.filter(building=building).count()
+
+        # Return the comment count
+        return JsonResponse({
+            'building_id': building_id,
+            'comment_count': comment_count
+        }, status=200)
+
+    except Building.DoesNotExist:
+        return JsonResponse({'error': 'Building not found'}, status=404)
+    
+@require_GET
+def get_building_comments(request, building_id):
+    try:
+        # Get the building by id
+        building = Building.objects.get(id=building_id)
+
+        # Get all comments related to this building
+        comments = Comment.objects.filter(building=building).values(
+            'id', 'writer_id', 'writer_name', 'description', 'sentiment', 'created_at'
+        )
+
+        # Return the comments as a list
+        return JsonResponse(list(comments), safe=False, status=200)
+
+    except Building.DoesNotExist:
+        return JsonResponse({'error': 'Building not found'}, status=404)

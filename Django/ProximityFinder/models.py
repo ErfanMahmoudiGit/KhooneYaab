@@ -30,12 +30,13 @@ class Building(models.Model):
     def __str__(self):
         return self.title
 
+class Comment(models.Model):
+    writer_id = models.IntegerField()
+    writer_name = models.CharField(max_length=255)
+    description = models.TextField()
+    building = models.ForeignKey(Building, on_delete=models.CASCADE, related_name='comments')
+    created_at = models.DateTimeField(default=timezone.now)
+    sentiment = models.CharField(max_length=50, blank=True)  # New field for sentiment analysis
 
-class BuildingImage(models.Model):
-    building = models.ForeignKey(Building, related_name='images', on_delete=models.CASCADE)
-    image_path = models.ImageField(upload_to='house_images/')
-    caption = models.CharField(max_length=255, blank=True)
-    uploaded_at = models.DateTimeField(auto_now_add=True)
-    
     def __str__(self):
-        return f"{self.building.title} - {self.caption if self.caption else 'Image'}"
+        return f"Comment by {self.writer_name} on {self.building.title}"
