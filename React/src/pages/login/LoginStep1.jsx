@@ -65,7 +65,7 @@ export default function LoginStep1(props){
                                 dispatch(
                                     handle_variables({
                                       loginModalStep2: true,
-                                    //   loginModalStep1: false,
+                                   //   loginModalStep1: false,
                                       isSendCode: true,
                                       phoneNumber: data.phoneNumber,
                                     })

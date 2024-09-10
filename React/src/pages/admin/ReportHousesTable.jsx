@@ -19,23 +19,84 @@ import {
 import { Col, Container, Row } from 'react-bootstrap';
 import { FaFilter } from "react-icons/fa6";
 import ReportCard from './ReportCard';
+import { API_GET_CATEGORIES_COUNT_STATE } from '../../services/apiServices';
 
 export default function ReportHousesTable() {
   const [searchInput, setSearchInput] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(6);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rows, setRows] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let resp = await API_GET_CATEGORIES_COUNT_STATE();
+        if (resp.status === 200) {
+          console.log(resp.data);
+          setRows(resp.data);
+          setFilteredRows(resp.data); // Set filtered rows to be the same as rows initially
+        } else {
+          console.log("Error fetching data");  
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
+    fetchData();
+  }, []);
+  
+  useEffect(() => {
+    let result = rows;
+  
+    // Apply search filter
+    if (searchInput.trim()) {
+      result = result.filter(row =>
+        row.city.toLowerCase().includes(searchInput.trim().toLowerCase())
+      );
+    }
+  
+    // Apply category filter
+    if (categoryFilter) {
+      result = result.filter(row =>
+        row.category.toLowerCase() === categoryFilter.toLowerCase()
+      );
+    }
+  
+    setFilteredRows(result);
+    setPage(0); // Reset the page to 0 on filter change
+  }, [searchInput, categoryFilter, rows]);
+  
 
-  let rows = [
-    { id: 1, city: 'زنجان', category: 'اجاره خانه و ویلا', count: 21 },
-    { id: 2, city: 'زنجان', category: 'اجاره آپارتمان', count: 24 },
-    { id: 3, city: 'زنجان', category: 'فروش آپارتمان', count: 32 },
-    { id: 4, city: 'زنجان', category: 'فروش خانه و ویلا', count: 11 },
-    { id: 5, city: 'تهران', category: 'اجاره خانه و ویلا', count: 22 },
-    { id: 6, city: 'تهران', category: 'اجاره آپارتمان', count: 24 },
-    { id: 7, city: 'تهران', category: 'فروش آپارتمان', count: 32 },
-    { id: 8, city: 'تهران', category: 'فروش خانه و ویلا', count: 11 },
-  ];
+//   useEffect(()=>{
+
+//     let resp = API_GET_CATEGORIES_COUNT_STATE()
+
+//       resp.then((res) => {
+//         console.log(res);
+        
+//         if (res.status === 200) {
+//             console.log(res.data);
+//             setRows(res.data)          
+//         } else {
+//             console.log("false");  
+//         }
+//       })     
+
+// },[])
+
+  
+
+  // let rows = [
+  //   { id: 1, city: 'زنجان', category: 'اجاره خانه و ویلا', count: 21 },
+  //   { id: 2, city: 'زنجان', category: 'اجاره آپارتمان', count: 24 },
+  //   { id: 3, city: 'زنجان', category: 'فروش آپارتمان', count: 32 },
+  //   { id: 4, city: 'زنجان', category: 'فروش خانه و ویلا', count: 11 },
+  //   { id: 5, city: 'تهران', category: 'اجاره خانه و ویلا', count: 22 },
+  //   { id: 6, city: 'تهران', category: 'اجاره آپارتمان', count: 24 },
+  //   { id: 7, city: 'تهران', category: 'فروش آپارتمان', count: 32 },
+  //   { id: 8, city: 'تهران', category: 'فروش خانه و ویلا', count: 11 },
+  // ];
 
   const [filteredRows, setFilteredRows] = useState(rows);
 
@@ -44,6 +105,8 @@ export default function ReportHousesTable() {
   };
 
   const handleCategoryChange = (e) => {
+    console.log(e.target.value);
+    
     setCategoryFilter(e.target.value);
   };
 
@@ -148,8 +211,8 @@ export default function ReportHousesTable() {
                 className="form-control login-input"
               >
                 <option value="">همه دسته‌ها</option>
-                <option value="اجاره آپارتمان">اجاره آپارتمان</option>
-                <option value="اجاره خانه و ویلا">اجاره خانه و ویلا</option>
+                <option value="اجارهٔ آپارتمان">اجاره آپارتمان</option>
+                <option value="اجارهٔ خانه و ویلا">اجاره خانه و ویلا</option>
                 <option value="فروش خانه و ویلا">فروش خانه و ویلا</option>
                 <option value="فروش آپارتمان">فروش آپارتمان</option>
               </select>

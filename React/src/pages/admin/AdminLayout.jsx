@@ -8,6 +8,9 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import { NavLink } from "react-router-dom";
+import { FaRegCommentDots } from "react-icons/fa6";
+import { FaCity } from "react-icons/fa";
+import { IoMdEye } from "react-icons/io";
 
 function getItem(label, key, icon, children, link) {
     return {
@@ -21,10 +24,10 @@ function getItem(label, key, icon, children, link) {
 const items = [
     getItem('داشبورد', 'dashboard', <DashboardIcon />, null, '/admin/dashboard'),
     getItem('گزارشات', 'reports', <BarChartIcon />, [
-      getItem('استان ها', 'cities', <DescriptionIcon  className='me-4'/>, null, '/admin/cities'),
-      getItem('نظرات', 'comments', <DescriptionIcon  className='me-4'/>, null, '/admin/comments'),
+      getItem('استان ها', 'cities', <FaCity  className='me-4'/>, null, '/admin/cities'),
+      getItem('نظرات', 'comments', <FaRegCommentDots  className='me-4'/>, null, '/admin/comments'),
     ]),
-    getItem('بازدیدها', 'views', <LayersIcon />, null, '/admin/views'),
+    getItem('بازدیدها', 'views', <IoMdEye />, null, '/admin/views'),
    
   ];
 
