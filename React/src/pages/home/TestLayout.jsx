@@ -14,7 +14,6 @@ import { BiSolidCategoryAlt } from "react-icons/bi";
 import { Button, Modal} from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import Form from 'react-bootstrap/Form';
-import NewDropdown from '../../ui/NewDropDown';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { FaRegUser } from "react-icons/fa6";
 import { useSelector, useDispatch } from "react-redux";

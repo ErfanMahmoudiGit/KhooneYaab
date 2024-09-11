@@ -219,6 +219,13 @@ body {
 .filter-color{
   color: #ac2323 !important;
 }
+.positive-color{
+  color: #198754 !important;
+}
+.nodiff-color{
+  color: rgba(13,110,253);
+}
+
 .css-1aquho2-MuiTabs-indicator{
   background-color: #ac2323 !important;
 

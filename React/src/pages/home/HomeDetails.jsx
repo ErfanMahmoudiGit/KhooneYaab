@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { API_GETHOUSE_DETAILS ,API_GET_CONTACT_INFO} from "../../services/apiServices";
+import { API_GETHOUSE_DETAILS ,API_GET_CONTACT_INFO , API_ADD_COMMENT} from "../../services/apiServices";
 import { Button, Col, Container, Row ,Modal, Form } from "react-bootstrap";
 import { MapContainer ,TileLayer, Marker,Popup} from 'react-leaflet'
 import { GrElevator } from "react-icons/gr";
@@ -11,6 +11,7 @@ import React from 'react';
 import { FaSchool, FaHospital , FaTree } from 'react-icons/fa';
 import { FaChevronLeft } from 'react-icons/fa';
 import { BeatLoader } from "react-spinners";
+import { toast } from "react-toastify";
 
 export default function HomeDetails() { 
     const params =useParams()
@@ -22,6 +23,10 @@ export default function HomeDetails() {
     const [loading, setIsLoading] = useState(false);
     const[contactInfo,setContactInfo] = useState([])
     const navigate = useNavigate()
+    const [comment, setComment] = useState('');
+
+    console.log(comment);
+    
 
     useEffect(()=>{
         setIsLoading(true)
@@ -66,6 +71,25 @@ export default function HomeDetails() {
 
         fetchContactInfo();
     }, [showContactModal, houseId]);
+
+    const addComment = async () => {
+        // console.log(e.target.value);
+        // e.PreventDefault();
+        let data = {
+            "writer_id" : 1,
+            "writer_name" : "fatemeh",
+            "description": comment,
+            "building_id" : 11
+        }
+        console.log(data);
+        
+        let res = await API_ADD_COMMENT(data);  
+        if (res.status === 200) {
+            toast.success("نظر شما با موفقیت ثبت گردید")
+            setComment('')
+        }
+
+    }
     
 
   
@@ -341,10 +365,14 @@ export default function HomeDetails() {
                 <Col sm={8}>
                 <Form.Label>نظرات تنها برای شما قابل دیدن است و پس از حذف آگهی،حذف خواهد شد</Form.Label>
                     <textarea rows={6}  placeholder={"نظرات شما..."} className="form-control login-input" 
-                                 name={"comment"}  onChange={(e) => {
-                            // setFieldValue("description", e.target.value);
-                        }}>
-
+                                 name={"comment"}  
+                                 onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        e.preventDefault();
+                                        addComment(); 
+                                    }
+                                    }}
+                                 onChange={(e) => {setComment(e.target.value)}}>
                         </textarea>
                         </Col>
            

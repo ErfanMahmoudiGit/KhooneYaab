@@ -2,8 +2,16 @@ import React, { useEffect, useRef } from 'react';
 import { CChartLine } from '@coreui/react-chartjs';
 import { getStyle } from '@coreui/utils';
 
+function formatNumber(number) {
+  // Convert to string and format with commas
+  let formatted = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+  // Convert to Persian numerals
+  const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+  return formatted.replace(/\d/g, (digit) => persianDigits[digit]);
+}
 const comments = Array.from({ length: 30 }, (_, i) => ({
-  date: i + 1,
+  date: formatNumber(i + 1),
   positive: Math.floor(Math.random() * 40) + 1,
   negative: Math.floor(Math.random() * 40) + 1,
   noDiff: Math.floor(Math.random() * 40) + 1,

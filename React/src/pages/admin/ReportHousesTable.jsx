@@ -249,7 +249,7 @@ export default function ReportHousesTable() {
               </TableBody>
             </Table>
           </TableContainer>
-          <div className="d-flex justify-content-between align-items-center">
+          <div className="d-flex justify-content-center align-items-center">
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"

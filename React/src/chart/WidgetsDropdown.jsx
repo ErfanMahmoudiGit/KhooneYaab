@@ -1,20 +1,9 @@
-import React, { useEffect, useRef } from 'react'
-
-import {
-  CRow,
-  CCol,
-  CDropdown,
-  CDropdownMenu,
-  CDropdownItem,
-  CDropdownToggle,
-  CWidgetStatsA,
-} from '@coreui/react'
+/* eslint-disable react/prop-types */
+import { useEffect, useRef } from 'react'
+import {CRow,CCol,CWidgetStatsA} from '@coreui/react'
 import { getStyle } from '@coreui/utils'
-import { CChartBar, CChartLine } from '@coreui/react-chartjs'
-import CIcon from '@coreui/icons-react'
-import { cilArrowBottom, cilArrowTop, cilOptions } from '@coreui/icons'
 
-const WidgetsDropdown = (props) => {
+const WidgetsDropdown = ({view,badSentimentCount,goodSentimentCount,neutralSentimentCount,commentLength}) => {
   const widgetChartRef1 = useRef(null)
   const widgetChartRef2 = useRef(null)
 
@@ -37,413 +26,83 @@ const WidgetsDropdown = (props) => {
   }, [widgetChartRef1, widgetChartRef2])
 
   return (
-    <CRow className={props.className} xs={{ gutter: 4 }}>
+    <CRow className='p-2' xs={{ gutter: 4 }}>
      
       <CCol sm={6} xl={4} xxl={3}>
         <CWidgetStatsA
           color="success"
           value={
-            <>
-              تعداد کل نظرات مثبت{' '}
-              {/* <span className="fs-6 fw-normal">
-                (40.9% <CIcon icon={cilArrowTop} />)
-              </span> */}
-            </>
+            <div className='d-flex justify-content-center align-items-center gap-4 p-4'>
+              <div className='me-3 pt-2 pb-3'>تعداد کل نظرات</div>
+              <div className='pt-2 pb-3'>{commentLength}</div>
+            </div>
           }
-          title="110"
-          // action={
-          //   <CDropdown alignment="end">
-          //     <CDropdownToggle color="transparent" caret={false} className="text-white p-0">
-          //       <CIcon icon={cilOptions} />
-          //     </CDropdownToggle>
-          //     <CDropdownMenu>
-          //       <CDropdownItem>Action</CDropdownItem>
-          //       <CDropdownItem>Another action</CDropdownItem>
-          //       <CDropdownItem>Something else here...</CDropdownItem>
-          //       <CDropdownItem disabled>Disabled action</CDropdownItem>
-          //     </CDropdownMenu>
-          //   </CDropdown>
-          // }
-          chart={
-            <CChartLine
-              ref={widgetChartRef2}
-              className="mt-3 mx-3"
-              style={{ height: '70px' }}
-              data={{
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                datasets: [
-                  {
-                    label: 'My First dataset',
-                    backgroundColor: 'transparent',
-                    borderColor: 'rgba(255,255,255,.55)',
-                    pointBackgroundColor: getStyle('--cui-info'),
-                    data: [1, 18, 9, 17, 34, 22, 11],
-                  },
-                ],
-              }}
-              options={{
-                plugins: {
-                  legend: {
-                    display: false,
-                  },
-                },
-                maintainAspectRatio: false,
-                scales: {
-                  x: {
-                    border: {
-                      display: false,
-                    },
-                    grid: {
-                      display: false,
-                      drawBorder: false,
-                    },
-                    ticks: {
-                      display: false,
-                    },
-                  },
-                  y: {
-                    min: -9,
-                    max: 39,
-                    display: false,
-                    grid: {
-                      display: false,
-                    },
-                    ticks: {
-                      display: false,
-                    },
-                  },
-                },
-                elements: {
-                  line: {
-                    borderWidth: 1,
-                  },
-                  point: {
-                    radius: 4,
-                    hitRadius: 10,
-                    hoverRadius: 4,
-                  },
-                },
-              }}
-            />
-          }
+          
         />
-      </CCol>
-      {/* <CCol sm={6} xl={4} xxl={3}>
-        <CWidgetStatsA
-          color="warning"
+        {/* <CWidgetStatsA
+          color="danger"
           value={
-            <>
-              2.49%{' '}
-              <span className="fs-6 fw-normal">
-                (84.7% <CIcon icon={cilArrowTop} />)
-              </span>
-            </>
+            <div className='d-flex justify-content-between gap-4 p-3'>
+              <div>تعداد کل بازدیدها</div>
+              <div>110</div>
+            </div>
           }
-          title="Conversion Rate"
-          action={
-            <CDropdown alignment="end">
-              <CDropdownToggle color="transparent" caret={false} className="text-white p-0">
-                <CIcon icon={cilOptions} />
-              </CDropdownToggle>
-              <CDropdownMenu>
-                <CDropdownItem>Action</CDropdownItem>
-                <CDropdownItem>Another action</CDropdownItem>
-                <CDropdownItem>Something else here...</CDropdownItem>
-                <CDropdownItem disabled>Disabled action</CDropdownItem>
-              </CDropdownMenu>
-            </CDropdown>
-          }
-          chart={
-            <CChartLine
-              className="mt-3"
-              style={{ height: '70px' }}
-              data={{
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                datasets: [
-                  {
-                    label: 'My First dataset',
-                    backgroundColor: 'rgba(255,255,255,.2)',
-                    borderColor: 'rgba(255,255,255,.55)',
-                    data: [78, 81, 80, 45, 34, 12, 40],
-                    fill: true,
-                  },
-                ],
-              }}
-              options={{
-                plugins: {
-                  legend: {
-                    display: false,
-                  },
-                },
-                maintainAspectRatio: false,
-                scales: {
-                  x: {
-                    display: false,
-                  },
-                  y: {
-                    display: false,
-                  },
-                },
-                elements: {
-                  line: {
-                    borderWidth: 2,
-                    tension: 0.4,
-                  },
-                  point: {
-                    radius: 0,
-                    hitRadius: 10,
-                    hoverRadius: 4,
-                  },
-                },
-              }}
-            />
-          }
-        />
-      </CCol> */}
+        /> */}
+      </CCol>
       <CCol sm={6} xl={4} xxl={3}>
         <CWidgetStatsA
           color="danger"
           value={
-            <>
-              تعداد کل نظرات منفی {' '}
-              {/* <span className="fs-6 fw-normal">
-                (-23.6% <CIcon icon={cilArrowBottom} />)
-              </span> */}
-            </>
-          }
-          title="120"
-          // action={
-          //   <CDropdown alignment="end">
-          //     <CDropdownToggle color="transparent" caret={false} className="text-white p-0">
-          //       <CIcon icon={cilOptions} />
-          //     </CDropdownToggle>
-          //     <CDropdownMenu>
-          //       <CDropdownItem>Action</CDropdownItem>
-          //       <CDropdownItem>Another action</CDropdownItem>
-          //       <CDropdownItem>Something else here...</CDropdownItem>
-          //       <CDropdownItem disabled>Disabled action</CDropdownItem>
-          //     </CDropdownMenu>
-          //   </CDropdown>
-          // }
-          // chart={
-          //   <CChartBar
-          //     className="mt-3 mx-3"
-          //     style={{ height: '70px' }}
-          //     data={{
-          //       labels: [
-          //         'January',
-          //         'February',
-          //         'March',
-          //         'April',
-          //         'May',
-          //         'June',
-          //         'July',
-          //         'August',
-          //         'September',
-          //         'October',
-          //         'November',
-          //         'December',
-          //         'January',
-          //         'February',
-          //         'March',
-          //         'April',
-          //       ],
-          //       datasets: [
-          //         {
-          //           label: 'My First dataset',
-          //           backgroundColor: 'rgba(255,255,255,.2)',
-          //           borderColor: 'rgba(255,255,255,.55)',
-          //           data: [78, 81, 80, 45, 34, 12, 40, 85, 65, 23, 12, 98, 34, 84, 67, 82],
-          //           barPercentage: 0.6,
-          //         },
-          //       ],
-          //     }}
-          //     options={{
-          //       maintainAspectRatio: false,
-          //       plugins: {
-          //         legend: {
-          //           display: false,
-          //         },
-          //       },
-          //       scales: {
-          //         x: {
-          //           grid: {
-          //             display: false,
-          //             drawTicks: false,
-          //           },
-          //           ticks: {
-          //             display: false,
-          //           },
-          //         },
-          //         y: {
-          //           border: {
-          //             display: false,
-          //           },
-          //           grid: {
-          //             display: false,
-          //             drawBorder: false,
-          //             drawTicks: false,
-          //           },
-          //           ticks: {
-          //             display: false,
-          //           },
-          //         },
-          //       },
-          //     }}
-          //   />
-          // }
-          chart={
-            <CChartLine
-              ref={widgetChartRef1}
-              className="mt-3 mx-3"
-              style={{ height: '70px' }}
-              data={{
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                datasets: [
-                  {
-                    label: 'My First dataset',
-                    backgroundColor: 'transparent',
-                    borderColor: 'rgba(255,255,255,.55)',
-                    pointBackgroundColor: getStyle('--cui-primary'),
-                    data: [65, 59, 84, 84, 51, 55, 40],
-                  },
-                ],
-              }}
-              options={{
-                plugins: {
-                  legend: {
-                    display: false,
-                  },
-                },
-                maintainAspectRatio: false,
-                scales: {
-                  x: {
-                    border: {
-                      display: false,
-                    },
-                    grid: {
-                      display: false,
-                      drawBorder: false,
-                    },
-                    ticks: {
-                      display: false,
-                    },
-                  },
-                  y: {
-                    min: 30,
-                    max: 89,
-                    display: false,
-                    grid: {
-                      display: false,
-                    },
-                    ticks: {
-                      display: false,
-                    },
-                  },
-                },
-                elements: {
-                  line: {
-                    borderWidth: 1,
-                    tension: 0.4,
-                  },
-                  point: {
-                    radius: 4,
-                    hitRadius: 10,
-                    hoverRadius: 4,
-                  },
-                },
-              }}
-            />
+            <div className='d-flex justify-content-center align-items-center gap-4 p-4'>
+              <div className='me-3 pt-2 pb-3'>تعداد کل بازدیدها</div>
+              <div className='pt-2 pb-3'>11</div>
+              {/* <div className='pt-2 pb-3'>{view}</div> */}
+            </div>
           }
         />
       </CCol>
       <CCol sm={6} xl={4} xxl={3}>
         <CWidgetStatsA
           color="primary"
-          value={
-            <>
-              تعداد کل نظرات خنثی{' '}
-              {/* <span className="fs-6 fw-normal">
-                (-12.4% <CIcon icon={cilArrowBottom} />)
-              </span> */}
-            </>
-          }
-          title="100"
-          // action={
-          //   <CDropdown alignment="end">
-          //     <CDropdownToggle color="transparent" caret={false} className="text-white p-0">
-          //       <CIcon icon={cilOptions} />
-          //     </CDropdownToggle>
-          //     <CDropdownMenu>
-          //       <CDropdownItem>Action</CDropdownItem>
-          //       <CDropdownItem>Another action</CDropdownItem>
-          //       <CDropdownItem>Something else here...</CDropdownItem>
-          //       <CDropdownItem disabled>Disabled action</CDropdownItem>
-          //     </CDropdownMenu>
-          //   </CDropdown>
+          // value={
+          //   <div>
+          //       <div className='d-flex justify-content-between gap-4 p-2'>
+          //         <div>تعداد نظرات مثبت </div>
+          //         <div>110</div>
+          //       </div>
+          //       <div className='d-flex justify-content-between gap-4 p-2'>
+          //         <div>تعداد نظرات خنثی </div>
+          //         <div>110</div>
+          //       </div>
+          //       <div className='d-flex justify-content-between gap-4 p-2'>
+          //         <div>تعداد نظرات منفی </div>
+          //         <div>110</div>
+          //       </div>
+                
+
+          //   </div>
+           
           // }
-          chart={
-            <CChartLine
-              ref={widgetChartRef1}
-              className="mt-3 mx-3"
-              style={{ height: '70px' }}
-              data={{
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                datasets: [
-                  {
-                    label: 'My First dataset',
-                    backgroundColor: 'transparent',
-                    borderColor: 'rgba(255,255,255,.55)',
-                    pointBackgroundColor: getStyle('--cui-primary'),
-                    data: [65, 59, 84, 84, 51, 55, 40],
-                  },
-                ],
-              }}
-              options={{
-                plugins: {
-                  legend: {
-                    display: false,
-                  },
-                },
-                maintainAspectRatio: false,
-                scales: {
-                  x: {
-                    border: {
-                      display: false,
-                    },
-                    grid: {
-                      display: false,
-                      drawBorder: false,
-                    },
-                    ticks: {
-                      display: false,
-                    },
-                  },
-                  y: {
-                    min: 30,
-                    max: 89,
-                    display: false,
-                    grid: {
-                      display: false,
-                    },
-                    ticks: {
-                      display: false,
-                    },
-                  },
-                },
-                elements: {
-                  line: {
-                    borderWidth: 1,
-                    tension: 0.4,
-                  },
-                  point: {
-                    radius: 4,
-                    hitRadius: 10,
-                    hoverRadius: 4,
-                  },
-                },
-              }}
-            />
+            /* <div>تعداد نظرات مثبت </div>
+              <div>تعداد نظرات خنثی </div> 
+              
+              <div>تعداد نظرات منفی </div> */
+          title={
+            <div>
+            
+              <div className='d-flex justify-content-between gap-4 p-2'>
+                  <div>تعداد نظرات مثبت </div>
+                   <div>{goodSentimentCount}</div>
+                 </div>
+              <div className='d-flex justify-content-between gap-4 p-2'>
+                  <div>تعداد نظرات خنثی </div>
+                   <div>{neutralSentimentCount}</div>
+                 </div>
+              <div className='d-flex justify-content-between gap-4 p-2'>
+                  <div>تعداد نظرات منفی </div>
+                   <div>{badSentimentCount}</div>
+                 </div>
+            </div>
           }
         />
       </CCol>

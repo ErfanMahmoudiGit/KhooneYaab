@@ -49,7 +49,7 @@ const AdminLayout = () => {
               }}
         >
             <div className='d-flex align-items-center gap-4'>
-                <h4 className='mt-3' style={{color:"#ac2323"}}>پنل ادمین خونه یاب</h4>
+                <h4 className='mt-3' style={{color:"#ac2323"}}>داشبورد مدیریتی خونه یاب</h4>
             </div>  
         </Header>
         <Layout>

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { RiFilterOffFill } from "react-icons/ri";
 import { useSearchParams } from "react-router-dom";
 import { ImArrowUp2 } from "react-icons/im";
-import Skeleton from "../../ui/Skeleton";
 
 const Filters = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -25,7 +24,7 @@ const Filters = () => {
         setShowFilters({ ...showFilters, [key]: !showFilters[key] });
     };
 
-    const handleRangeChange = (e, key) => {
+    const handleRangeChange = (e) => {
         const allParams = serializeFormQuery();
         const { name, value } = e.target;
 

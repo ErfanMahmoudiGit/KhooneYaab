@@ -195,6 +195,33 @@ export const API_DELETE_HOUSE = async (id) => {
 };
 
 
+export const API_ADD_COMMENT = async (data) => {
+  try {
+    const response = await API_BASE.post(`building/comments/add-comment/`,data);
+    return response;
+  } catch (error) {
+    try{
+      return({...error?.response?.data,status: error.response.status}) ;  // check
+    }catch(err){
+      return({error:{message:'--سرویس در دسترس نیست'}}) ;
+    }  
+  }
+};
+
+
+export const API_GET_BUILDING_COMMENT = async (id) => {
+  try {
+    const response = await API_BASE.get(`building/comments/${id}`);
+    return response;
+  } catch (error) {
+    try{
+      return({...error?.response?.data,status: error.response.status}) ;  // check
+    }catch(err){
+      return({error:{message:'--سرویس در دسترس نیست'}}) ;
+    }  
+  }
+};
+
 
 export const API_GET_MY_BUILDINGS= async (data) => {
   try {

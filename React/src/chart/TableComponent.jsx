@@ -1,21 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import {
-  Box,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TablePagination,
-  TableRow,
-  Paper,
-} from '@mui/material';
+import { useEffect, useState } from 'react';
+import {Box,Table,TableBody,TableCell,TableContainer,TableHead,TablePagination,TableRow,Paper,} from '@mui/material';
 import { AiTwotoneEdit } from "react-icons/ai";
-
-import { Button, Col, Container, Modal, Row } from 'react-bootstrap';
+import { Button, Col, Modal, Row } from 'react-bootstrap';
 import { IoEyeSharp } from "react-icons/io5";
 import { PiToggleRight } from "react-icons/pi";
-
 import { API_GETHOUSE , API_DELETE_HOUSE} from '../services/apiServices';
 import { MdDelete } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
@@ -27,18 +15,15 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { BeatLoader } from 'react-spinners';
 import { toast } from 'react-toastify';
 
-
-
 export default function TableComponent() {
   const [searchInput, setSearchInput] = useState('');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [isLoadinging, setIsLoadinging] = useState(false);
   const [selectedHouseId, setSelectedHouseId] = useState(null);
-
   const [houses, setHouses] = useState([]);
-    const [loading, setIsLoading] = useState(true);
-    const [deleteModal, setDeleteModal] = useState(false);
+  const [loading, setIsLoading] = useState(true);
+  const [deleteModal, setDeleteModal] = useState(false);
     console.log(deleteModal);
     
     const navigate = useNavigate()
@@ -162,7 +147,10 @@ export default function TableComponent() {
         <ThemeProvider theme={demoTheme}>
         <Box sx={{ width: '100%' , marginTop:"20px" , borderRadius:"20px"}}>
         <Paper sx={{ width: '100%', mb: 2, p: 2 }}>
+
         <form onSubmit={handleSearchSubmit}>
+        <Row className='d-flex justify-content-center'>
+
           <Col md={4}>
                 <input
                     value={searchInput}
@@ -183,7 +171,9 @@ export default function TableComponent() {
                     // name="phone"
                                 />
                                 </Col>
+                                </Row>
         </form>
+      
         <TableContainer>
           <Table>
             <TableHead>
@@ -223,7 +213,7 @@ export default function TableComponent() {
             </TableBody>
           </Table>
         </TableContainer>
-        <div className="d-flex justify-content-between align-items-center">
+        <div className="d-flex justify-content-center align-items-center">
 
         <TablePagination
     

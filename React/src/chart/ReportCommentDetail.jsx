@@ -1,220 +1,129 @@
-import React from 'react'
+import { useEffect, useState } from 'react'
 import classNames from 'classnames'
+import {API_GET_BUILDING_COMMENT, API_GETHOUSE_DETAILS} from '../services/apiServices'
+import {CCard,CCardBody,CCardFooter,CCardHeader,CCol,CProgress,CRow,CTable,CTableBody,CTableDataCell,CTableHead,CTableHeaderCell,CTableRow,} from '@coreui/react'
 
-import {
-  CAvatar,
-  CButton,
-  CButtonGroup,
-  CCard,
-  CCardBody,
-  CCardFooter,
-  CCardHeader,
-  CCol,
-  CProgress,
-  CRow,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
-} from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import {
-  cibCcAmex,
-  cibCcApplePay,
-  cibCcMastercard,
-  cibCcPaypal,
-  cibCcStripe,
-  cibCcVisa,
-  cibGoogle,
-  cibFacebook,
-  cibLinkedin,
-  cifBr,
-  cifEs,
-  cifFr,
-  cifIn,
-  cifPl,
-  cifUs,
-  cibTwitter,
-  cilCloudDownload,
-  cilPeople,
-  cilUser,
-  cilUserFemale,
-} from '@coreui/icons'
-
-import avatar1 from '/avatars/1.jpg'
-import avatar2 from '/avatars/2.jpg'
-import avatar3 from '/avatars/3.jpg'
-import avatar4 from '/avatars/4.jpg'
-import avatar5 from '/avatars/5.jpg'
-import avatar6 from '/avatars/6.jpg'
-
-import WidgetsBrand from './WidgetsBrand'
 import WidgetsDropdown from './WidgetsDropdown'
 import MainChart from './MainChart'
-import TableComponent from './TableComponent'
+import { useParams } from 'react-router-dom'
+import jalaali from 'jalaali-js';
 
 const ReportCommentDetail = () => {
+ 
+  const [commentData,setCommentData] = useState([])
+  console.log("commnets: ",commentData);
+  const[detail,setDetail] = useState([])
+
+
+  function convertToShamsi(gregorianDateString) {
+    // Parse the input date string to a Date object
+    const date = new Date(gregorianDateString);
+  
+    // Extract the UTC year, month, and day
+    const year = date.getUTCFullYear();
+    const month = date.getUTCMonth() + 1; // getUTCMonth() returns 0-indexed months
+    const day = date.getUTCDate();
+  
+    // Convert the Gregorian date to Shamsi (Jalali) date
+    const shamsiDate = jalaali.toJalaali(year, month, day);
+  
+    // Return the Shamsi date in yyyy-mm-dd format
+    return `${shamsiDate.jy}-${shamsiDate.jm}-${shamsiDate.jd}`;
+  }
+  const gregorianDate = '2024-09-11T16:41:35.694Z';
+const shamsiDate = convertToShamsi(gregorianDate);
+console.log(shamsiDate);  // Outputs: "1403-6-21"
+
+
+  // const users = [
+  //   {
+  //     NAME: 'علی مرادلو',
+  //     owner_id:1,
+  //     COMMENT:'قیمت مناسب',
+  //     COMMENT_DATE: 'Jan 1, 2023',
+  //     comment_status:'مثبت'
+  //   },
+  //   {
+  //     NAME: 'رها خرسند',
+  //     owner_id:2,
+  //     COMMENT:'قیمت مناسب',
+  //     COMMENT_DATE: 'Jan 1, 2023',
+  //     comment_status:'مثبت'
+  //   },
+  //   {
+  //     NAME: 'نیایش علیپور',
+  //     owner_id:5,
+  //     COMMENT:'حیف متراژش پایینه',
+  //     COMMENT_DATE: 'Jan 1, 2023',
+  //     comment_status:'منفی'
+  //   }
+  // ]
+ 
+  const params = useParams()
+  console.log(params.id);
+
+  useEffect(()=>{
+    let resp = API_GET_BUILDING_COMMENT(params.id)
+    console.log(resp);
+    resp.then((res)=>{
+      console.log(res.data);
+      setCommentData(res.data)
+      
+    })
+
+  },[])
+
+  console.log(detail.times_viewed);
+  
+  useEffect(()=>{
+    // setIsLoading(true)
+    const fetchHouseDetails = async () => {
+        try {
+            let res = await API_GETHOUSE_DETAILS(params.id);
+            console.log("res: ", res);
+            
+            if (res.status === 200) {
+                console.log("success");
+                console.log(res.data);
+                await setDetail(res.data);
+                // setIsLoading(false)
+            } else {
+                console.log("false");
+                // setIsLoading(false)
+            }
+        } catch (error) {
+            console.error("Error fetching house details:", error);
+            // setIsLoading(false)
+        }
+    };
+
+    fetchHouseDetails();
+},[])
+  const badSentimentCount = commentData.filter(item => item.sentiment === 'bad').length;
+  const goodSentimentCount = commentData.filter(item => item.sentiment === 'good').length;
+  const neutralSentimentCount = commentData.filter(item => item.sentiment === 'neutral').length;
+  const commentLength = commentData.length;
+  const badPercent = badSentimentCount / commentLength;
+  const goodPercent = goodSentimentCount / commentLength;
+  const neutralPercent = neutralSentimentCount / commentLength;
+
+
   const progressExample = [
-    { title: 'نظرات مثبت', percent: 40, color: 'success' },
-    { title: 'نظرات منفی', percent: 80, color: 'danger' },
-    { title: 'نظرات خنثی', percent: 40.15, color: 'primary' },
+    { title: 'نظرات مثبت', percent:( goodPercent * 100), color: 'success' },
+    { title: 'نظرات منفی', percent: (badPercent * 100), color: 'danger' },
+    { title: 'نظرات خنثی', percent: (neutralPercent * 100), color: 'primary' },
   ]
-//   const progressExample = [
-//     { title: 'نظرات مثبت', value: '40', percent: 40, color: 'success' },
-//     { title: 'نظرات منفی', value: '22.123 Users', percent: 80, color: 'danger' },
-//     { title: 'نظرات خنثی', value: 'Average Rate', percent: 40.15, color: 'primary' },
-//   ]
-
-  const progressGroupExample1 = [
-    { title: 'Monday', value1: 34, value2: 78 },
-    { title: 'Tuesday', value1: 56, value2: 94 },
-    { title: 'Wednesday', value1: 12, value2: 67 },
-    { title: 'Thursday', value1: 43, value2: 91 },
-    { title: 'Friday', value1: 22, value2: 73 },
-    { title: 'Saturday', value1: 53, value2: 82 },
-    { title: 'Sunday', value1: 9, value2: 69 },
-  ]
-
-  const progressGroupExample2 = [
-    { title: 'Male', icon: cilUser, value: 53 },
-    { title: 'Female', icon: cilUserFemale, value: 43 },
-  ]
-
-  const progressGroupExample3 = [
-    { title: 'Organic Search', icon: cibGoogle, percent: 56, value: '191,235' },
-    { title: 'Facebook', icon: cibFacebook, percent: 15, value: '51,223' },
-    { title: 'Twitter', icon: cibTwitter, percent: 11, value: '37,564' },
-    { title: 'LinkedIn', icon: cibLinkedin, percent: 8, value: '27,319' },
-  ]
-
-  const users = [
-    {
-      NAME: 'علی مرادلو',
-      owner_id:1,
-      COMMENT:'قیمت مناسب',
-      COMMENT_DATE: 'Jan 1, 2023',
-      comment_status:'مثبت'
-    },
-    {
-      NAME: 'رها خرسند',
-      owner_id:2,
-      COMMENT:'قیمت مناسب',
-      COMMENT_DATE: 'Jan 1, 2023',
-      comment_status:'مثبت'
-    },
-    {
-      NAME: 'نیایش علیپور',
-      owner_id:5,
-      COMMENT:'حیف متراژش پایینه',
-      COMMENT_DATE: 'Jan 1, 2023',
-      comment_status:'منفی'
-    }
-  ]
-  const tableExample = [
-    {
-      avatar: { src: avatar1, status: 'success' },
-      user: {
-        NAME: 'علی مرادلو',
-        owner_id:'',
-        COMMENT:'قیمت مناسب',
-        COMMENT_DATE: 'Jan 1, 2023',
-        comment_status:'مثبت'
-      },
-      country: { name: 'USA', flag: cifUs },
-      // usage: {
-      //   value: 50,
-      //   period: 'Jun 11, 2023 - Jul 10, 2023',
-      //   color: 'success',
-      // },
-      // payment: { name: 'Mastercard', icon: cibCcMastercard },
-      // activity: '10 sec ago',
-    },
-    {
-      avatar: { src: avatar2, status: 'danger' },
-      user: {
-        name: 'Avram Tarasios',
-        new: false,
-        registered: 'Jan 1, 2023',
-      },
-      country: { name: 'Brazil', flag: cifBr },
-      usage: {
-        value: 22,
-        period: 'Jun 11, 2023 - Jul 10, 2023',
-        color: 'info',
-      },
-      payment: { name: 'Visa', icon: cibCcVisa },
-      activity: '5 minutes ago',
-    },
-    {
-      avatar: { src: avatar3, status: 'warning' },
-      user: { name: 'Quintin Ed', new: true, registered: 'Jan 1, 2023' },
-      country: { name: 'India', flag: cifIn },
-      usage: {
-        value: 74,
-        period: 'Jun 11, 2023 - Jul 10, 2023',
-        color: 'warning',
-      },
-      payment: { name: 'Stripe', icon: cibCcStripe },
-      activity: '1 hour ago',
-    },
-    {
-      avatar: { src: avatar4, status: 'secondary' },
-      user: { name: 'Enéas Kwadwo', new: true, registered: 'Jan 1, 2023' },
-      country: { name: 'France', flag: cifFr },
-      usage: {
-        value: 98,
-        period: 'Jun 11, 2023 - Jul 10, 2023',
-        color: 'danger',
-      },
-      payment: { name: 'PayPal', icon: cibCcPaypal },
-      activity: 'Last month',
-    },
-    {
-      avatar: { src: avatar5, status: 'success' },
-      user: {
-        name: 'Agapetus Tadeáš',
-        new: true,
-        registered: 'Jan 1, 2023',
-      },
-      country: { name: 'Spain', flag: cifEs },
-      usage: {
-        value: 22,
-        period: 'Jun 11, 2023 - Jul 10, 2023',
-        color: 'primary',
-      },
-      payment: { name: 'Google Wallet', icon: cibCcApplePay },
-      activity: 'Last week',
-    },
-    {
-      avatar: { src: avatar6, status: 'danger' },
-      user: {
-        name: 'Friderik Dávid',
-        new: true,
-        registered: 'Jan 1, 2023',
-      },
-      country: { name: 'Poland', flag: cifPl },
-      usage: {
-        value: 43,
-        period: 'Jun 11, 2023 - Jul 10, 2023',
-        color: 'success',
-      },
-      payment: { name: 'Amex', icon: cibCcAmex },
-      activity: 'Last week',
-    },
-  ]
-
   return (
     <>
-      <WidgetsDropdown className="mb-4" />
+      <WidgetsDropdown className="mb-4" view={detail?.times_viewed} commentLength={commentLength} neutralSentimentCount={neutralSentimentCount} badSentimentCount={badSentimentCount} goodSentimentCount={goodSentimentCount}/>
       <CCard className="mb-4">
         <CCardBody>
           <CRow>
-            <CCol sm={5}>
+            <CCol sm={12}>
               <h4 id="traffic" className="card-title mb-0">
-                آمار نظرات آگهی 3
+                آمار نظرات آگهی {detail?.title}
               </h4>
+              <div className="small text-body-secondary">آگهی شده در {detail?.city}</div>
               <div className="small text-body-secondary">شهریور 1403</div>
             </CCol>
             
@@ -338,45 +247,35 @@ const ReportCommentDetail = () => {
               <CTable align="middle" className="mb-0 border" hover responsive>
                 <CTableHead className="text-nowrap">
                   <CTableRow>
-                    {/* <CTableHeaderCell className="bg-body-tertiary text-center">
-                      <CIcon icon={cilPeople} />
-                    </CTableHeaderCell> */}
                     <CTableHeaderCell className="bg-body-tertiary">نام کاربر</CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary">شناسه کاربر</CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary text-center">
-                      نظر
-                    </CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary ">نظر</CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary">تاریخ ثبت نظر</CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary text-center">
-                      وضعیت نظر
-                    </CTableHeaderCell>
-                    {/* <CTableHeaderCell className="bg-body-tertiary">Activity</CTableHeaderCell> */}
+                    <CTableHeaderCell className="bg-body-tertiary ">تحلیل نظر</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                  {users.map((item, index) => (
+               
+                  {commentData.map((item, index) => (
                     <CTableRow v-for="item in tableItems" key={index}>
-                      {/* <CTableDataCell className="text-center">
-                        <CAvatar size="md" src={item.avatar.src} status={item.avatar.status} />
-                      </CTableDataCell> */}
                        <CTableDataCell>
-                        <div>{item.NAME}</div>
+                        <div>{item.writer_name}</div>
 
                        </CTableDataCell>
                        <CTableDataCell>
-                        <div>{item.owner_id}</div>
+                        <div>{item.writer_id}</div>
 
                        </CTableDataCell>
                        <CTableDataCell>
-                        <div>{item.COMMENT}</div>
+                        <div className={`${item.sentiment == 'bad'? 'filter-color': item.sentiment == 'good' ? 'positive-color' : 'nodiff-color'}`}>{item.description}</div>
 
                        </CTableDataCell>
                        <CTableDataCell>
-                        <div>{item.COMMENT_DATE}</div>
+                        <div>{convertToShamsi(item.created_at)}</div>
 
                        </CTableDataCell>
                        <CTableDataCell>
-                        <div>{item.comment_status}</div>
+                        <div>{item.sentiment=='bad'?'منفی': item.sentiment == 'good' ? 'مثبت' : 'خنثی'}</div>
 
                        </CTableDataCell>
 
