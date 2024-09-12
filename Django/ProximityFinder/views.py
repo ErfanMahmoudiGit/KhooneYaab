@@ -736,6 +736,14 @@ def get_state_by_categories(request):
     # Return the result as a JSON response
     return JsonResponse(result, safe=False)
 
+from datetime import datetime
+from django.utils import timezone
+from django.http import JsonResponse
+import requests
+import json
+from .models import Building, Comment
+from django.views.decorators.http import require_POST
+
 @require_POST
 def add_comment(request):
     try:
@@ -760,6 +768,15 @@ def add_comment(request):
             sentiment = sentiment_response.json().get('sentiment')
         else:
             return JsonResponse({'error': 'Failed to analyze sentiment'}, status=500)
+        
+        # Handle created_at (convert string to datetime if provided)
+        if data.get('created_at'):
+            try:
+                created_at = datetime.strptime(data['created_at'], '%Y-%m-%d %H:%M')
+            except ValueError:
+                return JsonResponse({'error': 'Invalid date format for created_at'}, status=400)
+        else:
+            created_at = timezone.now()
 
         # Create the comment with the sentiment
         comment = Comment.objects.create(
@@ -768,7 +785,7 @@ def add_comment(request):
             description=description,
             building=building,
             sentiment=sentiment,  # Add the sentiment to the comment
-            created_at=timezone.now()
+            created_at=created_at  # Now a proper datetime object
         )
 
         # Return success response
@@ -790,6 +807,7 @@ def add_comment(request):
 
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
+
     
 @require_GET
 def get_comment_count(request, building_id):

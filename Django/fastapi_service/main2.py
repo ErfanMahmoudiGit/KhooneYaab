@@ -1,29 +1,34 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
-from transformers import pipeline
+import torch
+from transformers import MT5ForConditionalGeneration, MT5Tokenizer
+import numpy as np
 
-# Initialize FastAPI app
-app = FastAPI()
+tokenizer = MT5Tokenizer.from_pretrained("persiannlp/mt5-base-parsinlu-sentiment-analysis")
+model = MT5ForConditionalGeneration.from_pretrained("persiannlp/mt5-base-parsinlu-sentiment-analysis")
 
-# Load the sentiment analysis pipeline
-classifier = pipeline('sentiment-analysis', model="HooshvareLab/bert-fa-base-uncased-sentiment-persian")
 
-# Define the request body structure
-class Comment(BaseModel):
-    text: str
+def model_predict(text_a, text_b):
+    features = tokenizer( [(text_a, text_b)], padding="max_length", truncation=True, return_tensors='pt')
+    output = model(**features)
+    logits = output[0]
+    probs = torch.nn.functional.softmax(logits, dim=1).tolist()
+    idx = np.argmax(np.array(probs))
+    print(labels[idx], probs) # type: ignore
 
-# Define the response structure
-class SentimentResponse(BaseModel):
-    sentiment: str
-    score: float
 
-@app.post("/analyze-sentiment/", response_model=SentimentResponse)
-async def analyze_sentiment(comment: Comment):
-    # Perform sentiment analysis
-    result = classifier(comment.text)[0]
-    
-    # Prepare the response
-    sentiment = result['label']
-    score = result['score']
-    
-    return SentimentResponse(sentiment=sentiment, score=score)
+def run_model(context, query, **generator_args):
+    input_ids = tokenizer.encode(context + "<sep>" + query, return_tensors="pt")
+    res = model.generate(input_ids, **generator_args)
+    output = tokenizer.batch_decode(res, skip_special_tokens=True)
+    return output
+
+
+run_model(
+  "خانه خیلی خوبی است و مناسب مشکل پسندان",
+ "نظر شما در مورد خانه چیست؟"
+)
+
+
+run_model(
+  "خانه  خوبی نیست و قدیمی بود",
+ "نظر شما در مورد خانه چیست؟"
+)
