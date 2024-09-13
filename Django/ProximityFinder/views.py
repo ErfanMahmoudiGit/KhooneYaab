@@ -10,7 +10,7 @@ from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_date
 from .models import Building
 from django.db.models import Q
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
@@ -53,7 +53,7 @@ STATE_DATA = [
     {"name": "يزد", "center": "يزد", "latitude": "31.530", "longitude": "54.210", "id": 31},
 ]
 
-@api_view(['POST'])
+@require_POST
 @permission_classes([IsAuthenticated])
 def create_house(request):
     try:
@@ -249,7 +249,7 @@ def get_buildings(request):
 
     return JsonResponse(building_list, safe=False)
 
-@api_view(['POST'])
+@require_POST
 @permission_classes([IsAuthenticated])
 def get_buildings_by_owner_id(request):
     data = json.loads(request.body)
