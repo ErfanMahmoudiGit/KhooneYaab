@@ -32,7 +32,7 @@ export default function LoginStep1(props){
     return(
         <>
         <Modal
-            className={"Auth-modal"}
+            className={"Auth-modal h-modal"}
             show={loginModalStep1}
             onHide={() =>
               dispatch(handle_variables({ loginModalStep1: false }))

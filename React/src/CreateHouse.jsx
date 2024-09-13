@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Formik, Form } from 'formik';
 import { Button, Steps, Layout, ConfigProvider } from 'antd';
 import { RightOutlined, LeftOutlined } from '@ant-design/icons';
@@ -10,6 +10,7 @@ import HouseDetailInformation from './pages/register_announcement/HouseDetailInf
 import HouseLocationInformation from './pages/register_announcement/HouseLocationInformation';
 import {  toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import cookieService from './pages/cookieService';
 const { Step } = Steps;
 const { Content } = Layout;
 
@@ -23,6 +24,15 @@ const steps = [
 const CreateHouse = () => {
   const [current, setCurrent] = useState(0);
   const navigate = useNavigate()
+
+  useEffect(()=>{
+    const token = cookieService.getCookie('TOKEN');
+    if(!token){
+      toast.error("برای دسترسی به این صفحه ابتدا باید وارد شوید")
+      navigate("/")
+    }
+  },[])
+
 
   const next = () => {
     setCurrent(current + 1);
@@ -52,10 +62,23 @@ const CreateHouse = () => {
 };
 
 console.log(getCurrentDate());
+const [owner_id, setOwner_id] = useState({});
 
+useEffect(()=>{
+  const userData = localStorage.getItem('userData');
+  if (userData) {
+    // Parse the JSON string into an object
+    const parsedUserData = JSON.parse(userData);
+    console.log(parsedUserData.owner_id);
+    setOwner_id(parsedUserData.owner_id)
+    
+  } else {
+    console.log('No user data found in localStorage');
+  }
+},[])
   const onSubmit = (values, actions) => {
-    console.log("here");
-    console.log("outside",values);
+  
+    
 
     
     if (current === steps.length - 1) {
@@ -93,7 +116,9 @@ console.log(getCurrentDate());
 
           time:getCurrentDate(),
           price_per_meter : values.price / values.meterage ,
-          owner_id : 1
+          owner_id : owner_id,
+          times_viewed : 0
+
         } 
         console.log("data",data)
         let resp = API_createHouse(data)

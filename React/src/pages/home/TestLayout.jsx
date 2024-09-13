@@ -19,13 +19,14 @@ import { FaRegUser } from "react-icons/fa6";
 import { useSelector, useDispatch } from "react-redux";
 import { authState, handle_variables } from '../login/Redux/authSlice'; 
 import { useNavigate } from 'react-router-dom';
-import { API_SEARCH , API_REMOVE_USER} from "../../services/apiServices";
+import { API_SEARCH , API_LOGOUT_USER} from "../../services/apiServices";
 import LoginStep1 from '../login/LoginStep1';
 import { FaBookmark } from 'react-icons/fa';
 import { CiLogout } from "react-icons/ci";
 import { FaLocationDot } from "react-icons/fa6";
 import CityModal from '../../ui/CityModal';
 import cookieService from '../cookieService';
+import { toast } from 'react-toastify';
 
 function getItem(label, key, icon, children, link) {
     return {
@@ -48,26 +49,6 @@ const items = [
     getItem('نشان شده ها', 'bookmarks', <FaBookmark />, null, '/bookmarks'),    
   ];
 
-
-// const items1 = ['1', '2', '3'].map((key) => ({
-//   key,
-//   label: `nav ${key}`,
-// }));
-// const items2 = [UserOutlined, LaptopOutlined, NotificationOutlined].map((icon, index) => {
-//   const key = String(index + 1);
-//   return {
-//     key: `sub${key}`,
-//     icon: React.createElement(icon),
-//     label: `subnav ${key}`,
-//     children: new Array(4).fill(null).map((_, j) => {
-//       const subKey = index * 4 + j + 1;
-//       return {
-//         key: subKey,
-//         label: `option${subKey}`,
-//       };
-//     }),
-//   };
-// });
 const TestLayout = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -76,49 +57,69 @@ const TestLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [cityModal, setCityModal] = useState(false);
   const [userObject, setUserObject] = useState({});
+  const [name, setName] = useState('');
   const[searchValue,setSearchValue] = useState("")
   const token = cookieService.getCookie('TOKEN');
+  const refreshTok = cookieService.getCookie('REFRESH');
+  const [isLoggedIn, setIsLoggedIn] = useState(!!cookieService.getCookie('TOKEN')); // Track login status
+
   useEffect(()=>{
-    const userData = localStorage.getItem('userData');
-    if (userData) {
-      // Parse the JSON string into an object
-      const parsedUserData = JSON.parse(userData);
-      setUserObject(parsedUserData)
-    } else {
-      console.log('No user data found in localStorage');
-    }
+    const NAME = cookieService.getCookie('NAME');
+    setName(NAME)
   },[])
+
+  // useEffect(()=>{
+  //   const userData = localStorage.getItem('userData');
+  //   if (userData) {
+  //     // Parse the JSON string into an object
+  //     const parsedUserData = JSON.parse(userData);
+  //     setUserObject(parsedUserData)
+  //     setName(parsedUserData.name)
+  //   } else {
+  //     console.log('No user data found in localStorage');
+  //   }
+  // },[isLoggedIn,name])
   
-  
+  const handleLogOut = async () => {
+    // toast.success("hi")
+    console.log("refreshTok",refreshTok);
+    
+    const res = await API_LOGOUT_USER({refresh : refreshTok});
+    console.log(res);
+    if(res.status == 200){
+      toast.success("از خونه یاب خارج شدید")
+      
+      cookieService.removeCookie('REFRESH');
+      cookieService.removeCookie('TOKEN');
+      cookieService.removeCookie('NAME');
+      localStorage.removeItem("TOKEN")
+      localStorage.removeItem("userData")
+      setName(null); // Reset name after logout
+      setIsLoggedIn(false);
+    }
+    
+
+
+
+    
+    
+  }
+  console.log("Retrieved NAME cookie:", cookieService.getCookie('NAME'));
+  console.log("name",name);
+
 
   let navigate = useNavigate()
   const { loginModalStep1  , 
-    is_verified_user,name ,selectedCityId  , selectedCity,
+    is_verified_user ,selectedCityId  , selectedCity,
     seachedValue , owner_id} = useSelector(authState);
 
   console.log("name",name);
   const dispatch = useDispatch();
   function handleSearch(filters){
     dispatch(handle_variables({ seachedValue : searchValue }))
-
-    // const body = { 
-    //     min_price :'',
-    //     max_price : '',
-    //     min_meterage : '',
-    //     max_meterage : '',
-    //     room_count: 3 
-    // };
-    // const body = {
-    //     min_price: filters.min_price || '',
-    //     max_price: filters.max_price || '',
-    //     min_meterage: filters.min_meterage || '',
-    //     max_meterage: filters.max_meterage || '',
-    //     room_count: filters.room_count || ''
-    //   };
     let body = {
         
     }
-    // const res = await API_CATEGORY({ category: cat , state : selectedCityId});
 
     let resp = API_SEARCH(searchValue ,body ,selectedCityId)
       resp.then((res) => {
@@ -160,29 +161,11 @@ const TestLayout = () => {
 
           <div className='d-flex gap-4 align-items-center '>
                                   
-                  <span onClick={()=>setCityModal(true)} style={{cursor:"pointer"}} ><FaLocationDot className='ps-1' />{selectedCity ? selectedCity: '31 شهر'}</span>
-              {/* <NewDropdown  /> */}
+              <span onClick={()=>setCityModal(true)} style={{cursor:"pointer"}} ><FaLocationDot className='ps-1' />{selectedCity ? selectedCity: '31 شهر'}</span>
               {token ? (
               <span className='d-flex align-items-center gap-2'>
-                  {userObject?.name}
-                  <CiLogout size={24} onClick={()=>{
-                      let data = {
-                          user_id :  owner_id
-                      }
-                      let resp = API_REMOVE_USER(data)
-                      resp.then((res) => {
-                          if (res.status === 200) {
-                          //   dispatch(handle_variables({ searchResults: res.data }))
-                          //   navigate('/search')
-                  
-                          } else {
-                              console.log("false");        
-                
-                          }
-                          })
-                  }}/>
-                  {/* <FiUserCheck /> */}
-                  
+                  {cookieService.getCookie('NAME')}
+                  <CiLogout size={24} onClick={handleLogOut} style={{cursor:"pointer"}}/>                  
               </span>
               ) : (
                   <NavLink
@@ -191,9 +174,7 @@ const TestLayout = () => {
                       }}  
                       >
                       <Button
-                      //   className='bg-body-tertiary'
                           style={{
-                          //   color: "white",
                           fontSize: "15.4px",
                           fontWeight: 500,
                           border: "none",
@@ -202,26 +183,12 @@ const TestLayout = () => {
                           alignContent:"center",
                           alignItems:"center",
                           gap:"4px",
-                          // color:"#ffffff",
                           color:"#001529",
-                          // backgroundColor:"#942525",
                           backgroundColor:"#e0e0e2",
                           }}
                       >
                       <span>ورود</span>
-                      <FaRegUser />
-                      
-                      
-                      {/* <NavDropdown
-                      title={<span style={{ fontSize: "16px" }}><FaRegUser /></span>}
-                    >
-                      <NavDropdown.Item
-                        onClick={()=> {
-                        }}
-                      >
-                        خروج
-                      </NavDropdown.Item>
-                    </NavDropdown> */}
+                      <FaRegUser /> 
                       </Button>
                   </NavLink>
               )}     
@@ -262,19 +229,7 @@ const TestLayout = () => {
               }}
           >
               <Outlet /> {/* This will render child routes */}
-          </Content>
-            
-            {/* <Content
-              style={{
-                padding: 24,
-                margin: 0,
-                minHeight: 280,
-                background: colorBgContainer,
-                borderRadius: borderRadiusLG,
-              }}
-            >
-              Content
-            </Content> */}
+          </Content>  
           </Layout>
         </Layout>
       </Layout>
@@ -283,10 +238,6 @@ const TestLayout = () => {
         <Modal
         className={"Auth-modal"}
         show={cityModal}
-        // onHide={() =>
-        //   dispatch(handle_variables({ loginModalStep1: false }))
-        // }
-        // size={"lg"}
         centered
     >
         <Modal.Body className="custom-modal-body1" style={{height:"80vh"}}>

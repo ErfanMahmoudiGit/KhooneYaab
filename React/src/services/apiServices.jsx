@@ -24,54 +24,49 @@ const API_BASE_USER = axios.create({
 // }
 // const token = getCookie('TOKEN');
 
-export const API_createHouse = async (data) => {
-  try {
-    // Get the token before making the request
-    // const token = Cookies.get('TOKEN');
-    const token = cookieService.getCookie('TOKEN');
-    // setCookieValue(value);
-    console.log(token);
-    // If token is not available, handle the error
-    if (!token) {
-      throw new Error('Authorization token is missing.');
-    }
-
-    // Make the API request with the token in the Authorization header
-    const response = await API_BASE.post('building/create_house/', data, {
-      headers: {
-        'Authorization': `Bearer ${token}`, // Attach the token here
-      },
-      withCredentials: true, // Important if you are relying on cookies elsewhere
-    });
-
-    return response;
-  } catch (error) {
-    // Error handling
-    try {
-      return { ...error?.response?.data, status: error.response.status };
-    } catch (err) {
-      return { error: { message: '--سرویس در دسترس نیست' } }; // Fallback message if no response
-    }
-  }
-};
-
 // export const API_createHouse = async (data) => {
 //   try {
-//     const response = await API_BASE.post('building/create_house/',data,{
+//     // Get the token before making the request
+//     // const token = Cookies.get('TOKEN');
+//     const token = cookieService.getCookie('TOKEN');
+//     // setCookieValue(value);
+//     console.log(token);
+//     // If token is not available, handle the error
+//     if (!token) {
+//       throw new Error('Authorization token is missing.');
+//     }
+
+//     // Make the API request with the token in the Authorization header
+//     const response = await API_BASE.post('building/create_house/', data, {
 //       headers: {
-//         'Authorization': `Bearer ${token}`,
-//     },
-//     withCredentials: true // Important for cross-origin requests
+//         'Authorization': `Bearer ${token}`, // Attach the token here
+//       },
+//       withCredentials: true, // Important if you are relying on cookies elsewhere
 //     });
+
 //     return response;
 //   } catch (error) {
-//     try{
-//       return({...error?.response?.data,status: error.response.status}) ;  // check
-//     }catch(err){
-//       return({error:{message:'--سرویس در دسترس نیست'}}) ;
-//     }  
+//     // Error handling
+//     try {
+//       return { ...error?.response?.data, status: error.response.status };
+//     } catch (err) {
+//       return { error: { message: '--سرویس در دسترس نیست' } }; // Fallback message if no response
+//     }
 //   }
 // };
+
+export const API_createHouse = async (data) => {
+  try {
+    const response = await API_BASE.post('building/create_house/',data)
+    return response;
+  } catch (error) {
+    try{
+      return({...error?.response?.data,status: error.response.status}) ;  // check
+    }catch(err){
+      return({error:{message:'--سرویس در دسترس نیست'}}) ;
+    }  
+  }
+};
 export const API_GETHOUSE = async () => {
   try {
     const response = await API_BASE.get('building/buildings/');
@@ -197,8 +192,6 @@ export const API_GET_BY_STATE= async (data) => {
     }  
   }
 };
-// path('api/building/recommend_buildings/', recommend_buildings, name='recommend_buildings'),
-// path('api/building/state/', get_buildings_by_state, name='get_buildings_by_state'),
 
 export const API_RECOMMENDER= async (data) => {
   try {
@@ -296,10 +289,6 @@ export const API_GET_BUILDING_COMMENT = async (id) => {
 
 export const API_GET_MY_BUILDINGS= async (data) => {
   try {
-    
-
-  
-
     const response = await API_BASE.post(`building/my_buildings/`,data);
     return response;
   } catch (error) {
@@ -310,10 +299,6 @@ export const API_GET_MY_BUILDINGS= async (data) => {
     }  
   }
 };
-
-// path('api/building/get_state_by_categories/', get_state_by_categories, name='get_state_by_categories')
-
-
 
 export const API_GET_CATEGORIES_COUNT_STATE= async () => {
   try {

@@ -57,7 +57,10 @@ export default function LoginStep2() {
                             if (res.status === 200) {
                                 console.log(res.data.data.tokens.access);
                                 // localStorage.setItem('TOKEN', res.data.data.tokens.access);
+                                cookieService.setCookie('NAME', res.data.data.user.name, { expires: 7 }); // Expires in 7 days
+                                cookieService.setCookie('OWNER_ID', res.data.data.user.user_id, { expires: 7 }); // Expires in 7 days
                                 cookieService.setCookie('TOKEN', res.data.data.tokens.access, { expires: 7 }); // Expires in 7 days
+                                cookieService.setCookie('REFRESH', res.data.data.tokens.refresh); 
                                 const token = cookieService.getCookie('TOKEN');
                                 console.log("tok",token);
                                 
@@ -72,7 +75,7 @@ export default function LoginStep2() {
                                         login_expires_in : parseInt(res.data.data.user.login_expires_in),
                                         phoneNumber: parseInt(data.phoneNumber),
                                     }));
-                                    localStorage.setItem('owner_id', JSON.stringify(owner_id));
+                                    // localStorage.setItem('owner_id', JSON.stringify(owner_id));
                                     // Assuming 'res' is your response object and 'data' contains the necessary values
                                     const userData = {
                                         is_verified_user: res.data.data.user.is_verified_user,    
@@ -132,7 +135,12 @@ export default function LoginStep2() {
                                 <h5>کد فعالسازی 6 رقمی به شماره همراه {phoneNumber} ارسال گردید</h5>
                             </Col>
                         </Row>
-                        <p className="font-weight-bold text-secondary text-center d-flex justify-content-center">کد تایید را وارد کنید</p>
+                        <Row className={"text-center"}>
+                            <Col xs={12}>
+                                <p className="font-weight-bold text-secondary text-center">کد تایید را وارد کنید</p>
+                            </Col>
+                        </Row>
+                        {/* <p className="font-weight-bold text-secondary text-center d-flex justify-content-center">کد تایید را وارد کنید</p> */}
                         <Row className="d-flex justify-content-center mt-3">
 
                             <Col className="ci-div" xs={12} md={9}>

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authState, handle_variables } from '../pages/login/Redux/authSlice';
 import { useDispatch, useSelector } from "react-redux";
+import cookieService from '../pages/cookieService';
 
 const STATE_OPTIONS = [
     { label: "آذربايجان شرقی", value: 1 },
@@ -45,7 +46,7 @@ export default function CityModal({ setCityModal }) {
     const [searchInput, setSearchInput] = useState('');
     const { selectedCityId, selectedCity } = useSelector(authState);
     console.log(selectedCityId, selectedCity);
-    
+
     const handleSearchChange = (e) => {
         setSearchInput(e.target.value);
     };
@@ -56,6 +57,8 @@ export default function CityModal({ setCityModal }) {
             setSelectedValue(value);
             dispatch(handle_variables({ selectedCity: selectedState.label, selectedCityId: selectedState.value }));
             localStorage.setItem('CITY', JSON.stringify(selectedState.value));
+            cookieService.setCookie('CITY', selectedState.value); 
+
             console.log(value);
             setCityModal(false);
         } else {

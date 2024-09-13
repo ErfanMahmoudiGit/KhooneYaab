@@ -500,7 +500,7 @@ input[type="search"]::placeholder {
   padding: 10px 15px !important;
 } */
 .login-input{
-  border-radius: 15px;
+  border-radius: 12px;
   padding: 8px 20px;
   font-size: 14px;
   border-color: #ced4da !important;
@@ -529,6 +529,10 @@ input[type="search"]::placeholder {
 .custom-modal-body1 {
   height: 48vh; /* Adjust the height as needed */
   overflow-y: auto; /* Adds scrolling if content overflows */
+}
+
+.h-modal .modal-content{
+  width: 97% !important;
 }
 .custom-modal-body2 {
   height: 52vh; /* Adjust the height as needed */

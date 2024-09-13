@@ -8,6 +8,7 @@ import { useState } from "react";
 import { BeatLoader } from "react-spinners";
 import { API_LOGIN_USER } from "../../services/apiServices";
 import {  toast } from 'react-toastify';
+import cookieService from "../cookieService";
 
 const validationSchema = yup.object().shape({
     name: yup.string()
@@ -56,15 +57,13 @@ export default function LoginStep3(){
                                     loginModalStep3 : false,
                                     loginModalStep1 : false,
                                     loginModalStep2 : false,
-                                    name : data.name , 
-                                    email : data.email,
+                                    name : res.data.data.user.name , 
+                                    email : res.data.data.user.email,
                                     is_verified_user: true,
                                     // owner_id : res.data.data.user.user_id,
                                     // login_expires_in : res.data.data.user.login_expires_in,
                                 }));
-                                // console.log(res.data.data.tokens);
-                                // console.log(res.data.data.tokens.access);
-                                // localStorage.setItem('TOKEN', res.data.data.tokens.access);
+                                cookieService.setCookie('NAME', res.data.data.user.name, { expires: 7 }); // Expires in 7 days
                                 
                               
                                 toast.success("ورود شما با موفقیت انجام شد")
@@ -88,11 +87,6 @@ export default function LoginStep3(){
                     <form onSubmit={props.handleSubmit}>
                         <Row className="d-flex justify-content-center mt-3">
                             <h3 className="filter-colo text-center">{welcome_message}</h3>
-                            {/* <Row className={"text-center"}>
-                            <Col xs={12}>
-                                <h3 className="filter-color">لطفا اطلاعات خود را وارد نمایید</h3>
-                            </Col>
-                        </Row> */}
                             <Col className="ci-div" xs={12} md={9}>
                                 <label htmlFor="">نام</label>
                                 <input
@@ -135,21 +129,6 @@ export default function LoginStep3(){
                                     {isLoading ? <BeatLoader size={9} color={"black"} /> : "تایید"} 
                                 </Button> 
                             </Col>
-                            {/* <Col xs={6} md={4}>
-                            <Button
-                                    type="button"
-                                    className="btn-login"
-                                    onClick={() => {
-                                        dispatch(handle_variables({
-                                            isSendCode: false,
-                                            loginModalStep3: false,
-                                            loginModalStep2: true,
-                                        }));
-                                    }}
-                                >
-                                    بازگشت 
-                                </Button>  
-                            </Col> */}
                         </Row>
                     </form>
                 )}

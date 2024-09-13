@@ -58,12 +58,15 @@ const SearchLayout = () => {
   //   seachedValue , owner_id} = useSelector(authState);
 
   const { loginModalStep1  , 
-    is_verified_user,name ,selectedCityId  , selectedCity,
+    is_verified_user ,selectedCityId  , selectedCity,
     seachedValue , owner_id} = useSelector(authState);
     const [userObject, setUserObject] = useState({});
     const [cityModal, setCityModal] = useState(false);
-    
+    const [name, setName] = useState('');
 
+
+    console.log("selectedCityId",selectedCityId);
+    
   // console.log("name",name);
   const token = cookieService.getCookie('TOKEN');
   useEffect(()=>{
@@ -76,17 +79,25 @@ const SearchLayout = () => {
       console.log('No user data found in localStorage');
     }
   },[])
+  useEffect(()=>{
+    const NAME = cookieService.getCookie('NAME');
+    setName(NAME)
+  },[])
+  // useEffect(()=>{
+  //   console.log("zzz",cookieService.getCookie('CITY'));
+
+  // },[selectedCityId])
   const dispatch = useDispatch();
   function handleSearch(filters){
     dispatch(handle_variables({ seachedValue : searchValue }))
 
+    console.log(filters);
     
-    let body = {
-        
-    }
+    // console.log("zzz",cookieService.getCookie('CITY'));
+    
 
-    let resp = API_SEARCH(searchValue , body , selectedCityId)
-      resp.then((res) => {
+    let resp = API_SEARCH(searchValue , filters , cookieService.getCookie('CITY'))
+      resp.then((res) => {        
           if (res.status === 200) {
             console.log("search",res.data);
             dispatch(handle_variables({ searchResults: res.data }))
@@ -131,7 +142,7 @@ const SearchLayout = () => {
           {/* <NewDropdown  /> */}
           {token ? (
           <span className='d-flex align-items-center gap-2'>
-              {userObject.name}
+              {cookieService.getCookie('NAME')}
               <CiLogout size={24} onClick={()=>{
                   let data = {
                       user_id :  owner_id

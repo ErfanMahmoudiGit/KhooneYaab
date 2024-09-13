@@ -23,6 +23,15 @@ export default function HouseInformation(){
         {label : "اجاره خانه و ویلا" , value : "اجاره خانه و ویلا"}
     ]
 
+    function formatNumber(number) {
+        // Convert to string and format with commas
+        let formatted = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    
+        // Convert to Persian numerals
+        const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+        return formatted.replace(/\d/g, (digit) => persianDigits[digit]);
+    }
+   
     const uploadImageHandler = (file) => {
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -56,7 +65,7 @@ export default function HouseInformation(){
                 </Col>
                 <Col sm={6}>
                     <Form.Label className='form-label margin-left-x'>دسته بندی آگهی</Form.Label>
-                    <Field as="select" name="category" className="form-control">
+                    <Field as="select" name="category" className="form-control login-input">
                         <option value="" label="انتخاب کنید" />
                         {categories.map((item, index) => (
                             <option key={index} value={item.value}>
