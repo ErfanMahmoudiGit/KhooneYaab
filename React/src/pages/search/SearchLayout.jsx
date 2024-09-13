@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
-import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { useEffect } from 'react';
+import { Layout,theme } from 'antd';
 import SearchBar from '../admin/SearchBar';
 const { Header, Content, Sider } = Layout;
 import{ useState } from 'react';
@@ -11,10 +10,8 @@ import { MdRecommend } from "react-icons/md";
 import { GoHomeFill } from "react-icons/go";
 import { GiVillage } from "react-icons/gi";
 import { BiSolidCategoryAlt } from "react-icons/bi";
-import { Button} from "react-bootstrap";
+import { Button, Modal} from "react-bootstrap";
 import { NavLink } from "react-router-dom";
-import Form from 'react-bootstrap/Form';
-import { AiOutlineSearch } from 'react-icons/ai';
 import { FaRegUser } from "react-icons/fa6";
 import { useSelector, useDispatch } from "react-redux";
 import { authState, handle_variables } from '../login/Redux/authSlice'; 
@@ -26,6 +23,7 @@ import { CiLogout } from "react-icons/ci";
 import { FaLocationDot } from "react-icons/fa6";
 import NewFilters from '../home/NewFilters';
 import cookieService from '../cookieService';
+import CityModal from '../../ui/CityModal';
 
 function getItem(label, key, icon, children, link) {
     return {
@@ -55,10 +53,16 @@ const SearchLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const[searchValue,setSearchValue] = useState("")
   let navigate = useNavigate()
+  // const { loginModalStep1  , 
+  //   is_verified_user,name ,selectedCityId  , selectedCity,
+  //   seachedValue , owner_id} = useSelector(authState);
+
   const { loginModalStep1  , 
-    is_verified_user,name ,
+    is_verified_user,name ,selectedCityId  , selectedCity,
     seachedValue , owner_id} = useSelector(authState);
     const [userObject, setUserObject] = useState({});
+    const [cityModal, setCityModal] = useState(false);
+    
 
   // console.log("name",name);
   const token = cookieService.getCookie('TOKEN');
@@ -81,7 +85,7 @@ const SearchLayout = () => {
         
     }
 
-    let resp = API_SEARCH(searchValue ,body)
+    let resp = API_SEARCH(searchValue , body , selectedCityId)
       resp.then((res) => {
           if (res.status === 200) {
             console.log("search",res.data);
@@ -96,6 +100,8 @@ const SearchLayout = () => {
               
   }
   return (
+    <>
+   
     <Layout>
     <Header
       // style={{
@@ -119,8 +125,9 @@ const SearchLayout = () => {
       </div>
 
       <div className='d-flex gap-4 align-items-center '>
-                              
-              <span><FaLocationDot className='ps-1' />31 شهر </span>
+      <span onClick={()=>setCityModal(true)} style={{cursor:"pointer"}} ><FaLocationDot className='ps-1' />{selectedCity ? selectedCity: '31 شهر'}</span>
+
+              {/* <span><FaLocationDot className='ps-1' />31 شهر </span> */}
           {/* <NewDropdown  /> */}
           {token ? (
           <span className='d-flex align-items-center gap-2'>
@@ -238,6 +245,27 @@ const SearchLayout = () => {
       </Layout>
     </Layout>
   </Layout>
+  {cityModal ? (
+        <Modal
+        className={"Auth-modal"}
+        show={cityModal}
+        // onHide={() =>
+        //   dispatch(handle_variables({ loginModalStep1: false }))
+        // }
+        // size={"lg"}
+        centered
+    >
+        <Modal.Body className="custom-modal-body1" style={{height:"80vh"}}>
+          <h3 className='text-center'>انتخاب شهر</h3>
+          <CityModal setCityModal={setCityModal} />
+        </Modal.Body>
+        </Modal>
+      ) : (
+        null
+      )}
+
+  </>
+  
   );
 };
 export default SearchLayout;

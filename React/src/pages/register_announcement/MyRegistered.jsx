@@ -15,9 +15,23 @@ export default function MyRegistered(){
     const [myRegisteredHouse,setMyRegisteredHouse] = useState([])
     const [loading, setIsLoading] = useState(false);
     const navigate = useNavigate()
-    const { owner_id} = useSelector(authState);
+    // const { owner_id} = useSelector(authState);
+    const [owner_id, setOwner_id] = useState({});
+
 
     console.log(owner_id);
+    useEffect(()=>{
+        const userData = localStorage.getItem('userData');
+        if (userData) {
+          // Parse the JSON string into an object
+          const parsedUserData = JSON.parse(userData);
+          console.log(parsedUserData.owner_id);
+          setOwner_id(parsedUserData.owner_id)
+          
+        } else {
+          console.log('No user data found in localStorage');
+        }
+      },[])
     
     const generateRandomData = (length) => {
         return Array.from({ length }, () => Math.floor(Math.random() * 41));
@@ -25,7 +39,7 @@ export default function MyRegistered(){
     useEffect(()=>{
         setIsLoading(true)
 
-        let resp = API_GET_MY_BUILDINGS({owner_id : parseInt(owner_id)})
+        let resp = API_GET_MY_BUILDINGS({owner_id : owner_id})
         // setLoading(true)
 
           resp.then((res) => {

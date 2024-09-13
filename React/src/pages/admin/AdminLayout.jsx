@@ -27,7 +27,7 @@ const items = [
       getItem('استان ها', 'cities', <FaCity  className='me-4'/>, null, '/admin/cities'),
       getItem('نظرات', 'comments', <FaRegCommentDots  className='me-4'/>, null, '/admin/comments'),
     ]),
-    getItem('بازدیدها', 'views', <IoMdEye />, null, '/admin/views'),
+    // getItem('بازدیدها', 'views', <IoMdEye />, null, '/admin/views'),
    
   ];
 

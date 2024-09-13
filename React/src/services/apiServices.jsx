@@ -98,7 +98,7 @@ export const API_GETHOUSE_DETAILS = async (id) => {
     }  
   }
 };
-export const API_SEARCH = async (q,body) => {
+export const API_SEARCH = async (q,body,selectedCityId) => {
   try {
     // const response = await API_BASE.get(`building/search/?q=${q}`,body);
     const response = await API_BASE.get('building/search/', {
@@ -109,6 +109,7 @@ export const API_SEARCH = async (q,body) => {
           min_meterage: body.min_meterage,
           max_meterage: body.max_meterage,
           room_count: body.room_count,
+          state_id : selectedCityId
       }
   });
     return response;
@@ -265,6 +266,18 @@ export const API_TOGGLE_STATUS_BUILDING = async (id) => {
     }  
   }
 };
+export const API_UPDATE_BUILDING = async (id,data) => {
+  try {
+    const response = await API_BASE.post(`building/update-building/${id}/`,data);
+    return response;
+  } catch (error) {
+    try{
+      return({...error?.response?.data,status: error.response.status}) ;  
+    }catch(err){
+      return({error:{message:'--سرویس در دسترس نیست'}}) ;
+    }  
+  }
+};
 
 
 export const API_GET_BUILDING_COMMENT = async (id) => {
@@ -283,6 +296,10 @@ export const API_GET_BUILDING_COMMENT = async (id) => {
 
 export const API_GET_MY_BUILDINGS= async (data) => {
   try {
+    
+
+  
+
     const response = await API_BASE.post(`building/my_buildings/`,data);
     return response;
   } catch (error) {
@@ -313,6 +330,19 @@ export const API_GET_CATEGORIES_COUNT_STATE= async () => {
 
 // path('remove/', remove_user, name='remove_user'),
 // path('logout/', logout_user, name='logout_user')
+
+export const API_LOGOUT_USER = async (data) => {
+  try {
+    const response = await API_BASE_USER.post('/logout/',data);
+    return response;
+  } catch (error) {
+    try{
+      return({...error?.response?.data,status: error.response.status}) ;  // check
+    }catch(err){
+      return({error:{message:'--سرویس در دسترس نیست'}}) ;
+    }  
+  }
+};
 
 export const API_REMOVE_USER = async (data) => {
   try {

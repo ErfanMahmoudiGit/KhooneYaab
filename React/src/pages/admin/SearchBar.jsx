@@ -19,13 +19,14 @@ function SearchBar() {
   const dispatch = useDispatch();
   let navigate = useNavigate()
   const { loginModalStep1  , 
-    is_verified_user,name ,
+    is_verified_user,name , selectedCityId ,
     seachedValue , owner_id} = useSelector(authState);
 
 
   const toggleSearch = () => {
     setOpen(!open);
   };
+  
 
   function handleSearch(){
     dispatch(handle_variables({ seachedValue : searchValue }))
@@ -35,7 +36,7 @@ function SearchBar() {
         
     }
 
-    let resp = API_SEARCH(searchValue ,body)
+    let resp = API_SEARCH(searchValue ,body,selectedCityId)
       resp.then((res) => {
           if (res.status === 200) {
             console.log("search",res.data);

@@ -7,7 +7,7 @@ import { authState } from "../login/Redux/authSlice";
 import { useSelector } from "react-redux";
 import { Button } from "react-bootstrap";
 import { TbArrowsSort } from "react-icons/tb";
-
+import {truncateText} from '../../utils/util'
 export default function CategoryPage() {
     const [houses, setHouses] = useState([]);
     const [displayedHouses, setDisplayedHouses] = useState([]);
@@ -128,17 +128,17 @@ export default function CategoryPage() {
     // function truncateText(text) {
     //     return text.length > 10 ? `${text.slice(0, 23)}...` : text;
     // }
-    function truncateText(text, maxLength = 23) {
-        if (text.length <= maxLength) return text;
+    // function truncateText(text, maxLength = 23) {
+    //     if (text.length <= maxLength) return text;
     
-        // Find the index of the last space within the maxLength limit
-        const indexOfLastSpace = text.lastIndexOf(' ', maxLength);
+    //     // Find the index of the last space within the maxLength limit
+    //     const indexOfLastSpace = text.lastIndexOf(' ', maxLength);
     
-        // If no space is found within the limit, just truncate at the maxLength
-        const truncateIndex = indexOfLastSpace === -1 ? maxLength : indexOfLastSpace;
+    //     // If no space is found within the limit, just truncate at the maxLength
+    //     const truncateIndex = indexOfLastSpace === -1 ? maxLength : indexOfLastSpace;
     
-        return `${text.slice(0, truncateIndex)}...`;
-    }
+    //     return `${text.slice(0, truncateIndex)}...`;
+    // }
     
     return (
         <>

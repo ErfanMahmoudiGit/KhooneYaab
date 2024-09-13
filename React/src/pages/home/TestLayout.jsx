@@ -118,8 +118,9 @@ const TestLayout = () => {
     let body = {
         
     }
+    // const res = await API_CATEGORY({ category: cat , state : selectedCityId});
 
-    let resp = API_SEARCH(searchValue ,body)
+    let resp = API_SEARCH(searchValue ,body ,selectedCityId)
       resp.then((res) => {
           if (res.status === 200) {
             console.log("search",res.data);

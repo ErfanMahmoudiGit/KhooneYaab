@@ -540,6 +540,10 @@ input[type="search"]::placeholder {
   height: 54vh; /* Adjust the height as needed */
   overflow-y: auto; /* Adds scrolling if content overflows */
 }
+.update-modal .modal-dialog .modal-content {
+  height: 70vh; /* Adjust the height as needed */
+  overflow-y: auto; /* Adds scrolling if content overflows */
+}
 .login-pill{
   /* border-radius: 30px; */
   padding: 35px 10px;
@@ -900,6 +904,12 @@ input.default-input-box.invalid::placeholder,
 .ant-switch.ant-switch-checked{
   background-color: #ac2323 !important;
 
+}
+.css-pdct74-MuiTablePagination-selectLabel{
+  margin-top: 10px !important;
+}
+.css-levciy-MuiTablePagination-displayedRows{
+  margin-top: 10px !important;
 }
 .map {
   height: 100%;

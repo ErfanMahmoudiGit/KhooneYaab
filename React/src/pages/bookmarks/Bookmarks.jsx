@@ -4,7 +4,7 @@ import { BeatLoader } from "react-spinners";
 import { FaChevronLeft, FaBookmark } from 'react-icons/fa';
 import { useNavigate } from "react-router-dom";
 import { Button} from "react-bootstrap";
-
+import {truncateText} from '../../utils/util'
 export default function Bookmarks() {
     const [detail, setDetail] = useState([]);
     const [id, setID] = useState([]);
@@ -77,9 +77,9 @@ export default function Bookmarks() {
         return formatted.replace(/\d/g, (digit) => persianDigits[digit]);
     }
 
-    function truncateText(text) {
-        return text.length > 10 ? `${text.slice(0, 23)}...` : text;
-    }
+    // function truncateText(text) {
+    //     return text.length > 10 ? `${text.slice(0, 23)}...` : text;
+    // }
 
 
     const handleUnbookmark = (houseId) => {

@@ -173,16 +173,7 @@ export default function LoginStep2() {
                             </Col>
                         </Row>
                         <Row className="d-flex justify-content-center mt-3">
-                            <Col xs={6} md={4}>
-                                {/* {!isLoading ? (
-                                    <Button type="submit" className="btn-login">
-                                        تایید 
-                                    </Button>
-                                ) : (
-                                    <div className="btn-login">
-                                        <BeatLoader size={9} color={"black"} />
-                                    </div>
-                                )} */}
+                            <Col xs={6} md={4}>   
                                  <Button type="submit" className="sendcodeBtn">
                                         {isLoading ? <BeatLoader size={9} color={"black"} /> : "تایید"} 
                                     </Button>

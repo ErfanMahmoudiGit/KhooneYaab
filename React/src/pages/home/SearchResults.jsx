@@ -7,7 +7,7 @@ import { FaChevronLeft, FaRegBookmark, FaBookmark } from 'react-icons/fa';
 import { BeatLoader } from "react-spinners";
 import { useEffect, useState } from "react";
 import { TbArrowsSort } from "react-icons/tb";
-
+import {truncateText} from '../../utils/util'
 const SearchResults = () => {
     const navigate = useNavigate();
     const [loading, setIsLoading] = useState(false);
@@ -61,9 +61,9 @@ const SearchResults = () => {
     function formatNumber(number) {
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
-    function truncateText(text) {
-        return text.length > 10 ? `${text.slice(0, 23)}...` : text;
-    }
+    // function truncateText(text) {
+    //     return text.length > 10 ? `${text.slice(0, 23)}...` : text;
+    // }
 
     const handleSortChange = (selectedSort) => {
         setSortOrder(selectedSort);

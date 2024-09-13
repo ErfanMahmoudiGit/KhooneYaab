@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import HomeMap from "./HomeMap";
 import { BeatLoader } from "react-spinners";
 import { FaChevronLeft, FaRegBookmark, FaBookmark } from 'react-icons/fa';
-
+import {truncateText} from '../../utils/util'
 export default function Home() {
     const [houses, setHouses] = useState([]);
     const [displayedHouses, setDisplayedHouses] = useState([]);
@@ -107,9 +107,9 @@ export default function Home() {
         return formatted.replace(/\d/g, (digit) => persianDigits[digit]);
     }
    
-    function truncateText(text) {
-        return text.length > 10 ? `${text.slice(0, 30)}...` : text;
-    }
+    // function truncateText(text) {
+    //     return text.length > 10 ? `${text.slice(0, 30)}...` : text;
+    // }
     
     return (
         <>
