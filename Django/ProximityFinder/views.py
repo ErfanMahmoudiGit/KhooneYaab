@@ -12,12 +12,14 @@ from .models import Building
 from django.db.models import Q
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from extentions import utils
 from django.db.models import Count  # Import Count for aggregation
 from django.utils import timezone
 import requests
+from datetime import datetime
+from django.utils import timezone
+import ast # For cosine Sim.
 
 STATE_DATA = [
     {"name": "آذربايجان شرقی", "center": "تبریز", "latitude": "38.50", "longitude": "46.180", "id": 1},
@@ -599,8 +601,6 @@ def genetic_algorithm(buildings, meterage, price, build_date, rooms, facilities,
     
     return top_buildings
 
-import ast
-
 def cosine_similarity_algorithm(buildings, meterage, price, build_date, rooms, facilities, location_1, location_2, priorities):
     """
     Finds the top N buildings that best match the user's preferences using cosine similarity.
@@ -737,13 +737,7 @@ def get_state_by_categories(request):
     # Return the result as a JSON response
     return JsonResponse(result, safe=False)
 
-from datetime import datetime
-from django.utils import timezone
-from django.http import JsonResponse
-import requests
-import json
-from .models import Building, Comment
-from django.views.decorators.http import require_POST
+
 
 @require_POST
 def add_comment(request):
