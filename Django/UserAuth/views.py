@@ -263,11 +263,14 @@ def remove_user(request):
         return JsonResponse({"error": f"An error occurred: {e}"}, status=500)
 
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
 def logout_user(request):
     try:
+        # Retrieve the refresh token from the request
         refresh_token = request.data.get("refresh")
+        if not refresh_token:
+            return JsonResponse({"error": "Refresh token is required"}, status=400)
+
+        # Blacklist the refresh token
         token = RefreshToken(refresh_token)
         token.blacklist()
 
