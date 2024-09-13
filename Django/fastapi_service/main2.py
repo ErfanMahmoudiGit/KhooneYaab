@@ -1,34 +1,45 @@
+from fastapi import FastAPI
+from pydantic import BaseModel
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
-from transformers import MT5ForConditionalGeneration, MT5Tokenizer
-import numpy as np
 
-tokenizer = MT5Tokenizer.from_pretrained("persiannlp/mt5-base-parsinlu-sentiment-analysis")
-model = MT5ForConditionalGeneration.from_pretrained("persiannlp/mt5-base-parsinlu-sentiment-analysis")
+app = FastAPI()
 
+# Load pre-trained BERT model and tokenizer for Persian
+tokenizer = AutoTokenizer.from_pretrained("HooshvareLab/bert-fa-base-uncased-sentiment-snappfood")
+model = AutoModelForSequenceClassification.from_pretrained("HooshvareLab/bert-fa-base-uncased-sentiment-snappfood")
 
-def model_predict(text_a, text_b):
-    features = tokenizer( [(text_a, text_b)], padding="max_length", truncation=True, return_tensors='pt')
-    output = model(**features)
-    logits = output[0]
-    probs = torch.nn.functional.softmax(logits, dim=1).tolist()
-    idx = np.argmax(np.array(probs))
-    print(labels[idx], probs) # type: ignore
+class CommentRequest(BaseModel):
+    comment: str
 
+class SentimentResponse(BaseModel):
+    sentiment: str
 
-def run_model(context, query, **generator_args):
-    input_ids = tokenizer.encode(context + "<sep>" + query, return_tensors="pt")
-    res = model.generate(input_ids, **generator_args)
-    output = tokenizer.batch_decode(res, skip_special_tokens=True)
-    return output
+# Sentiment analysis using BERT model
+def bert_sentiment_analysis(text):
+    # Tokenize input text
+    inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True, max_length=128)
 
+    # Perform inference
+    with torch.no_grad():
+        outputs = model(**inputs)
+    
+    # Convert logits to probabilities
+    probabilities = torch.nn.functional.softmax(outputs.logits, dim=-1)
 
-run_model(
-  "خانه خیلی خوبی است و مناسب مشکل پسندان",
- "نظر شما در مورد خانه چیست؟"
-)
+    # Get the predicted label (0: negative, 1: neutral, 2: positive)
+    sentiment = torch.argmax(probabilities, dim=-1).item()
 
+    # Map the result to sentiment labels
+    if sentiment == 2:
+        return "good"
+    elif sentiment == 0:
+        return "bad"
+    else:
+        return "neutral"
 
-run_model(
-  "خانه  خوبی نیست و قدیمی بود",
- "نظر شما در مورد خانه چیست؟"
-)
+@app.post("/analyze-sentiment", response_model=SentimentResponse)
+async def analyze_sentiment(request: CommentRequest):
+    # Use the BERT model to analyze the sentiment
+    sentiment = bert_sentiment_analysis(request.comment)
+    return SentimentResponse(sentiment=sentiment)
