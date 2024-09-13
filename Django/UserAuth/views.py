@@ -266,7 +266,8 @@ def remove_user(request):
 def logout_user(request):
     try:
         # Retrieve the refresh token from the request
-        refresh_token = request.data.get("refresh")
+        data = json.loads(request.body)
+        refresh_token = data.get("refresh")
         if not refresh_token:
             return JsonResponse({"error": "Refresh token is required"}, status=400)
 
