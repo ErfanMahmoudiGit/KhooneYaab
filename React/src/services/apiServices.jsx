@@ -1,4 +1,7 @@
 import axios from 'axios';
+// import Cookies from 'js-cookie';
+import cookieService from  '../pages/cookieService';
+
 
 const API_BASE = axios.create({
     baseURL: 'http://localhost:8000/ProximityFinder/api/',
@@ -14,18 +17,61 @@ const API_BASE_USER = axios.create({
     },
   });
 
+//   function getCookie(name) {
+//     const value = `; ${document.cookie}`;
+//     const parts = value.split(`; ${name}=`);
+//     if (parts.length === 2) return parts.pop().split(';').shift();
+// }
+// const token = getCookie('TOKEN');
+
 export const API_createHouse = async (data) => {
   try {
-    const response = await API_BASE.post('building/create_house/',data);
+    // Get the token before making the request
+    // const token = Cookies.get('TOKEN');
+    const token = cookieService.getCookie('TOKEN');
+    // setCookieValue(value);
+    console.log(token);
+    // If token is not available, handle the error
+    if (!token) {
+      throw new Error('Authorization token is missing.');
+    }
+
+    // Make the API request with the token in the Authorization header
+    const response = await API_BASE.post('building/create_house/', data, {
+      headers: {
+        'Authorization': `Bearer ${token}`, // Attach the token here
+      },
+      withCredentials: true, // Important if you are relying on cookies elsewhere
+    });
+
     return response;
   } catch (error) {
-    try{
-      return({...error?.response?.data,status: error.response.status}) ;  // check
-    }catch(err){
-      return({error:{message:'--سرویس در دسترس نیست'}}) ;
-    }  
+    // Error handling
+    try {
+      return { ...error?.response?.data, status: error.response.status };
+    } catch (err) {
+      return { error: { message: '--سرویس در دسترس نیست' } }; // Fallback message if no response
+    }
   }
 };
+
+// export const API_createHouse = async (data) => {
+//   try {
+//     const response = await API_BASE.post('building/create_house/',data,{
+//       headers: {
+//         'Authorization': `Bearer ${token}`,
+//     },
+//     withCredentials: true // Important for cross-origin requests
+//     });
+//     return response;
+//   } catch (error) {
+//     try{
+//       return({...error?.response?.data,status: error.response.status}) ;  // check
+//     }catch(err){
+//       return({error:{message:'--سرویس در دسترس نیست'}}) ;
+//     }  
+//   }
+// };
 export const API_GETHOUSE = async () => {
   try {
     const response = await API_BASE.get('building/buildings/');
@@ -198,6 +244,18 @@ export const API_DELETE_HOUSE = async (id) => {
 export const API_ADD_COMMENT = async (data) => {
   try {
     const response = await API_BASE.post(`building/comments/add-comment/`,data);
+    return response;
+  } catch (error) {
+    try{
+      return({...error?.response?.data,status: error.response.status}) ;  // check
+    }catch(err){
+      return({error:{message:'--سرویس در دسترس نیست'}}) ;
+    }  
+  }
+};
+export const API_TOGGLE_STATUS_BUILDING = async (id) => {
+  try {
+    const response = await API_BASE.post(`building/toggle-prioritized/${id}/`);
     return response;
   } catch (error) {
     try{

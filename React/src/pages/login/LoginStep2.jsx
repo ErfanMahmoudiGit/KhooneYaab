@@ -11,6 +11,8 @@ import {API_CHECKOTP} from '../../services/apiServices'
 import LoginStep3 from "./LoginStep3";
 import {  toast } from 'react-toastify';
 import Timer from "./Timer";
+// import Cookies from 'js-cookie';
+import cookieService from '../cookieService';
 
 // Validation schema
 const validationSchema = yup.object().shape({
@@ -24,6 +26,8 @@ export default function LoginStep2() {
     const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false);
     const [otp, setOtp] = useState("");
+    const [cookieValue, setCookieValue] = useState('');
+
 
     console.log("loginModalStep3",loginModalStep3);
     
@@ -50,27 +54,14 @@ export default function LoginStep2() {
                         let resp = API_CHECKOTP(data)
                         resp.then((res) => {
                             console.log("res login 2: ",res);
-                            // is_verified_user
-                            // phoneNumber
-                            // name
-                            // email
-                            // login_expires_in
-                            // user_id
                             if (res.status === 200) {
-                                console.log(res.data.data.message);
-                                console.log(res.data.data.user.is_verified_user);
-                              
-                                console.log(res.data.data.tokens);
                                 console.log(res.data.data.tokens.access);
-                                localStorage.setItem('TOKEN', res.data.data.tokens.access);
-
-
-                                if(res.data.data.user.is_verified_user == true){
-                                    console.log("verified");
-                                    // console.log(res.data.data.tokens);
-                                    // console.log(res.data.data.tokens.access);
-                                    // localStorage.setItem('TOKEN', res.data.data.tokens.access);
-                                    
+                                // localStorage.setItem('TOKEN', res.data.data.tokens.access);
+                                cookieService.setCookie('TOKEN', res.data.data.tokens.access, { expires: 7 }); // Expires in 7 days
+                                const token = cookieService.getCookie('TOKEN');
+                                console.log("tok",token);
+                                
+                                if(res.data.data.user.is_verified_user == true){                                    
                                     dispatch(handle_variables({
                                         is_verified_user : res.data.data.user.is_verified_user,
                                         loginModalStep2 : false,

@@ -19,6 +19,7 @@ import SearchLayout from './pages/search/SearchLayout';
 import ReportCommentDetail from './chart/ReportCommentDetail';
 import TableComponent from './chart/TableComponent';
 import AdminViews from './pages/admin/AdminViews';
+import DefaultDashboard from './pages/admin/DefaultDashboard';
 // import ReportsTable from './pages/admin/ReportsTable';
 
 function App() {
@@ -33,7 +34,7 @@ function App() {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Navigate to="/admin/dashboard" replace />} />
           {/* <Route path="dashboard" element={<ReportCommentDetail />} /> */}
-          <Route path="dashboard" element={<TableComponent />} />
+          <Route path="dashboard" element={<DefaultDashboard />} />
           <Route path="comments" element={<TableComponent />} />
           <Route path="comments/:id" element={<ReportCommentDetail />} />
           <Route path="cities" element={<ReportHousesTable />} />

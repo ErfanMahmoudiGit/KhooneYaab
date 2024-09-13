@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import SearchBar from '../admin/SearchBar';
@@ -25,6 +25,7 @@ import { FaBookmark } from 'react-icons/fa';
 import { CiLogout } from "react-icons/ci";
 import { FaLocationDot } from "react-icons/fa6";
 import CityModal from '../../ui/CityModal';
+import cookieService from '../cookieService';
 
 function getItem(label, key, icon, children, link) {
     return {
@@ -34,6 +35,7 @@ function getItem(label, key, icon, children, link) {
       label: link ? <NavLink to={link}>{label}</NavLink> : label,
     };
 }
+
 
 const items = [
     getItem('دسته بندی ها', 'categories', <BiSolidCategoryAlt />, [
@@ -73,7 +75,22 @@ const TestLayout = () => {
 
   const [collapsed, setCollapsed] = useState(false);
   const [cityModal, setCityModal] = useState(false);
+  const [userObject, setUserObject] = useState({});
   const[searchValue,setSearchValue] = useState("")
+  const token = cookieService.getCookie('TOKEN');
+  useEffect(()=>{
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      // Parse the JSON string into an object
+      const parsedUserData = JSON.parse(userData);
+      setUserObject(parsedUserData)
+    } else {
+      console.log('No user data found in localStorage');
+    }
+  },[])
+  
+  
+
   let navigate = useNavigate()
   const { loginModalStep1  , 
     is_verified_user,name ,selectedCityId  , selectedCity,
@@ -140,13 +157,13 @@ const TestLayout = () => {
               <SearchBar />
           </div>
 
-          <div className='d-flex gap-2 align-items-center '>
+          <div className='d-flex gap-4 align-items-center '>
                                   
                   <span onClick={()=>setCityModal(true)} style={{cursor:"pointer"}} ><FaLocationDot className='ps-1' />{selectedCity ? selectedCity: '31 شهر'}</span>
               {/* <NewDropdown  /> */}
-              {is_verified_user == true ? (
+              {token ? (
               <span className='d-flex align-items-center gap-2'>
-                  {name}
+                  {userObject?.name}
                   <CiLogout size={24} onClick={()=>{
                       let data = {
                           user_id :  owner_id
