@@ -4,7 +4,7 @@ import { AiTwotoneEdit } from "react-icons/ai";
 import { Button, Col, Modal, Row } from 'react-bootstrap';
 import { IoEyeSharp } from "react-icons/io5";
 import { PiToggleRight } from "react-icons/pi";
-import { API_GETHOUSE , API_DELETE_HOUSE} from '../services/apiServices';
+import { API_GETHOUSE , API_DELETE_HOUSE, API_TOGGLE_STATUS_BUILDING} from '../services/apiServices';
 import { MdDelete } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import rtlPlugin from 'stylis-plugin-rtl';
@@ -14,6 +14,7 @@ import createCache from '@emotion/cache';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { BeatLoader } from 'react-spinners';
 import { toast } from 'react-toastify';
+import { Switch } from 'antd';
 
 export default function TableComponent() {
   const [searchInput, setSearchInput] = useState('');
@@ -25,11 +26,15 @@ export default function TableComponent() {
   const [loading, setIsLoading] = useState(true);
   const [deleteModal, setDeleteModal] = useState(false);
     console.log(deleteModal);
+    const [selectedHouseIdToggle, setSelectedHouseIdToggle] = useState(null);
+
+    console.log(houses);
     
     const navigate = useNavigate()
     const rows = houses.map((item) => ({
         id: item.id,
         title: item.title,
+        prioritized : item.prioritized
     }));
     const [filteredRows, setFilteredRows] = useState(rows);
 
@@ -43,6 +48,7 @@ export default function TableComponent() {
                 setFilteredRows(res.data.map((item) => ({
                     id: item.id,
                     title: item.title,
+                    prioritized : item.prioritized
                 })));
             } else {
                 console.error("Error fetching houses");
@@ -139,6 +145,36 @@ export default function TableComponent() {
         key: 'muirtl',
         stylisPlugins: [prefixer, rtlPlugin],
       });
+
+      const handleToggle = async (id,prioritized) => {
+        console.log('Switch toggled, isLadder:', id);
+       console.log(prioritized);
+       
+          const res = await API_TOGGLE_STATUS_BUILDING(id);
+          if (res.status === 200) {
+          console.log(res.data.prioritized);
+          if(res.data.prioritized== 1){
+            toast.success("این آگهی با موفقیت نردبان شد")
+
+          }else{
+            toast.success("این آگهی با موفقیت غیر نردبان شد")
+
+          }
+          
+            //  res.prioritized
+            
+            } else {
+  
+              console.error("Error fetching houses");
+          }
+      }
+      // catch (error) {
+  
+      // } finally {
+      // }
+      
+       
+    
   
   return (
       <>
@@ -200,8 +236,15 @@ export default function TableComponent() {
                     }
                       }/>
                       <AiTwotoneEdit />
-                      <PiToggleRight />
+                      {/* <PiToggleRight /> */}
+                     <Switch size="small" defaultChecked={row?.prioritized} onChange={()=>{
+                      handleToggle(row?.id,row?.prioritized);
+                      console.log(row);
                       
+                      // setSelectedHouseIdToggle(row.id)
+                    }}
+                     />
+
                   </TableCell>
                 </TableRow>
               ))}

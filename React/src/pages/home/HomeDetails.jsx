@@ -71,15 +71,28 @@ export default function HomeDetails() {
 
         fetchContactInfo();
     }, [showContactModal, houseId]);
+    const [userObject, setUserObject] = useState({});
+
+    useEffect(()=>{
+        const userData = localStorage.getItem('userData');
+        if (userData) {
+          // Parse the JSON string into an object
+          const parsedUserData = JSON.parse(userData);
+          setUserObject(parsedUserData)
+        } else {
+          console.log('No user data found in localStorage');
+        }
+      },[])
+      
 
     const addComment = async () => {
         // console.log(e.target.value);
         // e.PreventDefault();
         let data = {
-            "writer_id" : 1,
-            "writer_name" : "fatemeh",
+            "writer_id" : parseInt(userObject.owner_id),
+            "writer_name" : userObject.name,
             "description": comment,
-            "building_id" : 11
+            "building_id" : houseId
         }
         console.log(data);
         

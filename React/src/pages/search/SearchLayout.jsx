@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import SearchBar from '../admin/SearchBar';
@@ -25,6 +25,7 @@ import { FaBookmark } from 'react-icons/fa';
 import { CiLogout } from "react-icons/ci";
 import { FaLocationDot } from "react-icons/fa6";
 import NewFilters from '../home/NewFilters';
+import cookieService from '../cookieService';
 
 function getItem(label, key, icon, children, link) {
     return {
@@ -57,7 +58,20 @@ const SearchLayout = () => {
   const { loginModalStep1  , 
     is_verified_user,name ,
     seachedValue , owner_id} = useSelector(authState);
-  console.log("name",name);
+    const [userObject, setUserObject] = useState({});
+
+  // console.log("name",name);
+  const token = cookieService.getCookie('TOKEN');
+  useEffect(()=>{
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      // Parse the JSON string into an object
+      const parsedUserData = JSON.parse(userData);
+      setUserObject(parsedUserData)
+    } else {
+      console.log('No user data found in localStorage');
+    }
+  },[])
   const dispatch = useDispatch();
   function handleSearch(filters){
     dispatch(handle_variables({ seachedValue : searchValue }))
@@ -104,13 +118,13 @@ const SearchLayout = () => {
           <SearchBar />
       </div>
 
-      <div className='d-flex gap-2 align-items-center '>
+      <div className='d-flex gap-4 align-items-center '>
                               
               <span><FaLocationDot className='ps-1' />31 شهر </span>
           {/* <NewDropdown  /> */}
-          {is_verified_user == true ? (
+          {token ? (
           <span className='d-flex align-items-center gap-2'>
-              {name}
+              {userObject.name}
               <CiLogout size={24} onClick={()=>{
                   let data = {
                       user_id :  owner_id

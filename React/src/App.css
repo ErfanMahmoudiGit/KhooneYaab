@@ -230,6 +230,12 @@ body {
   background-color: #ac2323 !important;
 
 }
+.custom-modal-wider{
+  max-width: calc(800px + 20px); /* Increase by 20px */
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center;
+}
 .filterBtn{
   background-color: #ac2323;
   border: #ac2323;
@@ -526,6 +532,8 @@ input[type="search"]::placeholder {
 }
 .custom-modal-body2 {
   height: 52vh; /* Adjust the height as needed */
+  /* padding-left: 10px;
+  padding-right: 10px; */
   overflow-y: auto; /* Adds scrolling if content overflows */
 }
 .custom-modal-body3 {
@@ -888,6 +896,10 @@ input.default-input-box.invalid::placeholder,
   box-shadow: 0 0 10px var(--primary-600);
   color: #fff;
   z-index: 1000;
+}
+.ant-switch.ant-switch-checked{
+  background-color: #ac2323 !important;
+
 }
 .map {
   height: 100%;

@@ -55,8 +55,8 @@ const WidgetsDropdown = ({view,badSentimentCount,goodSentimentCount,neutralSenti
           value={
             <div className='d-flex justify-content-center align-items-center gap-4 p-4'>
               <div className='me-3 pt-2 pb-3'>تعداد کل بازدیدها</div>
-              <div className='pt-2 pb-3'>11</div>
-              {/* <div className='pt-2 pb-3'>{view}</div> */}
+              {/* <div className='pt-2 pb-3'>11</div> */}
+              <div className='pt-2 pb-3'>{view}</div>
             </div>
           }
         />
