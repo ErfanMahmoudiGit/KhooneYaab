@@ -108,7 +108,8 @@ def create_house(request):
             status = status,
             direction = direction,
             city = city,
-            category = category
+            category = category,
+            times_viewed = 0
         )
 
         # Save the building object to the database
@@ -520,8 +521,8 @@ def recommend_buildings(request):
 
             if buildings:
                 # Find the top 3 recommended buildings using a genetic algorithm
-                #recommended_buildings = genetic_algorithm(buildings, meterage, price, build_date, rooms, facilities, location_1, location_2, priorities)
-                recommended_buildings = cosine_similarity_algorithm(buildings, meterage, price, build_date, rooms, facilities, location_1, location_2, priorities)
+                recommended_buildings = genetic_algorithm(buildings, meterage, price, build_date, rooms, facilities, location_1, location_2, priorities)
+                #recommended_buildings = cosine_similarity_algorithm(buildings, meterage, price, build_date, rooms, facilities, location_1, location_2, priorities)
 
                 return JsonResponse(recommended_buildings, safe=False)
             else:
