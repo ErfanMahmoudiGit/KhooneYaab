@@ -299,7 +299,7 @@ def search_buildings(request):
     min_meterage = request.GET.get('min_meterage')
     max_meterage = request.GET.get('max_meterage')
     room_count = request.GET.get('room_count')
-    state_id = request.GET.get('state_id')
+    state_id = int(request.GET.get('state_id'))
 
     # Initialize queryset
     buildings = Building.objects.all()
