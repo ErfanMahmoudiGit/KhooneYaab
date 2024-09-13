@@ -10,7 +10,7 @@ from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_date
 from .models import Building
 from django.db.models import Q
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
@@ -53,8 +53,6 @@ STATE_DATA = [
     {"name": "يزد", "center": "يزد", "latitude": "31.530", "longitude": "54.210", "id": 31},
 ]
 
-# @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
 def create_house(request):
     try:
         data = json.loads(request.body)
@@ -108,7 +106,8 @@ def create_house(request):
             status = status,
             direction = direction,
             city = city,
-            category = category
+            category = category,
+            times_viewed = 0
         )
 
         # Save the building object to the database
@@ -249,7 +248,7 @@ def get_buildings(request):
 
     return JsonResponse(building_list, safe=False)
 
-@api_view(['POST'])
+@require_POST
 @permission_classes([IsAuthenticated])
 def get_buildings_by_owner_id(request):
     data = json.loads(request.body)
@@ -299,7 +298,7 @@ def search_buildings(request):
     min_meterage = request.GET.get('min_meterage')
     max_meterage = request.GET.get('max_meterage')
     room_count = request.GET.get('room_count')
-    state_id = request.GET.get('state_id')
+    state_id = int(request.GET.get('state_id'))
 
     # Initialize queryset
     buildings = Building.objects.all()
@@ -520,8 +519,8 @@ def recommend_buildings(request):
 
             if buildings:
                 # Find the top 3 recommended buildings using a genetic algorithm
-                #recommended_buildings = genetic_algorithm(buildings, meterage, price, build_date, rooms, facilities, location_1, location_2, priorities)
-                recommended_buildings = cosine_similarity_algorithm(buildings, meterage, price, build_date, rooms, facilities, location_1, location_2, priorities)
+                recommended_buildings = genetic_algorithm(buildings, meterage, price, build_date, rooms, facilities, location_1, location_2, priorities)
+                #recommended_buildings = cosine_similarity_algorithm(buildings, meterage, price, build_date, rooms, facilities, location_1, location_2, priorities)
 
                 return JsonResponse(recommended_buildings, safe=False)
             else:
