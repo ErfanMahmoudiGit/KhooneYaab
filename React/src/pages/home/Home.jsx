@@ -64,11 +64,11 @@ export default function Home() {
         setTimeout(() => { // Simulate loading delay
             setCurrentIndex(prevIndex => {
                 const nextIndex = prevIndex + 14; // Increment current index by 14
-                console.log("Current Index:", prevIndex, "Next Index:", nextIndex);
+                // console.log("Current Index:", prevIndex, "Next Index:", nextIndex);
     
                 // Get houses from the current index to the next index
                 const newHouses = houses.slice(-nextIndex, -prevIndex);
-                console.log("New Houses Loaded:", newHouses);
+                // console.log("New Houses Loaded:", newHouses);
     
                 setDisplayedHouses(prevHouses => [...prevHouses, ...newHouses]);
                 return nextIndex; // Update the current index to the new position

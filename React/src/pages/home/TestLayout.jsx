@@ -92,7 +92,6 @@ const TestLayout = () => {
       cookieService.removeCookie('REFRESH');
       cookieService.removeCookie('TOKEN');
       cookieService.removeCookie('NAME');
-      cookieService.removeCookie('OWNER_ID');
       localStorage.removeItem("TOKEN")
       localStorage.removeItem("userData")
       setName(null); // Reset name after logout

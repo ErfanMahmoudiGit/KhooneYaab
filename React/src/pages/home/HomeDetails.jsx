@@ -12,7 +12,6 @@ import { FaSchool, FaHospital , FaTree } from 'react-icons/fa';
 import { FaChevronLeft } from 'react-icons/fa';
 import { BeatLoader } from "react-spinners";
 import { toast } from "react-toastify";
-import cookieService from "../cookieService";
 
 export default function HomeDetails() { 
     const params =useParams()
@@ -90,15 +89,15 @@ export default function HomeDetails() {
         // console.log(e.target.value);
         // e.PreventDefault();
         let data = {
-            "writer_id" : cookieService.getCookie('OWNER_ID'),
-            "writer_name" : cookieService.getCookie('NAME') ,
+            "writer_id" : parseInt(userObject.owner_id),
+            "writer_name" : userObject.name,
             "description": comment,
             "building_id" : houseId
         }
         console.log(data);
         
         let res = await API_ADD_COMMENT(data);  
-        if (res.status === 201) {
+        if (res.status === 200) {
             toast.success("نظر شما با موفقیت ثبت گردید")
             setComment('')
         }
@@ -380,7 +379,6 @@ export default function HomeDetails() {
                 <Form.Label>نظرات تنها برای شما قابل دیدن است و پس از حذف آگهی،حذف خواهد شد</Form.Label>
                     <textarea rows={6}  placeholder={"نظرات شما..."} className="form-control login-input" 
                                  name={"comment"}  
-                                 value={comment} // Bind the value of the textarea to the comment state
                                  onKeyDown={(e) => {
                                     if (e.key === 'Enter') {
                                         e.preventDefault();
@@ -393,6 +391,21 @@ export default function HomeDetails() {
            
             </TabPanel>
         </Box>
+        {/* <hr className="filter-color mt-3"/> */}
+
+            {/* <Col sm={6}>
+                <Form.Label>یادداشت تنها برای شما قابل دیدن است و پس از حذف آگهی،حذف خواهد شد</Form.Label>
+                    <textarea rows={4}  placeholder={"یادداشت شما..."} className="form-control login-input" 
+                                 name={"comment"}  onChange={(e) => {
+                            // setFieldValue("description", e.target.value);
+                        }}>
+
+                        </textarea>
+            </Col>
+            <Col sm={6}>
+                <Form.Label>بازخورد شما درباره این آگهی چیست؟</Form.Label>
+                    
+            </Col> */}
         
                 </Row>
             </Container>
