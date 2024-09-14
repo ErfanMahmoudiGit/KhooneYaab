@@ -41,7 +41,6 @@ def run_model(context, query, **generator_args):
 
 @app.post("/analyze-sentiment", response_model=SentimentResponse)
 async def analyze_sentiment(request: CommentRequest):
-    print(request)
     sentiment = run_model(str(request.comment), "نظر شما در مورد خانه چیست؟")[0]
     if sentiment == 'positive' or sentiment == 'very positive' :
         return SentimentResponse(sentiment="good")
