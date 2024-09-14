@@ -116,7 +116,7 @@ useEffect(()=>{
 
           time:getCurrentDate(),
           price_per_meter : values.price / values.meterage ,
-          owner_id : owner_id,
+          owner_id : cookieService.getCookie('OWNER_ID'),
           times_viewed : 0
 
         } 
