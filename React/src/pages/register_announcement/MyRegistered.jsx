@@ -103,6 +103,7 @@ export default function MyRegistered(){
           if (res.status === 200) {
             toast.success("این آگهی با موفقیت حذف شد")
             setDeleteModal(false)  
+            setMyRegisteredHouse((prevHouses) => prevHouses.filter((house) => house.id !== id));
             // setPage(0)
           } else {
             console.error("Error fetching houses");
