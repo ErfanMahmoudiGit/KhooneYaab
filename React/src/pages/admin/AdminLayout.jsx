@@ -1,16 +1,12 @@
-import React from 'react';
 import { Layout, Menu } from 'antd';
 const { Header, Content, Sider } = Layout;
 import{ useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import LayersIcon from '@mui/icons-material/Layers';
-import DescriptionIcon from '@mui/icons-material/Description';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import { NavLink } from "react-router-dom";
 import { FaRegCommentDots } from "react-icons/fa6";
 import { FaCity } from "react-icons/fa";
-import { IoMdEye } from "react-icons/io";
 
 function getItem(label, key, icon, children, link) {
     return {
@@ -26,9 +22,7 @@ const items = [
     getItem('گزارشات', 'reports', <BarChartIcon />, [
       getItem('استان ها', 'cities', <FaCity  className='me-4'/>, null, '/admin/cities'),
       getItem('نظرات', 'comments', <FaRegCommentDots  className='me-4'/>, null, '/admin/comments'),
-    ]),
-    // getItem('بازدیدها', 'views', <IoMdEye />, null, '/admin/views'),
-   
+    ]),   
   ];
 
 const AdminLayout = () => {
@@ -43,7 +37,6 @@ const AdminLayout = () => {
               alignItems: 'center',
               justifyContent:'space-between',
               top: 0,
-            //   zIndex:10001,
               color:'#001529',
               backgroundColor: '#f8f9fa', 
               }}
@@ -77,15 +70,11 @@ const AdminLayout = () => {
             style={{
               padding: '0',
               margin: '0',
-
-            //   padding: '0 24px 24px',
             }}
           >
               <Content 
               style={{
                   margin: '0 16px',
-                //   margin: '0',
-                //   backgroundColor:"red"
               }}
           >
             

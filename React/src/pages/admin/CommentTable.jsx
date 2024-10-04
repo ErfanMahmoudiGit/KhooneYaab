@@ -175,7 +175,6 @@ export default function CommentTable() {
                   : filteredRows
                 ).map((row,index) => (
                   <TableRow key={row.id} style={{ backgroundColor: index % 2 === 0 ? '#f0f0f0' : 'white' , cursor:"pointer"}}>
-                    {/* <TableCell align="right">{row.id}</TableCell> */}
                     <TableCell align="left">{row.city}</TableCell>
                     <TableCell align="left">{row.category}</TableCell>
                     <TableCell align="left">{row.count}</TableCell> 

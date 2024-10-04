@@ -86,8 +86,6 @@ export default function HomeDetails() {
       
 
     const addComment = async () => {
-        // console.log(e.target.value);
-        // e.PreventDefault();
         let data = {
             "writer_id" : parseInt(userObject.owner_id),
             "writer_name" : userObject.name,
@@ -142,9 +140,6 @@ export default function HomeDetails() {
                         <span>{detail.city} <FaChevronLeft /> {detail.category} <FaChevronLeft /> {detail.title}</span>
                         <Button className="backprimaryButton" onClick={()=> navigate('/')}>بازگشت به صفحه اصلی</Button>
                     </div>
-                    {/* <Row className="mb-4">  
-                        <span>{detail.city} <FaChevronLeft /> {detail.category} <FaChevronLeft /> {detail.title}</span>
-                    </Row> */}
                     <Row className=" d-flex justiy-content-between">
                         <Col xs={12} md={6} className="d-flex flex-column  mb-2">
                             <h2>{detail.title}</h2>
@@ -220,11 +215,9 @@ export default function HomeDetails() {
                         <Col sm={12} className="d-flex flex-column align-items-center mb-2 ">
                             <img
                                 src={detail?.image ? detail?.image : '/1.png'}
-                                // style={{width:"500px", height:"400px"}}          
                                 className="rounded custom-size"
                                 alt={detail.title}
                             />
-                            {/* <img className="rounded" src={detail.image} alt="" style={{width:"500px", height:"400px"}} /> */}
                         </Col>
                         <Row className="d-flex justify-content-around gap-2">
     
@@ -391,21 +384,6 @@ export default function HomeDetails() {
            
             </TabPanel>
         </Box>
-        {/* <hr className="filter-color mt-3"/> */}
-
-            {/* <Col sm={6}>
-                <Form.Label>یادداشت تنها برای شما قابل دیدن است و پس از حذف آگهی،حذف خواهد شد</Form.Label>
-                    <textarea rows={4}  placeholder={"یادداشت شما..."} className="form-control login-input" 
-                                 name={"comment"}  onChange={(e) => {
-                            // setFieldValue("description", e.target.value);
-                        }}>
-
-                        </textarea>
-            </Col>
-            <Col sm={6}>
-                <Form.Label>بازخورد شما درباره این آگهی چیست؟</Form.Label>
-                    
-            </Col> */}
         
                 </Row>
             </Container>

@@ -46,16 +46,9 @@ const items = [
   ];
 
 const SearchLayout = () => {
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
-
   const [collapsed, setCollapsed] = useState(false);
   const[searchValue,setSearchValue] = useState("")
   let navigate = useNavigate()
-  // const { loginModalStep1  , 
-  //   is_verified_user,name ,selectedCityId  , selectedCity,
-  //   seachedValue , owner_id} = useSelector(authState);
 
   const { loginModalStep1  , 
     is_verified_user ,selectedCityId  , selectedCity,
@@ -83,18 +76,10 @@ const SearchLayout = () => {
     const NAME = cookieService.getCookie('NAME');
     setName(NAME)
   },[])
-  // useEffect(()=>{
-  //   console.log("zzz",cookieService.getCookie('CITY'));
-
-  // },[selectedCityId])
+  
   const dispatch = useDispatch();
   function handleSearch(filters){
-    dispatch(handle_variables({ seachedValue : searchValue }))
-
-    console.log(filters);
-    
-    // console.log("zzz",cookieService.getCookie('CITY'));
-    
+    dispatch(handle_variables({ seachedValue : searchValue }))        
 
     let resp = API_SEARCH(searchValue , filters , cookieService.getCookie('CITY'))
       resp.then((res) => {        
@@ -137,9 +122,6 @@ const SearchLayout = () => {
 
       <div className='d-flex gap-4 align-items-center '>
       <span onClick={()=>setCityModal(true)} style={{cursor:"pointer"}} ><FaLocationDot className='ps-1' />{selectedCity ? selectedCity: '31 شهر'}</span>
-
-              {/* <span><FaLocationDot className='ps-1' />31 شهر </span> */}
-          {/* <NewDropdown  /> */}
           {token ? (
           <span className='d-flex align-items-center gap-2'>
               {cookieService.getCookie('NAME')}
@@ -241,18 +223,7 @@ const SearchLayout = () => {
       >
           <Outlet /> {/* This will render child routes */}
       </Content>
-        
-        {/* <Content
-          style={{
-            padding: 24,
-            margin: 0,
-            minHeight: 280,
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
-          }}
-        >
-          Content
-        </Content> */}
+      
       </Layout>
     </Layout>
   </Layout>
@@ -260,10 +231,6 @@ const SearchLayout = () => {
         <Modal
         className={"Auth-modal"}
         show={cityModal}
-        // onHide={() =>
-        //   dispatch(handle_variables({ loginModalStep1: false }))
-        // }
-        // size={"lg"}
         centered
     >
         <Modal.Body className="custom-modal-body1" style={{height:"80vh"}}>

@@ -10,7 +10,6 @@ import * as Yup from "yup";
 import { useEffect, useRef, useState } from "react";
 import { API_RECOMMENDER} from "../../services/apiServices";
 import {  toast } from 'react-toastify';
-import { BeatLoader } from "react-spinners";
 import useGeoLocation from '../../hooks/useGeoLocation';
 import RecommenderMap from '../recommender/RecommenderMap';
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -170,20 +169,6 @@ export default function Recommender(){
         return null;
         
       }
-
-    //   const handleUseMyLocationClick = () => {
-    //     setIsButtonClicked(true); // Set button clicked state to true
-    //     getPosition(); // Fetch the location
-    //     setTimeout(() => setIsButtonClicked(false), 2000); // Reset the button state after 1 second
-    // };     
-    
-    //   const handleMouseEnter = () => {
-    //     setIsHoveringButton(true); // Step 3: Set hover state to true
-    //   };
-    
-    //   const handleMouseLeave = () => {
-    //     setIsHoveringButton(false); // Step 3: Set hover state to false
-    //   };
       const addMarker = (newMarker, setFieldValue) => {
         console.log(newMarker);
         console.log(isButtonClicked);
@@ -414,14 +399,6 @@ export default function Recommender(){
                         <Col sm={7}>
                             <div className="appLayout" style={{height:"620px"}}>
                                 <div className="mapContainer" >
-                                    {/* <button 
-                                        className="getLocation" 
-                                        onClick={handleUseMyLocationClick} 
-                                        onMouseOver={handleMouseEnter}
-                                        onMouseLeave={handleMouseLeave}
-                                    >
-                                        {isLoadingPosition ? "در حال بروزرسانی..." : "استفاده از موقعیت من"}
-                                    </button> */}
                                     <MapContainer className="map"  zoom={zoomLevel}
                                     whenCreated={(mapInstance) => (mapRef.current = mapInstance)} // Capture the map instance
                                     scrollWheelZoom={true} center={mapCenter} >
@@ -485,20 +462,8 @@ export default function Recommender(){
                                             <div >متراژ : {home.meterage}</div>
                                             <div >سال ساخت : {home.build_date}</div>
                                             <div >اتاق : {home.rooms}</div>
-                                            {/* <button onClick={() => navigate(`/house/${home.id}`)} className="smsButton"> مشاهده جزییات آگهی</button> */}
-
                                         </Card>
                                         </NavLink>
-                                        // <Card key={home.id} style={{ border: '1px solid #ddd', padding: '16px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>
-                                        //     <div > استان : {home.city}</div>
-                                        //     <div >عنوان : {home.title}</div>
-                                        //     <div >قیمت : {home.price}</div>
-                                        //     <div >متراژ : {home.meterage}</div>
-                                        //     <div >سال ساخت : {home.build_date}</div>
-                                        //     <div >اتاق : {home.rooms}</div>
-                                        //     {/* <button onClick={() => navigate(`/house/${home.id}`)} className="smsButton"> مشاهده جزییات آگهی</button> */}
-
-                                        // </Card>
                                     )
                                 }
                                     
@@ -514,7 +479,7 @@ export default function Recommender(){
                             ]}/>
                                                         )}
                                                     
-                                                                                </Col>
+                         </Col>
                     </Row>
 
                 </>
@@ -525,9 +490,6 @@ export default function Recommender(){
     </>
     )
 }
-
-
-
 
 export function DetectClick({ onMarkerAdd, setFieldValue ,isButtonClicked}) {
     useMapEvents({

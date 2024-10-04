@@ -39,15 +39,6 @@ const WidgetsDropdown = ({view,badSentimentCount,goodSentimentCount,neutralSenti
           }
           
         />
-        {/* <CWidgetStatsA
-          color="danger"
-          value={
-            <div className='d-flex justify-content-between gap-4 p-3'>
-              <div>تعداد کل بازدیدها</div>
-              <div>110</div>
-            </div>
-          }
-        /> */}
       </CCol>
       <CCol sm={6} xl={4} xxl={3}>
         <CWidgetStatsA
@@ -55,7 +46,6 @@ const WidgetsDropdown = ({view,badSentimentCount,goodSentimentCount,neutralSenti
           value={
             <div className='d-flex justify-content-center align-items-center gap-4 p-4'>
               <div className='me-3 pt-2 pb-3'>تعداد کل بازدیدها</div>
-              {/* <div className='pt-2 pb-3'>11</div> */}
               <div className='pt-2 pb-3'>{view}</div>
             </div>
           }
@@ -63,30 +53,7 @@ const WidgetsDropdown = ({view,badSentimentCount,goodSentimentCount,neutralSenti
       </CCol>
       <CCol sm={6} xl={4} xxl={3}>
         <CWidgetStatsA
-          color="primary"
-          // value={
-          //   <div>
-          //       <div className='d-flex justify-content-between gap-4 p-2'>
-          //         <div>تعداد نظرات مثبت </div>
-          //         <div>110</div>
-          //       </div>
-          //       <div className='d-flex justify-content-between gap-4 p-2'>
-          //         <div>تعداد نظرات خنثی </div>
-          //         <div>110</div>
-          //       </div>
-          //       <div className='d-flex justify-content-between gap-4 p-2'>
-          //         <div>تعداد نظرات منفی </div>
-          //         <div>110</div>
-          //       </div>
-                
-
-          //   </div>
-           
-          // }
-            /* <div>تعداد نظرات مثبت </div>
-              <div>تعداد نظرات خنثی </div> 
-              
-              <div>تعداد نظرات منفی </div> */
+          color="primary" 
           title={
             <div>
             

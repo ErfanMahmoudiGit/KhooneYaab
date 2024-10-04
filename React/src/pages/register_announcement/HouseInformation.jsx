@@ -171,35 +171,6 @@ export default function HouseInformation(){
                 </Col>
                
             </Row>
-            {/* <Row className='gx-4 d-flex justify-content-center mx-5 mb-4 align-right'>
-
-                <Col sm={6}>
-                    <Form.Label>آپلود تصویر ملک</Form.Label>
-                    <div
-                        className="upload-license-image"
-                        style={{ width: "100% !important" }}
-                    >
-                        <Upload
-                            accept="image/png, image/jpeg"
-                            maxCount={1}
-                            beforeUpload={uploadImageHandler}
-                            // showUploadList={false}
-                        >
-                            <Button
-                                style={{ width: "100% !important" }}
-                                // className='login-button'
-                                icon={<UploadOutlined />}
-                            >
-                                آپلود تصویر
-                            </Button>
-                        </Upload>
-                    </div>
-                    <ErrorMessage name="image" component="div" className="text-danger" />
-
-                </Col>
-                <Col sm={6}>
-                </Col>
-            </Row> */}
         </section>
     );
     
@@ -218,34 +189,17 @@ HouseInformation.initialValues = {
 };
 
 HouseInformation.validationSchema = Yup.object().shape({
-    // title: Yup.string(),
-    // category: Yup.string(),
-    // meterage: Yup.string()
-    //     .matches(/^[0-9]/, "لطفا متراژ را به عدد وارد کنید"),
-    // price: Yup.string()
-    //     .matches(/^[0-9]/, "لطفا قیمت را به عدد وارد کنید"),
-    // image: Yup.string(),
-    // description: Yup.string(),
-    // build_date: Yup.string(),
     meterage: Yup.number().required('متراژ نمیتواند خالی باشد')
-      .min(0, 'متراژ نمی‌تواند منفی باشد') // Add this line
-      .typeError("لطفا متراژ را به عدد وارد کنید"), // H
-        //   .matches(/^[0-9]/, "لطفا متراژ را به عدد وارد کنید"),
+      .min(0, 'متراژ نمی‌تواند منفی باشد') 
+      .typeError("لطفا متراژ را به عدد وارد کنید"), 
     price: Yup.number().required('قیمت نمیتواند خالی باشد')
-            .min(0, 'قیمت نمی‌تواند منفی باشد') // Add this line
-            .typeError("لطفا قیمت را به عدد وارد کنید"), // H
-
-
+            .min(0, 'قیمت نمی‌تواند منفی باشد')
+            .typeError("لطفا قیمت را به عدد وارد کنید"),
     title: Yup.string().required('عنوان نمیتواند خالی باشد'),
     category: Yup.string().required('عنوان دسته بندی نمیتواند خالی باشد'),
-    // meterage: Yup.string().required('متراژ نمیتواند خالی باشد')
-    //     .matches(/^[0-9]/, "لطفا متراژ را به عدد وارد کنید"),
-    // price: Yup.string().required('قیمت نمیتواند خالی باشد')
-    //     .matches(/^[0-9]/, "لطفا قیمت را به عدد وارد کنید"),
     image: Yup.string().required('تصویر نمیتواند خالی باشد'),
     description: Yup.string().required('توضیحات نمیتواند خالی باشد'),
     build_date: Yup.string()
-    // .required('سال ساخت نمیتواند خالی باشد'),
 });
 
 

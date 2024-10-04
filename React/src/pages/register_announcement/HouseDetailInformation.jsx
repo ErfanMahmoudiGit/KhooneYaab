@@ -25,16 +25,7 @@ export default function HouseDetailInformation(){
         {label:4 , value:4},
         {label:5 , value:5},
     ]
-    console.log(values.category);
-    // icon={
-    //     item.category === "فروش آپارتمان"
-    //       ? blueIcon
-    //       : item.category === "فروش خانه و ویلا"
-    //       ? goldIcon
-    //       : item.category === "اجارهٔ آپارتمان"
-    //       ? redIcon
-    //       : blackIcon
-    //   }
+    
     return(
         <>	
             {values.category == "فروش آپارتمان" || values.category == "فروش خانه و ویلا" ? (
@@ -189,18 +180,6 @@ HouseDetailInformation.initialValues = {
 
 HouseDetailInformation.validationSchema = Yup.object().shape({
     rooms: Yup.string().required('انتخاب تعداد اتاق الزامی است'),
-    // floor: Yup.string().required('انتخاب تعداد طبقه الزامی است'),
-    // all_floors: Yup.string().required('انتخاب تعداد کل طبقات الزامی است'),
-    // floor: Yup.string().when('category', {
-    //     is: (category) => category === 'فروش آپارتمان' || category === 'فروش خانه و ویلا',
-    //     then: Yup.string().required('انتخاب تعداد طبقه الزامی است'),
-    //     otherwise: Yup.string(),
-    // }),
-    // all_floors: Yup.string().when('category', {
-    //     is: (category) => category === 'فروش آپارتمان' || category === 'فروش خانه و ویلا',
-    //     then: Yup.string().required('انتخاب تعداد کل طبقات الزامی است'),
-    //     otherwise: Yup.string(),
-    // }),
     floor : Yup.string().when('category', {
         is: (value) => value === 'فروش آپارتمان' || value === 'فروش خانه و ویلا',
         then: (validationSchema) => validationSchema

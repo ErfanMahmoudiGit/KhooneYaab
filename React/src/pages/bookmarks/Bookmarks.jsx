@@ -43,44 +43,11 @@ export default function Bookmarks() {
         fetchHouseDetails();
     }, [id]);
 
-    // useEffect(() => {
-    //     if (id.length > 0) {
-    //         // Fetch details for each bookmarked ID
-    //         setIsLoading(true)
-    //         const fetchHouseDetails = async () => {
-    //             try {
-    //                 const details = await Promise.all(
-    //                     id.map(houseId => API_GETHOUSE_DETAILS(houseId))
-    //                 );
-                    
-    //                 const validDetails = details
-    //                     .filter(res => res.status === 200)
-    //                     .map(res => res.data);
-
-    //                 setDetail(validDetails);
-    //                 setIsLoading(false)
-
-    //             } catch (error) {
-    //                 setIsLoading(false)
-
-    //                 console.error("Error fetching house details:", error);
-    //             }
-    //         };
-
-    //         fetchHouseDetails();
-    //     }
-    // }, [id]);
-
     function formatNumber(number) {
         let formatted = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
         return formatted.replace(/\d/g, (digit) => persianDigits[digit]);
     }
-
-    // function truncateText(text) {
-    //     return text.length > 10 ? `${text.slice(0, 23)}...` : text;
-    // }
-
 
     const handleUnbookmark = (houseId) => {
         const updatedIDs = id.filter(item => item !== houseId);
@@ -112,38 +79,32 @@ export default function Bookmarks() {
                             style={{ border: '1px solid #ddd', padding: '16px', borderRadius: '8px',
                             boxShadow: "0 4px 4px rgba(0, 0, 0, 0.2)",backgroundColor:"#ffffff"
                              }}>
-                                  <div className="d-flex justify-content-center position-relative">
-                                                <img
-                                                    src={house.image ? house.image : '/1.png'}
-                                                    style={{ width: "190px", height: "190px", maxHeight: "190px" }}
-                                                    className="border border-light rounded"
-                                                    alt={house.title}
-                                                />
+                                <div className="d-flex justify-content-center position-relative">
+                                    <img
+                                        src={house.image ? house.image : '/1.png'}
+                                        style={{ width: "190px", height: "190px", maxHeight: "190px" }}
+                                        className="border border-light rounded"
+                                        alt={house.title}
+                                    />
                                                 
-                                                    <FaBookmark
-                                                        onClick={() => handleUnbookmark(house.id)}
-                                                        size={28}
-                                                        style={{
-                                                            position: 'absolute',
-                                                            top: '-4px',
-                                                            left: '-8px',
-                                                            color: '#d64444',
-                                                            fontSize: '42px',
-                                                            // color: '#ac2323',
-                                                            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                                                            borderRadius: '50%',
-                                                            padding: '4px'
-                                                        }}
-                                                    />
+                                    <FaBookmark
+                                        onClick={() => handleUnbookmark(house.id)}
+                                        size={28}
+                                        style={{
+                                            position: 'absolute',
+                                            top: '-4px',
+                                            left: '-8px',
+                                            color: '#d64444',
+                                            fontSize: '42px',
+                                            // color: '#ac2323',
+                                            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                                            borderRadius: '50%',
+                                            padding: '4px'
+                                        }}
+                                    />
                                                 
-                                            </div>
+                                </div>
 
-
-{/* 
-                                            <button onClick={() => handleUnbookmark(house.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', marginTop: '10px' }}>
-                                    <FaBookmark style={{ color: '#d64444', fontSize: '24px' }} />
-                                </button> */}
-                                {/* <img style={{width:"170px" , height:"170px" , borderRadius: '8px'}} src={house.image ? house.image : '/1.png'}></img> */}
                                 <h3 style={{ fontSize: '18px', marginTop: '12px' }}>{truncateText(house.title)}</h3>
                                 <div style={{ fontSize: '14px', color: '#666' }}>آگهی در {house.city}</div>
                                 <div style={{ fontSize: '14px', color: '#666' }}>املاک <FaChevronLeft size={12} /> {house.category}</div>

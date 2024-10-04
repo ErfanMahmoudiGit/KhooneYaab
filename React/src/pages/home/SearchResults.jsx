@@ -61,9 +61,6 @@ const SearchResults = () => {
     function formatNumber(number) {
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
-    // function truncateText(text) {
-    //     return text.length > 10 ? `${text.slice(0, 23)}...` : text;
-    // }
 
     const handleSortChange = (selectedSort) => {
         setSortOrder(selectedSort);
@@ -194,31 +191,6 @@ const SearchResults = () => {
                                                         />
                                                     )}
                                                 </div>
-                                    {/* <div className="d-flex justify-content-center position-relative">
-                                                    <img
-                                                        src={house.image ? house.image : '/1.png'}
-                                                        style={{ width: "190px", height: "190px", maxHeight: "190px" }}
-                                                        className="border border-light rounded"
-                                                        alt={house.title}
-                                                    />
-                                                    
-                                                        <FaBookmark
-                                                            onClick={() => toggleBookmark(house.id)}
-                                                            size={28}
-                                                            style={{
-                                                                position: 'absolute',
-                                                                top: '-4px',
-                                                                left: '-8px',
-                                                                color: '#d64444',
-                                                                fontSize: '42px',
-                                                                // color: '#ac2323',
-                                                                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                                                                borderRadius: '50%',
-                                                                padding: '4px'
-                                                            }}
-                                                        />
-                                                    
-                                                </div> */}
                                         <h3 style={{ fontSize: '18px', marginTop: '12px' }}>{truncateText(house.title)}</h3>
                                     <div style={{ fontSize: '14px', color: '#666' }}>آگهی در {house.city}</div>
                                     <div style={{ fontSize: '14px', color: '#666' }}>املاک <FaChevronLeft size={12} /> {house.category}</div>

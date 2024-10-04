@@ -32,7 +32,6 @@ const MeterageFilter = ({ value, onChange }) => {
                 style={{ marginBottom: '20px' }}
             />
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                {/* <span> تومان</span> */}
                 <span>{priceRange[1]} متر</span>
                 <span>{priceRange[0]} متر</span>
             </div>

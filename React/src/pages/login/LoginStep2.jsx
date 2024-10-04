@@ -11,7 +11,6 @@ import {API_CHECKOTP} from '../../services/apiServices'
 import LoginStep3 from "./LoginStep3";
 import {  toast } from 'react-toastify';
 import Timer from "./Timer";
-// import Cookies from 'js-cookie';
 import cookieService from '../cookieService';
 
 // Validation schema
@@ -56,7 +55,6 @@ export default function LoginStep2() {
                             console.log("res login 2: ",res);
                             if (res.status === 200) {
                                 console.log(res.data.data.tokens.access);
-                                // localStorage.setItem('TOKEN', res.data.data.tokens.access);
                                 cookieService.setCookie('NAME', res.data.data.user.name, { expires: 7 }); // Expires in 7 days
                                 cookieService.setCookie('OWNER_ID', res.data.data.user.user_id, { expires: 7 }); // Expires in 7 days
                                 cookieService.setCookie('TOKEN', res.data.data.tokens.access, { expires: 7 }); // Expires in 7 days

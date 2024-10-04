@@ -64,12 +64,9 @@ export default function Home() {
         setTimeout(() => { // Simulate loading delay
             setCurrentIndex(prevIndex => {
                 const nextIndex = prevIndex + 14; // Increment current index by 14
-                // console.log("Current Index:", prevIndex, "Next Index:", nextIndex);
     
                 // Get houses from the current index to the next index
-                const newHouses = houses.slice(-nextIndex, -prevIndex);
-                // console.log("New Houses Loaded:", newHouses);
-    
+                const newHouses = houses.slice(-nextIndex, -prevIndex);    
                 setDisplayedHouses(prevHouses => [...prevHouses, ...newHouses]);
                 return nextIndex; // Update the current index to the new position
             });
@@ -99,17 +96,10 @@ export default function Home() {
         );
     };
     function formatNumber(number) {
-        // Convert to string and format with commas
         let formatted = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    
-        // Convert to Persian numerals
         const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
         return formatted.replace(/\d/g, (digit) => persianDigits[digit]);
     }
-   
-    // function truncateText(text) {
-    //     return text.length > 10 ? `${text.slice(0, 30)}...` : text;
-    // }
     
     return (
         <>
@@ -143,7 +133,6 @@ export default function Home() {
 
                                                 )}
                                                 <div className="fw-bold">{truncateText(house.title)}</div>
-                                                {/* <div>آگهی در {house.city}</div> */}
                                                 <div >املاک <FaChevronLeft size={12} /> {house.category}</div>
                                                 <div style={{color:"#666"}}>{formatNumber(house.price)} تومان</div>
                                                 <button onClick={() => navigate(`/house/${house.id}`)} className="smsButton"> مشاهده ملک</button>

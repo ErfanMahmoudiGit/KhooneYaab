@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { FormControl } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { authState, handle_variables, loadCaptchaImage } from './Redux/authSlice';
@@ -6,7 +6,7 @@ import { authState, handle_variables, loadCaptchaImage } from './Redux/authSlice
 const CaptchaComponent = (props) => {
     const canvasRef = useRef(null);
     const dispatch = useDispatch();
-    const { loginModalStep1 ,user_string,isSendCode , phoneNumver , captcha_ref , captcha_image , invalid_captcha, captcha_string} = useSelector(authState);
+    const { user_string , invalid_captcha, captcha_string} = useSelector(authState);
 
     useEffect(()=>{
         createCaptcha();
@@ -63,7 +63,6 @@ const CaptchaComponent = (props) => {
                 </div>
                 <div className="d-flex">
             <div className={"refresh-captcha pointer-cursor mt-2 bg-refresh ms-2"}
-                 // src={"/asset/img/refresh.png"}
                  style={{maxWidth:30}}
                  onClick={createCaptcha}
             />

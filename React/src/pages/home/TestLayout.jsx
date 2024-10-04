@@ -98,11 +98,6 @@ const TestLayout = () => {
       setIsLoggedIn(false);
     }
     
-
-
-
-    
-    
   }
   console.log("Retrieved NAME cookie:", cookieService.getCookie('NAME'));
   console.log("name",name);
@@ -139,17 +134,11 @@ const TestLayout = () => {
     <>
       <Layout>
         <Header
-          // style={{
-          //   display: 'flex',
-          //   alignItems: 'center',
-          // }}
           style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent:'space-between',
-              // position: 'relative',
               top: 0,
-              // zIndex:10001,
               color:'#001529',
               backgroundColor: '#f8f9fa', 
               }}

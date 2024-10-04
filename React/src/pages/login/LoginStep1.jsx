@@ -11,7 +11,6 @@ import { BeatLoader } from "react-spinners";
 import {CaptchaComponent} from './CaptchaComponent'
 import LoginStep2 from "./LoginStep2";
 import {loadCaptchaImage} from './Redux/authSlice';
-import LoginStep3 from "./LoginStep3";
 
 let schema = yup.object().shape({
     phone: yup
@@ -21,13 +20,9 @@ let schema = yup.object().shape({
   
   });
 export default function LoginStep1(props){
-    const { loginModalStep1 ,loginModalStep2 , loginModalStep3 ,isSendCode , phoneNumber , captcha_string , user_string} = useSelector(authState);
+    const { loginModalStep1 ,loginModalStep2 , phoneNumber , captcha_string , user_string} = useSelector(authState);
     const dispatch = useDispatch();
     const [isLoadinging, setIsLoadinging] = useState(false);
-
-    console.log("loginModalStep2: ",loginModalStep2);
-    console.log("loginModalStep1: ",loginModalStep1);
-    
     
     return(
         <>
@@ -52,14 +47,10 @@ export default function LoginStep1(props){
                             phoneNumber: values.phone,
                             user_string : user_string,
                             captcha_string : captcha_string,
-                        };
-                        console.log("data login step 1: " ,data);
-                        
+                        };                        
                         let resp = API_GETOTP(data)
-                        console.log("resp login step 1",resp);
                         
                         resp.then((res) => {
-                            console.log("res login 1: ",res);
                             
                             if (res.status == 200) {
                                 dispatch(
@@ -83,9 +74,7 @@ export default function LoginStep1(props){
                             console.log(error);
                             toast.error(error);                                
                             dispatch(loadCaptchaImage());
-                            // toast.error(err.response.data.message);
                             setIsLoadinging(false);
-
                         });
 
                     }}

@@ -1,4 +1,4 @@
-import { Button, Col, Container, Row } from "react-bootstrap"
+import { Button, Col, Container} from "react-bootstrap"
 import { MdApartment } from "react-icons/md";
 import { FcHome } from "react-icons/fc";
 
@@ -9,10 +9,6 @@ export default function SelectSellCategory(){
     return(
         <>
         <Container className="p-4">
-            {/* <Row style={{direction : "ltr"}}>
-                <Button className="backprimaryButton" onClick={()=> navigate('/')}>بازگشت به صفحه اصلی</Button>
-
-            </Row> */}
             <div className="d-flex flex-row justify-content-between m-3 align-items-center">
                 <h6>دسته بندی مورد نظر خود را انتخاب کنید</h6>
                 <Button className="backprimaryButton" onClick={()=> navigate('/')}>بازگشت به صفحه اصلی</Button>
